@@ -1,5 +1,6 @@
 import Base from './base'
 import moment from 'moment'
+import {main as mainTemplate} from './templates'
 
 const Datepicker = (($) => {
 
@@ -10,18 +11,47 @@ const Datepicker = (($) => {
    */
   const NAME = 'datepicker'
   const DATA_KEY = `bmd.${NAME}`
-  const EVENT_KEY           = `.${DATA_KEY}`
-  const DATA_API_KEY        = '.data-api'
+  const EVENT_KEY = `.${DATA_KEY}`
+  const DATA_API_KEY = '.data-api'
   const JQUERY_NAME = `bmd${NAME.charAt(0).toUpperCase() + NAME.slice(1)}`
   const JQUERY_NO_CONFLICT = $.fn[JQUERY_NAME]
 
-  //const Event = {
-  //  SHOW           : `show${EVENT_KEY}`,
-  //  SHOWN          : `shown${EVENT_KEY}`,
-  //  HIDE           : `hide${EVENT_KEY}`,
-  //  HIDDEN         : `hidden${EVENT_KEY}`,
-  //  CLICK_DATA_API : `click${EVENT_KEY}${DATA_API_KEY}`
-  //}
+  const Event = {
+    //  SHOW           : `show${EVENT_KEY}`,
+    //  SHOWN          : `shown${EVENT_KEY}`,
+    //  HIDE           : `hide${EVENT_KEY}`,
+    //  HIDDEN         : `hidden${EVENT_KEY}`,
+    CLICK_DATA_API: `click${EVENT_KEY}${DATA_API_KEY}`
+  }
+
+  const Templates = {
+    head:
+      `<thead>
+            <tr>
+                <th colspan="7" class="datepicker-title"></th>
+            </tr>
+            <tr>
+                <th class="prev">&laquo;</th>
+                <th colspan="5" class="datepicker-switch"></th>
+                <th class="next">&raquo;</th>
+            </tr>
+        </thead>`,
+    cont:
+      `<tbody>
+            <tr>
+                <td colspan="7"></td>
+            </tr>
+        </tbody>`,
+    foot:
+      `<tfoot>
+            <tr>
+                <th colspan="7" class="today"></th>
+            </tr>
+            <tr>
+                <th colspan="7" class="clear"></th>
+            </tr>
+        </tfoot>`
+  }
 
   const Default = {
     lang: 'en',
@@ -61,7 +91,8 @@ const Datepicker = (($) => {
     // Popper.js options - see https://popper.js.org/
     popper: {
       // any popper.js options are valid here and will be passed to that component
-    }
+    },
+    template: mainTemplate
   }
 
   /**
@@ -78,7 +109,25 @@ const Datepicker = (($) => {
       this.moment = moment()
       this.moment.locale(this.config.lang)
 
+      // normalize options that are flexible
       this.normalizeConfig()
+
+      //
+      this.viewDate = this.config.date.default;
+      this.focusDate = null;
+
+      // inline datepicker if target is a div
+      this.isInline = this.$element.is('div')
+      this.isInput = this.$element.is('input');
+
+      // component
+      this.component = this.$element.hasClass('date') ? this.$element.find('.add-on, .input-group-addon, .btn') : false;
+      this.hasInput = this.component && this.$element.find('input').length;
+      if (this.component && this.component.length === 0)
+        this.component = false;
+
+      //
+      this.$picker = $(this.config.template);
     }
 
     dispose(dataKey = DATA_KEY) {
