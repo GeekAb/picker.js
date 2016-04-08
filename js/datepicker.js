@@ -1,6 +1,6 @@
 import Base from './base'
 import moment from 'moment'
-import {main as mainTemplate} from './templates'
+import {main} from './templates'
 
 const Datepicker = (($) => {
 
@@ -92,7 +92,7 @@ const Datepicker = (($) => {
     popper: {
       // any popper.js options are valid here and will be passed to that component
     },
-    template: mainTemplate
+    template: main
   }
 
   /**

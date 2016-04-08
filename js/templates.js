@@ -1,3 +1,6 @@
+export const leftArrow = `<i class="material-icons">keyboard_arrow_left</i>`
+export const rightArrow = `<i class="material-icons">keyboard_arrow_right</i>`
+
 // head
 export const head =
   `<thead>
@@ -5,9 +8,9 @@ export const head =
           <th colspan="7" class="datepicker-title"></th>
       </tr>
       <tr>
-          <th class="prev">&laquo;</th>
+          <th class="prev">${leftArrow}</th>
           <th colspan="5" class="datepicker-switch"></th>
-          <th class="next">&raquo;</th>
+          <th class="next">${rightArrow}</th>
       </tr>
   </thead>`
 
