@@ -1,0 +1,26 @@
+{
+  "name": "bootstrap-material-design-datepicker",
+  "version": "0.0.1",
+  "description": "A datepicker for bootstrap-material-design v4",
+  "main": "dist/bootstrap-material-design-datepicker.cjs.js",
+  "jsnext:main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rosskevin/bootstrap-material-design-datepicker.git"
+  },
+  "keywords": [
+    "bootstrap",
+    "material",
+    "design",
+    "datepicker"
+  ],
+  "author": "Kevin Ross <kevin.ross@alienfast.com> (https://github.com/rosskevin)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rosskevin/bootstrap-material-design-datepicker/issues"
+  },
+  "homepage": "https://github.com/rosskevin/bootstrap-material-design-datepicker#readme"
+}
