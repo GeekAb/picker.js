@@ -10,8 +10,18 @@ const Datepicker = (($) => {
    */
   const NAME = 'datepicker'
   const DATA_KEY = `bmd.${NAME}`
+  const EVENT_KEY           = `.${DATA_KEY}`
+  const DATA_API_KEY        = '.data-api'
   const JQUERY_NAME = `bmd${NAME.charAt(0).toUpperCase() + NAME.slice(1)}`
   const JQUERY_NO_CONFLICT = $.fn[JQUERY_NAME]
+
+  //const Event = {
+  //  SHOW           : `show${EVENT_KEY}`,
+  //  SHOWN          : `shown${EVENT_KEY}`,
+  //  HIDE           : `hide${EVENT_KEY}`,
+  //  HIDDEN         : `hidden${EVENT_KEY}`,
+  //  CLICK_DATA_API : `click${EVENT_KEY}${DATA_API_KEY}`
+  //}
 
   const Default = {
     lang: 'en',
