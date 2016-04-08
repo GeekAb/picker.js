@@ -11,4 +11,4 @@ A datepicker for bootstrap-material-design v4
 - [bootstrap-datepicker](https://github.com/eternicode/bootstrap-datepicker) - [Andrew Rowls](https://github.com/eternicode) and [contributors](https://github.com/eternicode/bootstrap-datepicker/graphs/contributors)
 - [bootstrap-datepicker original code](http://www.eyecon.ro/bootstrap-datepicker/) - Stefan Petre
 
-See [LICENSE](LICENSE)
+See [LICENSE](LICENSE.md)
