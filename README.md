@@ -1,8 +1,10 @@
 # bootstrap-material-design-datepicker
 A datepicker for bootstrap-material-design v4
 
-
 **Work in progress**
+
+## Goal 
+An ES2015 `datepicker` for [bootstrap-material-design](https://github.com/FezVrasta/bootstrap-material-design/tree/v4-dev) that meets the [Material Design specification](https://www.google.com/design/spec/components/pickers.html#)
 
 
 ## Credits
