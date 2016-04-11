@@ -23,8 +23,8 @@ const Base = class {
    * @returns {boolean} - if false, code should get out because handler prevented
    */
   trigger(eventKey, object = {}){
-    let event = $.Event(eventKey)
-    $(this._element).trigger(event)
+    let event = $.Event(eventKey ,object)
+    $(this.$element).trigger(event)
     if (event.isDefaultPrevented()) {
       this.debug(`default prevented on ${eventKey}`)
       return false
