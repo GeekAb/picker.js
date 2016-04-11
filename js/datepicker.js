@@ -4,6 +4,7 @@ import {main} from './templates'
 import Keycodes from './util/keycodes'
 import Key from './util/key'
 import Dates from './util/dates'
+import Renderer from './renderer'
 
 /**
  * Datepicker for fields using momentjs for all date-based functionality.
@@ -90,7 +91,26 @@ const Datepicker = (($) => {
     popper: {
       // any popper.js options are valid here and will be passed to that component
     },
-    template: main
+    template: main,
+
+
+    // -------------------
+    // callbacks  FIXME: better way to do this?
+
+    /*
+     A function that takes a date as a parameter and returns one of the following values:
+
+     - undefined to have no effect
+     - An object with the following properties:
+     selectable: A Boolean, indicating whether or not this date is selectable
+     classes: A String representing additional CSS classes to apply to the date’s cell
+     tooltip: A tooltip to apply to this date, via the title HTML attribute
+     */
+    beforeShowDay: undefined,
+    beforeShowMonth: undefined,
+    beforeShowYear: undefined,
+    beforeShowDecade: undefined,
+    beforeShowCentury: undefined
   }
 
   /**
@@ -106,7 +126,7 @@ const Datepicker = (($) => {
       this.dates = new Dates()
 
       // get our own utc instance and configure the locale
-      this.moment = moment().utc().locale(this.config.lang)
+      this.moment = this.newMoment()
 
       // normalize options that are flexible
       this.normalizeConfig()
@@ -119,14 +139,14 @@ const Datepicker = (($) => {
       this.isInline = this.$element.is('div')
       this.isInput = this.$element.is('input')
 
-      // component
+      // component? FIXME: better name?
       this.component = this.$element.hasClass('date') ? this.$element.find('.add-on, .input-group-addon, .btn') : false
       this.hasInput = this.component && this.$element.find('input').length
       if (this.component && this.component.length === 0)
         this.component = false
 
-      //
-      this.$picker = $(this.config.template)
+      // initialize the renderer and create the $picker element
+      this.renderer = new Renderer(this)
 
       //
       this.events = []
@@ -139,6 +159,19 @@ const Datepicker = (($) => {
       super.dispose(dataKey)
     }
 
+    /**
+     * delegate to reneder to obtain picker element
+     */
+    $picker() {
+      this.renderer.$picker
+    }
+
+    /**
+     * @returns a new UTC moment configured with the locale
+     */
+    newMoment() {
+      return moment().utc().locale(this.config.lang)
+    }
 
     // ------------------------------------------------------------------------
     // protected
@@ -208,7 +241,7 @@ const Datepicker = (($) => {
       }
 
       this.secondaryEvents = [
-        [this.$picker, {
+        [this.$picker(), {
           click: () => this.click()
         }],
         [$(window), {
@@ -220,9 +253,9 @@ const Datepicker = (($) => {
             if (!(
                 this.$element.is(ev.target) ||
                 this.$element.find(ev.target).length ||
-                this.$picker.is(ev.target) ||
-                this.$picker.find(ev.target).length ||
-                this.$picker.hasClass('datepicker-inline')
+                this.$picker().is(ev.target) ||
+                this.$picker().find(ev.target).length ||
+                this.$picker().hasClass('datepicker-inline')
               )) {
               this.hide()
             }
@@ -247,7 +280,7 @@ const Datepicker = (($) => {
 
     // FIXME: nomenclature to be onKe*
     keydown(ev) {
-      if (!this.$picker.is(':visible')) {
+      if (!this.isPickerVisible()) {
         if (Key.is(ev, Keycodes.DOWN, Keycodes.ESC)) { // allow down to re-show picker
           this.show()
           ev.stopPropagation()
@@ -264,7 +297,7 @@ const Datepicker = (($) => {
           if (this.focusDate) {
             this.focusDate = null
             this.viewDate = this.dates.last() || this.viewDate
-            this.fill()
+            this.renderer.fill() // FIXME: why not use this.update()?
           }
           else
             this.hide()
@@ -313,7 +346,7 @@ const Datepicker = (($) => {
           if (newViewDate) {
             this.focusDate = this.viewDate = newViewDate
             this.setInputValue()
-            this.fill()
+            this.renderer.fill() // FIXME: why not use this.update()?
             ev.preventDefault()
           }
           break
@@ -328,8 +361,8 @@ const Datepicker = (($) => {
           this.focusDate = null
           this.viewDate = this.dates.last() || this.viewDate
           this.setInputValue()
-          this.fill()
-          if (this.$picker.is(':visible')) {
+          this.renderer.fill() // FIXME: why not use this.update()?
+          if (this.isPickerVisible()) {
             ev.preventDefault()
             ev.stopPropagation()
             if (this.config.autoclose)
@@ -339,7 +372,7 @@ const Datepicker = (($) => {
         case Keycodes.TAB:
           this.focusDate = null
           this.viewDate = this.dates.last() || this.viewDate
-          this.fill()
+          this.renderer.fill() // FIXME: why not use this.update()?
           this.hide()
           break
       }
@@ -401,9 +434,9 @@ const Datepicker = (($) => {
       if (element.attr('readonly') && this.config.enableOnReadonly === false)
         return
       if (!this.isInline)
-        this.$picker.appendTo(this.config.container)
+        this.$picker().appendTo(this.config.container)
       this.place()
-      this.$picker.show()
+      this.$picker().show()
       this._attachSecondaryEvents()
       this._trigger('show')
       if ((window.navigator.msMaxTouchPoints || 'ontouchstart' in document) && !this.config.keyboard.touch) {
@@ -412,13 +445,17 @@ const Datepicker = (($) => {
       return this
     }
 
+    isPickerVisible() {
+      return this.$picker().is(':visible')
+    }
+
     hide() {
       if (this.isInline)
         return this
-      if (!this.$picker.is(':visible'))
+      if (!this.isPickerVisible())
         return this
       this.focusDate = null
-      this.$picker.hide().detach()
+      this.$picker().hide().detach()
       this._detachSecondaryEvents()
       this.viewMode = this.config.view.start
       this.showMode()
@@ -480,8 +517,8 @@ const Datepicker = (($) => {
       this.config.date.default = this.config.date.default || this.moment.clone()
     }
 
-    formatDate(date, format = this.config.format) {
-      date.format(this.config.format)
+    formatDate(mom, format = this.config.format) {
+      mom.format(this.config.format)
     }
 
     parseDate(value, format = this.config.format) {
@@ -508,6 +545,29 @@ const Datepicker = (($) => {
       else {
         this.throwError(`Unknown value type ${typeof value} for value: ${this.dump(value)}`)
       }
+    }
+
+    shouldBeHighlighted(date){
+      return $.inArray(date.day(), this.config.daysOfWeek.highlighted) !== -1
+      }
+
+    weekOfDateIsDisabled(date) {
+      return $.inArray(date.day(), this.config.daysOfWeek.disabled) !== -1
+    }
+
+    dateIsDisabled(date) {
+      return (
+        this.weekOfDateIsDisabled(date) ||
+        $.grep(this.config.date.disabled,
+          (d) => {
+            return date.isSame(d, 'day')
+          }
+        ).length > 0
+      )
+    }
+
+    dateWithinRange(date) {
+      return date.isSameOrAfter(this.config.date.start) && date.isSameOrBefore(this.config.date.end)
     }
 
     startOfDay(moment = this.moment) {
@@ -643,9 +703,8 @@ const Datepicker = (($) => {
         this._trigger('clearDate')
       }
 
-      this.fill()
+      this.renderer.fill()
       this.$element.change()
-      this.updateNavArrows()
       return this
     }
 
