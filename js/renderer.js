@@ -1,13 +1,6 @@
 import Base from './base'
-import moment from 'moment'
-import 'moment-range'
+import {Selector, ClassName, ClassPrefix, Visibility} from './constants'
 
-const VISIBILITY_HIDDEN = {visibility: 'hidden'}
-const VISIBILITY_VISIBLE = {visibility: 'visible'}
-const ClassNames = {
-  prev: '.prev',
-  next: '.next'
-}
 
 const Default = {
   debug: false
@@ -59,13 +52,10 @@ const Renderer = class extends Base {
       top += scrollTop
     }
 
-    this.$picker.removeClass(
-      'datepicker-orient-top datepicker-orient-bottom ' +
-      'datepicker-orient-right datepicker-orient-left'
-    )
+    this.$picker.removeClass([ClassName.TOP, ClassName.RIGHT, ClassName.BOTTOM, ClassName.LEFT])
 
     if (this.config.orientation.x !== 'auto') {
-      this.$picker.addClass('datepicker-orient-' + this.config.orientation.x)
+      this.$picker.addClass(`${ClassPrefix.ORIENT}-${this.config.orientation.x}`)
       if (this.config.orientation.x === 'right')
         left -= calendarWidth - width
     }
@@ -74,17 +64,17 @@ const Renderer = class extends Base {
     else {
       if (offset.left < 0) {
         // component is outside the window on the left side. Move it into visible range
-        this.$picker.addClass('datepicker-orient-left')
+        this.$picker.addClass(ClassName.LEFT)
         left -= offset.left - visualPadding
       }
       else if (left + calendarWidth > windowWidth) {
         // the calendar passes the widow right edge. Align it to component right side
-        this.$picker.addClass('datepicker-orient-right')
+        this.$picker.addClass(ClassName.RIGHT)
         left += width - calendarWidth
       }
       else {
         // Default to left
-        this.$picker.addClass('datepicker-orient-left')
+        this.$picker.addClass(ClassName.LEFT)
       }
     }
 
@@ -97,7 +87,7 @@ const Renderer = class extends Base {
       yorient = top_overflow < 0 ? 'bottom' : 'top'
     }
 
-    this.$picker.addClass('datepicker-orient-' + yorient)
+    this.$picker.addClass(`${ClassPrefix.ORIENT}-${yorient}`)
     if (yorient === 'top')
       top -= calendarHeight + parseInt(this.$picker.css('padding-top'))
     else
@@ -125,22 +115,21 @@ const Renderer = class extends Base {
   renderMonths(viewDate) {
     let html = ''
     for (let i of 11) { // 0..11
-      let focused = viewDate && viewDate.month() === i ? ' focused' : ''
-      html += `<span class="month ${focused}">${moment().month(i).format(`MMM`)}</span>` // Jan
+      let focused = viewDate && viewDate.month() === i ? ClassName.FOCUSED : ''
+      html += `<span class="${ClassName.MONTH} ${focused}">${moment().month(i).format(`MMM`)}</span>` // Jan
     }
-    this.$picker.find('.datepicker-months td').html(html)
+    this.$picker.find(`${Selector.MONTHS} td`).html(html)
   }
 
   fillDow() {
     let dowCnt = this.config.week.start
     let html = '<tr>'
     while (dowCnt < this.config.week.start + 7) {
-      let disabledClass = ($.inArray(dowCnt, this.config.daysOfWeek.disabled) > -1) ? 'disabled' : ''
-      //html += `<th class="dow ${disabledClass}">${dates[this.config.language].daysMin[(dowCnt++) % 7]}</th>`
-      html += `<th class="dow ${disabledClass}">${this.dp.newMoment().day((dowCnt++) % 7).format('dd')}</th>`
+      let disabledClass = ($.inArray(dowCnt, this.config.daysOfWeek.disabled) > -1) ? ClassName.DISABLED : ''
+      html += `<th class="${ClassName.DOW} ${disabledClass}">${this.dp.newMoment().day((dowCnt++) % 7).format('dd')}</th>`
     }
     html += '</tr>'
-    this.$picker.find('.datepicker-days thead').append(html)
+    this.$picker.find(`${Selector.DAYS} thead`).append(html)
   }
 
   fill() {
@@ -160,13 +149,13 @@ const Renderer = class extends Base {
 
     if (isNaN(year) || isNaN(month))
       return
-    this.$picker.find('.datepicker-days .datepicker-switch').text(this.dp.formatDate(viewDate, titleFormat))
+    this.$picker.find(`${Selector.DAYS} ${Selector.SWITCH}`).text(this.dp.formatDate(viewDate, titleFormat))
     // FIXME: remove option?
     //this.$picker.find('tfoot .today').text(todaytxt).toggle(this.config.today.button !== false)
     // FIXME: remove option?
     //this.$picker.find('tfoot .clear').text(cleartxt).toggle(this.config.clearBtn !== false)
     // FIXME: remove option? title text?
-    this.$picker.find('thead .datepicker-title').text(this.config.title).toggle(this.config.title !== '')
+    this.$picker.find(`thead ${Selector.TITLE}`).text(this.config.title).toggle(this.config.title !== '')
     this.updateNavArrows(viewDate)
     this.renderMonths(viewDate)
 
@@ -183,30 +172,30 @@ const Renderer = class extends Base {
       this.renderDay(viewDate, prevMonth)
       prevMonth.add(1, 'days')
     }
-    this.$picker.find('.datepicker-days tbody').empty().append(html.join(''))
+    this.$picker.find(`${Selector.DAYS} tbody`).empty().append(html.join(''))
 
     let monthsTitle = `use year here?`//dates[this.config.language].monthsTitle || dates['en'].monthsTitle || 'Months'
-    let $months = this.$picker.find('.datepicker-months')
-      .find('.datepicker-switch')
+    let $months = this.$picker.find(Selector.MONTHS)
+      .find(Selector.SWITCH)
       .text(this.config.view.max < 2 ? monthsTitle : year)
       .end()
-      .find('span').removeClass('active')
+      .find('span').removeClass(ClassName.ACTIVE)
 
 
     for (let d of this.dp.dates.array) {
       if (d.year() === year) {
-        $months.eq(d.month()).addClass('active')
+        $months.eq(d.month()).addClass(ClassName.ACTIVE)
       }
     }
 
     if (year < startYear || year > endYear) {
-      $months.addClass('disabled')
+      $months.addClass(ClassName.DISABLED)
     }
     if (year === startYear) {
-      $months.slice(0, startMonth).addClass('disabled')
+      $months.slice(0, startMonth).addClass(ClassName.DISABLED)
     }
     if (year === endYear) {
-      $months.slice(endMonth + 1).addClass('disabled')
+      $months.slice(endMonth + 1).addClass(ClassName.DISABLED)
     }
 
     /*
@@ -228,8 +217,8 @@ const Renderer = class extends Base {
         if (before === undefined) {
           before = {}
         }
-        if (before.selectable === false && !$month.hasClass('disabled')) {
-          $month.addClass('disabled')
+        if (before.selectable === false && !$month.hasClass(ClassName.DISABLED)) {
+          $month.addClass(ClassName.DISABLED)
         }
         if (before.classes) {
           $month.addClass(before.classes)
@@ -242,7 +231,7 @@ const Renderer = class extends Base {
 
     // Generating decade/years picker
     this.fillYearsView(
-      '.datepicker-years',
+      Selector.YEARS,
       'year',
       10,
       1,
@@ -254,7 +243,7 @@ const Renderer = class extends Base {
 
     // Generating century/decades picker
     this.fillYearsView(
-      '.datepicker-decades',
+      Selector.DECADES,
       'decade',
       100,
       10,
@@ -266,7 +255,7 @@ const Renderer = class extends Base {
 
     // Generating millennium/centuries picker
     this.fillYearsView(
-      '.datepicker-centuries',
+      Selector.CENTURIES,
       'century',
       1000,
       100,
@@ -288,16 +277,16 @@ const Renderer = class extends Base {
     switch (this.dp.viewMode) {
       case 0:
         if (year <= this.config.date.start.year() && month <= this.config.date.start.month()) {
-          this.$picker.find(ClassNames.prev).css(VISIBILITY_HIDDEN)
+          this.$picker.find(Selector.PREV).css(Visibility.HIDDEN)
         }
         else {
-          this.$picker.find(ClassNames.prev).css(VISIBILITY_VISIBLE)
+          this.$picker.find(Selector.PREV).css(Visibility.VISIBLE)
         }
         if (year >= this.config.date.end.year() && month >= this.config.date.end.month()) {
-          this.$picker.find(ClassNames.next).css(VISIBILITY_HIDDEN)
+          this.$picker.find(Selector.NEXT).css(Visibility.HIDDEN)
         }
         else {
-          this.$picker.find(ClassNames.next).css(VISIBILITY_VISIBLE)
+          this.$picker.find(Selector.NEXT).css(Visibility.VISIBLE)
         }
         break
       case 1:
@@ -305,16 +294,16 @@ const Renderer = class extends Base {
       case 3:
       case 4:
         if (year <= this.config.date.start.year() || this.config.view.max < 2) {
-          this.$picker.find(ClassNames.prev).css(VISIBILITY_HIDDEN)
+          this.$picker.find(Selector.PREV).css(Visibility.HIDDEN)
         }
         else {
-          this.$picker.find(ClassNames.prev).css(VISIBILITY_VISIBLE)
+          this.$picker.find(Selector.PREV).css(Visibility.VISIBLE)
         }
         if (year >= this.config.date.end.year() || this.config.view.max < 2) {
-          this.$picker.find(ClassNames.next).css(VISIBILITY_HIDDEN)
+          this.$picker.find(Selector.NEXT).css(Visibility.HIDDEN)
         }
         else {
-          this.$picker.find(ClassNames.next).css(VISIBILITY_VISIBLE)
+          this.$picker.find(Selector.NEXT).css(Visibility.VISIBLE)
         }
         break
     }
@@ -335,7 +324,7 @@ const Renderer = class extends Base {
       return parseInt(d.getUTCFullYear() / step, 10) * step
     })
 
-    $view.find('.datepicker-switch').text(`${year}-${year + step * 9}`)
+    $view.find(Selector.SWITCH).text(`${year}-${year + step * 9}`)
 
     let thisYear = year - step
     for (let i = -1; i < 11; i += 1) {
@@ -343,19 +332,19 @@ const Renderer = class extends Base {
       let tooltip = null
 
       if (i === -1) {
-        classes.push('old')
+        classes.push(ClassName.OLD)
       }
       else if (i === 10) {
-        classes.push('new')
+        classes.push(ClassName.NEW)
       }
       if ($.inArray(thisYear, steps) !== -1) {
-        classes.push('active')
+        classes.push(ClassName.ACTIVE)
       }
       if (thisYear < startStep || thisYear > endStep) {
-        classes.push('disabled')
+        classes.push(ClassName.DISABLED)
       }
       if (thisYear === this.viewDate.getFullYear()) {
-        classes.push('focused')
+        classes.push(ClassName.FOCUSED)
       }
 
       /*
@@ -376,7 +365,7 @@ const Renderer = class extends Base {
           before = {}
         }
         if (before.selectable === false) {
-          classes.push('disabled')
+          classes.push(ClassName.DISABLED)
         }
         if (before.classes) {
           classes = classes.concat(before.classes.split(/\s+/))
@@ -399,7 +388,7 @@ const Renderer = class extends Base {
       html.push('<tr>')
     }
     let classNames = this.getClassNames(viewDate, prevMonth)
-    classNames.push('day')
+    classNames.push(ClassName.DAY)
 
     /*
      A function that takes a date as a parameter and returns one of the following values:
@@ -416,7 +405,7 @@ const Renderer = class extends Base {
         before = {}
       }
       if (before.selectable === false) {
-        classNames.push('disabled')
+        classNames.push(ClassName.DISABLED)
       }
       if (before.classes) {
         classNames = classNames.concat(before.classes.split(/\s+/))
@@ -441,45 +430,45 @@ const Renderer = class extends Base {
     let today = this.db.newMoment().local()
 
     if (date.year() < year || (date.year() === year && date.month() < month)) {
-      classes.push('old')
+      classes.push(ClassName.OLD)
     }
     else if (date.year() > year || (date.year() === year && date.month() > month)) {
-      classes.push('new')
+      classes.push(ClassName.NEW)
     }
     if (this.dp.focusDate && date.isSame(this.dp.focusDate, 'day')) {
-      classes.push('focused')
+      classes.push(ClassName.FOCUSED)
     }
     // Compare internal UTC date with local today, not UTC today
     if (this.config.today.highlight && date.isSame(today, 'day')) {
-      classes.push('today')
+      classes.push(ClassName.TODAY)
     }
     if (this.dp.dates.contains(date) !== -1) {
-      classes.push('active')
+      classes.push(ClassName.ACTIVE)
     }
     if (!this.dp.dateWithinRange(date)) {
-      classes.push('disabled')
+      classes.push(ClassName.DISABLED)
     }
     if (this.dp.dateIsDisabled(date)) {
-      classes.push('disabled', 'disabled-date')
+      classes.push(ClassName.DISABLED)
     }
     if (this.dp.shouldBeHighlighted(date)) {
-      classes.push('highlighted')
+      classes.push(ClassName.HIGHLIGHTED)
     }
 
     // uses moment-range
     let range = this.dp.range
     if (range) {
       if (range.contains(date)) {
-        classes.push('range')
+        classes.push(ClassName.RANGE)
       }
       if (range.start.isSame(date) || range.end.isSame(date)) {
-        classes.push('selected')
+        classes.push(ClassName.SELECTED)
       }
       if (range.start.isSame(date)) {
-        classes.push('range-start')
+        classes.push(ClassName.RANGE_START)
       }
       if (range.end.isSame(date)) {
-        classes.push('range-end')
+        classes.push(ClassName.RANGE_END)
       }
     }
     return classes

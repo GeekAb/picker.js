@@ -557,41 +557,41 @@ const Datepicker = (($) => {
       let $target = $(ev.target)
 
       // Clicked on the switch
-      if ($target.hasClass('datepicker-switch')) {
+      if ($target.hasClass(ClassName.SWITCH)) {
         this.showMode(1)
       }
 
       // Clicked on prev or next
-      let $navArrow = $target.closest('.prev, .next')
+      let $navArrow = $target.closest(`${Selector.PREV}, ${Selector.NEXT}`)
       if ($navArrow.length > 0) {
-        let dir = this.config.view.modes[this.viewMode].navStep * ($navArrow.hasClass('prev') ? -1 : 1)
+        let dir = this.config.view.modes[this.viewMode].navStep * ($navArrow.hasClass(ClassName.PREV) ? -1 : 1)
         if (this.viewMode === 0) {
           this.viewDate.add(dir, 'month')
-          this._trigger('changeMonth', this.viewDate)
+          this._trigger(Event.MONTH_CHANGE, this.viewDate)
         }
         else {
           this.viewDate.add(dir, 'year')
           if (this.viewMode === 1) {
-            this._trigger('changeYear', this.viewDate)
+            this._trigger(Event.YEAR_CHANGE, this.viewDate)
           }
         }
         this.renderer.fill()
       }
 
       // Clicked on today button
-      if ($target.hasClass('today')) {
+      if ($target.hasClass(ClassName.TODAY)) {
         this.showMode(-2)
         this.clickDate(this.newMoment(), this.config.today.button === 'linked' ? null : 'view')
       }
 
       // Clicked on clear button
-      if ($target.hasClass('clear')) {
+      if ($target.hasClass(ClassName.CLEAR)) {
         this.clearDates()
       }
 
-      if (!$target.hasClass('disabled')) {
+      if (!$target.hasClass(ClassName.DISABLED)) {
         // Clicked on a day
-        if ($target.hasClass('day')) {
+        if ($target.hasClass(ClassName.DAY)) {
           let day = parseInt($target.text(), 10) || 1
           let year = this.viewDate.year()
           let month = this.viewDate.month()
@@ -599,7 +599,7 @@ const Datepicker = (($) => {
           let yearChanged = false
 
           // From last month
-          if ($target.hasClass('old')) {
+          if ($target.hasClass(ClassName.OLD)) {
             if (month === 0) {
               month = 11
               year = year - 1
@@ -613,7 +613,7 @@ const Datepicker = (($) => {
           }
 
           // From next month
-          if ($target.hasClass('new')) {
+          if ($target.hasClass(ClassName.NEW)) {
             if (month === 11) {
               month = 0
               year = year + 1
@@ -627,10 +627,10 @@ const Datepicker = (($) => {
           }
           this.clickDate(this.newMoment(year, month, day))
           if (yearChanged) {
-            this._trigger('changeYear', this.viewDate)
+            this._trigger(Event.YEAR_CHANGE, this.viewDate)
           }
           if (monthChanged) {
-            this._trigger('changeMonth', this.viewDate)
+            this._trigger(Event.MONTH_CHANGE, this.viewDate)
           }
         }
 
@@ -641,7 +641,7 @@ const Datepicker = (($) => {
           let month = $target.parent().find('span').index($target)
           let year = this.viewDate.year()
           this.viewDate.month(month)
-          this._trigger('changeMonth', this.viewDate)
+          this._trigger(Event.MONTH_CHANGE, this.viewDate)
           if (this.config.view.min === 1) {
             this.clickDate(this.newMoment(year, month, day))
             this.showMode()
@@ -664,19 +664,19 @@ const Datepicker = (($) => {
           this.viewDate.year(year)
 
           if ($target.hasClass('year')) {
-            this._trigger('changeYear', this.viewDate)
+            this._trigger(Event.YEAR_CHANGE, this.viewDate)
             if (this.config.view.min === 2) {
               this.clickDate(this.newMoment(year, month, day))
             }
           }
           if ($target.hasClass('decade')) {
-            this._trigger('changeDecade', this.viewDate)
+            this._trigger(Event.DECADE_CHANGE, this.viewDate)
             if (this.config.view.min === 3) {
               this.clickDate(this.newMoment(year, month, day))
             }
           }
           if ($target.hasClass('century')) {
-            this._trigger('changeCentury', this.viewDate)
+            this._trigger(Event.CENTURY_CHANGE, this.viewDate)
             if (this.config.view.min === 4) {
               this.clickDate(this.newMoment(year, month, day))
             }
@@ -746,13 +746,13 @@ const Datepicker = (($) => {
               newViewDate = this.moveAvailableDate(focusDate, dir, 'year')
 
               if (newViewDate)
-                this._trigger('changeYear', this.viewDate)
+                this._trigger(Event.YEAR_CHANGE, this.viewDate)
             }
             else if (ev.shiftKey) {
               newViewDate = this.moveAvailableDate(focusDate, dir, 'month')
 
               if (newViewDate)
-                this._trigger('changeMonth', this.viewDate)
+                this._trigger(Event.MONTH_CHANGE, this.viewDate)
             }
             else if (Key.is(ev, Keycodes.LEFT, Keycodes.RIGHT)) {
               newViewDate = this.moveAvailableDate(focusDate, dir, 'day')
@@ -810,7 +810,7 @@ const Datepicker = (($) => {
         if (this.dates.length())
           this._trigger(Event.DATE_CHANGE)
         else
-          this._trigger('clearDate')
+          this._trigger(Event.DATE_CLEAR)
         let element
         if (this.isInput) {
           element = this.$element
@@ -868,7 +868,7 @@ const Datepicker = (($) => {
       this.renderer.place()
       this.$picker().show()
       this.attachSecondaryEvents()
-      this._trigger('show')
+      this._trigger(Event.SHOW)
       if ((window.navigator.msMaxTouchPoints || 'ontouchstart' in document) && !this.config.keyboard.touch) {
         $(this.$element).blur()
       }
@@ -890,15 +890,11 @@ const Datepicker = (($) => {
       this.viewMode = this.config.view.start
       this.showMode()
 
-      if (
-        this.config.forceParse &&
-        (
-          this.isInput && this.$element.val() ||
-          this.hasInput && this.$element.find('input').val()
-        )
-      )
+      if (this.config.forceParse &&
+        (this.isInput && this.$element.val() || this.hasInput && this.$element.find('input').val())) {
         this.setInputValue()
-      this._trigger('hide')
+      }
+      this._trigger(Event.HIDE)
       return this
     }
 
@@ -1076,7 +1072,7 @@ const Datepicker = (($) => {
           this._trigger(Event.DATE_CHANGE)
       }
       if (!this.dates.length() && oldDates.length()) {
-        this._trigger('clearDate')
+        this._trigger(Event.DATE_CLEAR)
       }
 
       this.renderer.fill()

@@ -11,20 +11,83 @@ export const JQUERY_NAME = NAME // `bmd${NAME.charAt(0).toUpperCase() + NAME.sli
 
 export const JQUERY_NO_CONFLICT = $.fn[JQUERY_NAME]
 export const Event = {
-    DATE_CHANGE           : `date.change${EVENT_KEY}`,
+
+  DATE_CLEAR: `date.clear${EVENT_KEY}`,
+  DATE_CHANGE: `date.change${EVENT_KEY}`,
+
+  MONTH_CHANGE: `month.change${EVENT_KEY}`,
+  YEAR_CHANGE: `year.change${EVENT_KEY}`,
+  DECADE_CHANGE: `decade.change${EVENT_KEY}`,
+  CENTURY_CHANGE: `century.change${EVENT_KEY}`,
 
 
-  //  SHOW           : `show${EVENT_KEY}`,
+    SHOW           : `show${EVENT_KEY}`,
   //  SHOWN          : `shown${EVENT_KEY}`,
-  //  HIDE           : `hide${EVENT_KEY}`,
+    HIDE           : `hide${EVENT_KEY}`,
   //  HIDDEN         : `hidden${EVENT_KEY}`,
   CLICK_DATA_API: `click${EVENT_KEY}${DATA_API_KEY}`
 }
 
+const ClassPrefix = {
+  ORIENT: `${NAME}-orient`
+}
+
+// `${NAME}-`
 const ClassName = {
-  //IN         : 'in'
+  NAME: NAME,
+  PREV: 'prev',
+  NEXT: 'next',
+  DOW: `dow`,
+  TITLE: `${NAME}-title`,
+  SWITCH: `${NAME}-switch`,
+  TODAY: `today`,
+  CLEAR: `clear`,
+  SELECTED: `selected`,
+  HIGHLIGHTED: `highlighted`,
+  DISABLED: `disabled`,
+  ACTIVE: `active`,
+  FOCUSED: `focused`,
+  NEW: `new`,
+  OLD: `old`,
+
+  DAY: 'day',
+  MONTH: 'month',
+
+  DAYS: `${NAME}-days`,
+  MONTHS: `${NAME}-months`,
+  YEARS: `${NAME}-years`,
+  DECADES: `${NAME}-decades`,
+  CENTURIES: `${NAME}-centuries`,
+
+  // range
+  RANGE: 'range',
+  RANGE_START: 'range-start',
+  RANGE_END: 'range-end',
+
+  // orientation
+  TOP: `${ClassPrefix.ORIENT}-top`,
+  BOTTOM: `${ClassPrefix.ORIENT}-bottom`,
+  RIGHT: `${ClassPrefix.ORIENT}-right`,
+  LEFT: `${ClassPrefix.ORIENT}-left`
+
 }
 
 export const Selector = {
-  DATA_PROVIDE: '[data-provide="datepicker"]'
+  DATA_PROVIDE: '[data-provide="datepicker"]',
+  PREV: `.${ClassName.PREV}`,
+  NEXT: `.${ClassName.NEXT}`,
+  TITLE: `.${ClassName.TITLE}`,
+  SWITCH: `.${ClassName.SWITCH}`,
+
+  DAYS: `.${ClassName.DAYS}`,
+  MONTHS: `.${ClassName.MONTHS}`,
+  YEARS: `.${ClassName.YEARS}`,
+  DECADES: `.${ClassName.DECADES}`,
+  CENTURIES: `.${ClassName.CENTURIES}`,
+}
+
+
+export const Visibility = {
+  HIDDEN: {visibility: 'hidden'},
+  VISIBLE: {visibility: 'visible'}
 }
