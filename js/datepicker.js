@@ -5,6 +5,7 @@ import Keycodes from './util/keycodes'
 import Key from './util/key'
 import Dates from './util/dates'
 import Renderer from './renderer'
+import {JQUERY_NAME, Event, Selector, ClassName} from './constants'
 
 /**
  * Datepicker for fields using momentjs for all date-based functionality.
@@ -12,33 +13,6 @@ import Renderer from './renderer'
  * Internal dates are stored as UTC moments.  To use them in local time, execute moment.local() prior to formatting.
  */
 const Datepicker = (($) => {
-
-  /**
-   * ------------------------------------------------------------------------
-   * Constants
-   * ------------------------------------------------------------------------
-   */
-  const NAME = 'datepicker'
-  const DATA_KEY = `.${NAME}`
-  const EVENT_KEY = `.${DATA_KEY}`
-  const DATA_API_KEY = '.data-api'
-  const JQUERY_NAME = `bmd${NAME.charAt(0).toUpperCase() + NAME.slice(1)}`
-  const JQUERY_NO_CONFLICT = $.fn[JQUERY_NAME]
-  const DATA_PREFIX = 'date'
-
-  const Event = {
-    //  SHOW           : `show${EVENT_KEY}`,
-    //  SHOWN          : `shown${EVENT_KEY}`,
-    //  HIDE           : `hide${EVENT_KEY}`,
-    //  HIDDEN         : `hidden${EVENT_KEY}`,
-    CLICK_DATA_API: `click${EVENT_KEY}${DATA_API_KEY}`
-  }
-
-  const Selector = {
-    ACTIVES: '.panel > .in, .panel > .collapsing',
-    DATA_PROVIDE: '[data-provide="datepicker"]'
-  }
-
 
   const Default = {
     lang: 'en',
@@ -559,7 +533,7 @@ const Datepicker = (($) => {
       this.renderer.fill()
       this.setInputValue()
       if (!which || which !== 'view') {
-        this._trigger('changeDate')
+        this._trigger(Event.DATE_CHANGE)
       }
       let $e
       if (this.isInput) {
@@ -834,7 +808,7 @@ const Datepicker = (($) => {
       }
       if (dateChanged) {
         if (this.dates.length())
-          this._trigger('changeDate')
+          this._trigger(Event.DATE_CHANGE)
         else
           this._trigger('clearDate')
         let element
@@ -1070,7 +1044,7 @@ const Datepicker = (($) => {
       }
 
       this.update()
-      this._trigger('changeDate')
+      this._trigger(Event.DATE_CHANGE)
 
       if (this.config.autoclose) {
         this.hide()
@@ -1099,7 +1073,7 @@ const Datepicker = (($) => {
       else if (this.dates.length()) {
         // setting date by typing
         if (String(oldDates.array) !== String(this.dates.array))
-          this._trigger('changeDate')
+          this._trigger(Event.DATE_CHANGE)
       }
       if (!this.dates.length() && oldDates.length()) {
         this._trigger('clearDate')

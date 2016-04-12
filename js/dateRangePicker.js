@@ -1,8 +1,7 @@
 import Base from './base'
 import Datepicker from './datepicker'
-//import moment from 'moment'
-//import 'moment-range'
 import Moments from './util/moments'
+import {DATA_KEY, Event, Selector, ClassName} from './constants'
 
 // FIXME: ENCAPSULATION - currently, the Datepicker jquery fn instantiates this, then this instantiates that.  So strange.
 
@@ -25,81 +24,91 @@ const DateRangePicker = class extends Base {
 
       // instantiate each datepicker
       Datepicker._jQueryInterface.call($input, _config)
-        .on('changeDate', (ev) => this.dateUpdated(ev))
+        .on(Event.DATE_CHANGE, (ev) => this.dateUpdated(ev))
 
       // track all datepickers
-      this.datepickers.push($input.data(Datepicker.DATA_KEY))
+      this.datepickers.push($input.data(DATA_KEY))
     }
 
-    this.updateDates()
+    this.updateRange()
   }
 
-  updateDates() {
+  updateRange() {
+    // gather all dates
     this.dates = []
-    for(let dp of this.datepickers){
+    for (let dp of this.datepickers) {
       this.dates.push(dp.getDate())
     }
-    this.updateRanges()
-  }
 
-  updateRanges() {
-    let range = Moments.toRange(...this.dates)
-    for(let dp of this.datepickers){
+    // create a range from all dates
+    this.range = Moments.toRange(...dates)
+
+    // let the datepickers know what range we are working with
+    for (let dp of this.datepickers) {
       dp.setRange(range)
     }
   }
 
-
-
-  dateUpdated(e) {
-    // `this.updating` is a workaround for preventing infinite recursion
-    // between `changeDate` triggering and `setUTCDate` calling.  Until
-    // there is a better mechanism.
-    if (this.updating)
+  dateUpdated(ev) {
+    // `this.updating` is a workaround for preventing infinite recursion between Event.DATE_CHANGE triggering
+    //    and calls to `setDate`.  Until there is a better mechanism.
+    if (this.updating) {
       return
+    }
+
     this.updating = true
 
-    var dp = $(e.target).data('datepicker')
-
-    if (typeof(dp) === "undefined") {
-      return
-    }
-
-    var new_date = dp.getUTCDate(),
-      i = $.inArray(e.target, this.inputs),
-      j = i - 1,
-      k = i + 1,
-      l = this.inputs.length
-    if (i === -1)
-      return
-
-    $.each(this.datepickers, function (i, p) {
-      if (!p.getUTCDate())
-        p.setUTCDate(new_date)
-    })
-
-    if (new_date < this.dates.array[j]) {
-      // Date being moved earlier/left
-      while (j >= 0 && new_date < this.dates.array[j]) {
-        this.datepickers[j--].setUTCDate(new_date)
+    try {
+      let datepicker = $(ev.target).data(DATA_KEY)
+      if (typeof(datepicker) === "undefined") {
+        return
       }
-    }
-    else if (new_date > this.dates.array[k]) {
-      // Date being moved later/right
-      while (k < l && new_date > this.dates.array[k]) {
-        this.datepickers[k++].setUTCDate(new_date)
-      }
-    }
-    this.updateDates()
 
-    delete this.updating
+      if (!this.inputs.is(ev.target)) {
+        // not our input
+        return
+      }
+
+      // TODO: it appears we can have more than two datepickers, I'm not sure of the use-case, but it would seem to make more sense  with just two (and be simpler).
+      let newDate = datepicker.getDate()
+      let index = $.inArray(ev.target, this.inputs)
+      let indexBefore = index - 1
+      let indexAfter = index + 1
+      let length = this.inputs.length
+
+      for (let dp of this.datepickers) {
+        if (!dp.getDate())
+          dp.setDate(newDate)
+      }
+
+      if (newDate.isBefore(this.dates.array[indexBefore])) {
+        // Date being moved earlier/left
+        while (indexBefore >= 0 && newDate.isBefore(this.dates.array[indexBefore])) {
+          this.datepickers[indexBefore--].setDate(newDate)
+        }
+      }
+      else if (newDate.isAfter(this.dates.array[indexAfter])) {
+        // Date being moved later/right
+        while (indexAfter < length && newDate.isAfter(this.dates.array[indexAfter])) {
+          this.datepickers[indexAfter++].setDate(newDate)
+        }
+      }
+      this.updateRange()
+    }
+    finally {
+      this.updating = undefined
+    }
   }
 
-  remove() {
-    $.map(this.datepickers, function (p) {
-      p.remove()
-    })
-    delete this.$element.data().datepicker
+  dispose() {
+    for (let dp of this.datepickers) {
+      dp.dispose()
+    }
+
+    this.dates = null
+    this.range = null
+    this.inputs = null
+    this.datepickers = null
   }
 }
 
