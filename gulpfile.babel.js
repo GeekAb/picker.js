@@ -31,6 +31,15 @@ const rollupConfig = {
 }
 
 
+const sandbox = new Copy(gulp, preset, {
+  task: {name: 'sandbox'},
+  source: {
+    options: {cwd: 'sanbox'},
+    glob: ['**/*']
+  },
+  dest: 'dist/'
+})
+
 const js = new Aggregate(gulp, 'js',
   series(gulp,
     new EsLint(gulp, preset, {debug: true}),
@@ -46,7 +55,8 @@ const js = new Aggregate(gulp, 'js',
           dest: 'bootstrap-material-design-datepicker.iife.js',
           moduleName: 'bootstrapMaterialDesign'
         }
-      })
+      }),
+      sandbox
     )
   )
 )
@@ -57,6 +67,8 @@ const css = new Aggregate(gulp, 'css',
     new Sass(gulp, preset)
   )
 )
+
+
 
 const defaultRecipes = new Aggregate(gulp, 'default', series(gulp,
   new Clean(gulp, preset),
