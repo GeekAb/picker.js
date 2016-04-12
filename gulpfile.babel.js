@@ -31,14 +31,14 @@ const rollupConfig = {
 }
 
 
-const sandbox = new Copy(gulp, preset, {
-  task: {name: 'sandbox'},
-  source: {
-    options: {cwd: 'sanbox'},
-    glob: ['**/*']
-  },
-  dest: 'dist/'
-})
+//const sandbox = new Copy(gulp, preset, {
+//  task: {name: 'sandbox'},
+//  source: {
+//    options: {cwd: 'sandbox'},
+//    glob: ['**/*']
+//  },
+//  dest: 'dist/'
+//})
 
 const js = new Aggregate(gulp, 'js',
   series(gulp,
@@ -55,8 +55,7 @@ const js = new Aggregate(gulp, 'js',
           dest: 'bootstrap-material-design-datepicker.iife.js',
           moduleName: 'bootstrapMaterialDesign'
         }
-      }),
-      sandbox
+      })
     )
   )
 )
