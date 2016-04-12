@@ -5,7 +5,8 @@ import Keycodes from './util/keycodes'
 import Key from './util/key'
 import Dates from './util/dates'
 import Renderer from './renderer'
-import {JQUERY_NAME, Event, Selector, ClassName} from './constants'
+import {JQUERY_NAME, DATA_KEY, Event, Selector, ClassName} from './constants'
+import DateRangePicker from './dateRangePicker'
 
 /**
  * Datepicker for fields using momentjs for all date-based functionality.
@@ -14,6 +15,7 @@ import {JQUERY_NAME, Event, Selector, ClassName} from './constants'
  */
 const Datepicker = (($) => {
 
+  const JQUERY_NO_CONFLICT = $.fn[JQUERY_NAME]
   const Default = {
     lang: 'en',
     autoclose: false, // Whether or not to close the datepicker immediately when a date is selected
@@ -32,7 +34,7 @@ const Datepicker = (($) => {
     title: '', // string that will appear on top of the datepicker. If empty the title will be hidden.
     today: {
       button: false, // If true or “linked”, displays a “Today” button at the bottom of the datepicker to select the current date. If true, the “Today” button will only move the current date into view if “linked”, the current date will also be selected.
-      highlight: false, // If true, highlights the current date.
+      highlight: false // If true, highlights the current date.
     },
 
     //-----------------
@@ -936,7 +938,15 @@ const Datepicker = (($) => {
     }
 
     formatDate(mom, format = this.config.format) {
-      mom.format(this.config.format)
+      return mom.format(format)
+    }
+
+    parseDates(...dates) {
+      let results = []
+      for (let date of dates) {
+        results.push(this.parseDate(date))
+      }
+      return results
     }
 
     parseDate(value, format = this.config.format) {
@@ -948,7 +958,7 @@ const Datepicker = (($) => {
           this.throwError(`Invalid moment: ${value} provided.`)
         }
 
-        return this.moment.clone().moment(date)
+        return this.newMoment(value)
       }
       else if (typeof value === "string") {
         // parse with locale and strictness
@@ -1103,7 +1113,7 @@ const Datepicker = (($) => {
         this.viewDate = this.config.date.end.clone()
       }
       else {
-        this.viewDate = config.date.default.clone()
+        this.viewDate = this.config.date.default.clone()
       }
     }
 
@@ -1115,12 +1125,8 @@ const Datepicker = (($) => {
      */
     resolveDates(...dates) {
       let newDatesArray = null
-      let fromArgs = false
       if (dates) {
-        newDatesArray = []
-        for (let date of dates) {
-          newDatesArray.push(this.parseDate(date))
-        }
+        newDatesArray = this.parseDates(dates)
       }
       else {
         if (this.isInput) {
@@ -1137,18 +1143,14 @@ const Datepicker = (($) => {
           newDatesArray = [newDatesArray]
         }
         //delete this.$element.data().date
+        newDatesArray = this.parseDates(...newDatesArray)
       }
 
-      newDatesArray = $.map(newDatesArray, $.proxy(function (date) {
-        return DPGlobal.parseDate(date, this.config.format, this.config.language, this.config.assumeNearbyYear)
-      }, this))
-      newDatesArray = $.grep(newDatesArray, $.proxy(function (date) {
-        return (
-          !this.dateWithinRange(date) || !date
-        )
-      }, this), true)
+      newDatesArray = $.grep(newDatesArray, (date) => {
+        return (!this.dateWithinRange(date) || !date)
+      }, true)
 
-      return new Dates(newDatesArray)
+      return new Dates(...newDatesArray)
     }
 
 
@@ -1204,7 +1206,7 @@ const Datepicker = (($) => {
     // ------------------------------------------------------------------------
     // static
     static _jQueryInterface(config) {
-      let methodResult = undefined
+      //let methodResult = undefined
       return this.each(
         function () {
           let $element = $(this)
@@ -1213,7 +1215,7 @@ const Datepicker = (($) => {
           let _config = $.extend(
             {},
             Default,
-            $this.data(),
+            $element.data(),
             typeof config === 'object' && config  // config could be a string method name.
           )
 
@@ -1236,18 +1238,20 @@ const Datepicker = (($) => {
             if (data[config] === undefined) {
               throw new Error(`No method named "${config}"`)
             }
-            methodResult = data[config]()
+            //methodResult =
+            data[config]()
           }
         }
       )
 
-      // return method result if there is one
-      if (methodResult !== undefined) {
-        return methodResult
-      }
-      else {
-        return $element
-      }
+      //if (methodResult !== undefined) {
+      //  // return method result if there is one
+      //  return methodResult
+      //}
+      //else {
+      //  // return the element
+      //  return this
+      //}
     }
   }
 

@@ -9,7 +9,6 @@ export const EVENT_KEY = `.${DATA_KEY}`
 export const DATA_API_KEY = '.data-api'
 export const JQUERY_NAME = NAME // `bmd${NAME.charAt(0).toUpperCase() + NAME.slice(1)}`
 
-export const JQUERY_NO_CONFLICT = $.fn[JQUERY_NAME]
 export const Event = {
 
   DATE_CLEAR: `date.clear${EVENT_KEY}`,
@@ -83,7 +82,7 @@ export const Selector = {
   MONTHS: `.${ClassName.MONTHS}`,
   YEARS: `.${ClassName.YEARS}`,
   DECADES: `.${ClassName.DECADES}`,
-  CENTURIES: `.${ClassName.CENTURIES}`,
+  CENTURIES: `.${ClassName.CENTURIES}`
 }
 
 

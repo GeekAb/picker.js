@@ -1,7 +1,6 @@
 import Base from './base'
 import {Selector, ClassName, ClassPrefix, Visibility} from './constants'
 
-
 const Default = {
   debug: false
 }
@@ -116,7 +115,7 @@ const Renderer = class extends Base {
     let html = ''
     for (let i of 11) { // 0..11
       let focused = viewDate && viewDate.month() === i ? ClassName.FOCUSED : ''
-      html += `<span class="${ClassName.MONTH} ${focused}">${moment().month(i).format(`MMM`)}</span>` // Jan
+      html += `<span class="${ClassName.MONTH} ${focused}">${this.db.newMoment().month(i).format(`MMM`)}</span>` // Jan
     }
     this.$picker.find(`${Selector.MONTHS} td`).html(html)
   }
@@ -169,7 +168,7 @@ const Renderer = class extends Base {
     // render days
     let html = []
     while (prevMonth.isBefore(nextMonth)) {
-      this.renderDay(viewDate, prevMonth)
+      this.renderDay(viewDate, prevMonth, html)
       prevMonth.add(1, 'days')
     }
     this.$picker.find(`${Selector.DAYS} tbody`).empty().append(html.join(''))
@@ -212,8 +211,7 @@ const Renderer = class extends Base {
         //$.each($months, function (i, month) {
         let $month = $($months[i])
         let moDate = this.db.newMoment().year(year).month(i).startOf('month')
-        //let moDate = new Date(year, i, 1)
-        let before = that.config.beforeShowMonth(moDate)
+        let before = this.config.beforeShowMonth(moDate)
         if (before === undefined) {
           before = {}
         }
@@ -359,7 +357,7 @@ const Renderer = class extends Base {
       if (callback !== $.noop) {
         //before = callback(new Date(thisYear, 0, 1))
         let m = this.db.newMoment().year(thisYear).month(0).startOf('month')
-        before = callback(m)
+        let before = callback(m)
 
         if (before === undefined) {
           before = {}
@@ -381,7 +379,7 @@ const Renderer = class extends Base {
     $view.find('td').html(html)
   }
 
-  renderDay(viewDate, prevMonth) {
+  renderDay(viewDate, prevMonth, html) {
     let before = null
     let tooltip = null
     if (prevMonth.day() === this.config.week.start) {

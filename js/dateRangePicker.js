@@ -1,7 +1,7 @@
 import Base from './base'
 import Datepicker from './datepicker'
 import Moments from './util/moments'
-import {DATA_KEY, Event, Selector, ClassName} from './constants'
+import {DATA_KEY, Event} from './constants'
 
 // FIXME: ENCAPSULATION - currently, the Datepicker jquery fn instantiates this, then this instantiates that.  So strange.
 
@@ -19,7 +19,7 @@ const DateRangePicker = class extends Base {
     for (let i of this.config.inputs) {
 
       // track all inputs
-      let $input = $(input)
+      let $input = $(i)
       this.inputs.push($input)
 
       // instantiate each datepicker
@@ -41,11 +41,11 @@ const DateRangePicker = class extends Base {
     }
 
     // create a range from all dates
-    this.range = Moments.toRange(...dates)
+    this.range = Moments.toRange(...this.dates)
 
     // let the datepickers know what range we are working with
     for (let dp of this.datepickers) {
-      dp.setRange(range)
+      dp.setRange(this.range)
     }
   }
 
