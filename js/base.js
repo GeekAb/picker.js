@@ -10,6 +10,14 @@ const Base = class {
     this.config = extend(true, {}, Default, ...configs)
   }
 
+  dispose(dataKey = null) {
+    if(dataKey) {
+      $.removeData(this.$element, dataKey)
+    }
+    this.$element = null
+    this.config = null
+  }
+
   required(object, name) {
     if (!object) {
       this.error(`this.${name} was not provided in ${this.constructor.name}`)

@@ -19,11 +19,12 @@ const Datepicker = (($) => {
    * ------------------------------------------------------------------------
    */
   const NAME = 'datepicker'
-  const DATA_KEY = `bmd.${NAME}`
+  const DATA_KEY = `.${NAME}`
   const EVENT_KEY = `.${DATA_KEY}`
   const DATA_API_KEY = '.data-api'
   const JQUERY_NAME = `bmd${NAME.charAt(0).toUpperCase() + NAME.slice(1)}`
   const JQUERY_NO_CONFLICT = $.fn[JQUERY_NAME]
+  const DATA_PREFIX = 'date'
 
   const Event = {
     //  SHOW           : `show${EVENT_KEY}`,
@@ -32,6 +33,12 @@ const Datepicker = (($) => {
     //  HIDDEN         : `hidden${EVENT_KEY}`,
     CLICK_DATA_API: `click${EVENT_KEY}${DATA_API_KEY}`
   }
+
+  const Selector = {
+    ACTIVES: '.panel > .in, .panel > .collapsing',
+    DATA_PROVIDE: '[data-provide="datepicker"]'
+  }
+
 
   const Default = {
     lang: 'en',
@@ -60,7 +67,33 @@ const Datepicker = (($) => {
     view: {
       start: 'days', // The view that the datepicker should show when it is opened - string or digit
       min: 'days', // Set a minimum limit for the view mode
-      max: 'centuries' // Set a maximum limit for the view mode
+      max: 'centuries', // Set a maximum limit for the view mode
+      modes: [
+        {
+          cssClass: 'days',
+          navFnc: 'Month',
+          navStep: 1
+        },
+        {
+          cssClass: 'months',
+          navFnc: 'FullYear',
+          navStep: 1
+        },
+        {
+          cssClass: 'years',
+          navFnc: 'FullYear',
+          navStep: 10
+        },
+        {
+          cssClass: 'decades',
+          navFnc: 'FullDecade',
+          navStep: 100
+        },
+        {
+          cssClass: 'centuries',
+          navFnc: 'FullCentury',
+          navStep: 1000
+        }]
     },
     // ----------------
     // multi-dates
@@ -117,6 +150,7 @@ const Datepicker = (($) => {
    * ------------------------------------------------------------------------
    * Class Definition
    * ------------------------------------------------------------------------
+   * TODO: break this into components - ConfigurationManager(? not sure on this one), DateManager, EventManager, Renderer?
    */
   class Datepicker extends Base {
 
@@ -127,6 +161,9 @@ const Datepicker = (($) => {
 
       // get our own utc instance and configure the locale
       this.moment = this.newMoment()
+
+      // disallow updates during setup, call after
+      this.allowUpdate = false
 
       // normalize options that are flexible
       this.normalizeConfig()
@@ -153,11 +190,207 @@ const Datepicker = (($) => {
       this.secondaryEvents = []
 
       this.buildEvents()
+      this.attachEvents()
+
+      if (this.isInline) {
+        this.$picker.addClass('datepicker-inline').appendTo(this.$element)
+      }
+      else {
+        this.$picker.addClass('datepicker-dropdown dropdown-menu')
+      }
+
+      if (this.config.rtl) {
+        this.$picker.addClass('datepicker-rtl')
+      }
+
+      this.viewMode = this.config.view.start
+
+      this.renderer.fillDow()
+      this.renderer.renderMonths()  // FIXME see definition for notes
+      this.allowUpdate = true
+      this.update()
+      this.showMode()
+
+      if (this.isInline) {
+        this.show()
+      }
     }
 
     dispose(dataKey = DATA_KEY) {
+      this.hide()
+      this.detachEvents()
+      this.detachSecondaryEvents()
+      this.$picker.remove()
+      this.$picker = null
+      this.renderer.dispose()
+      this.renderer = null
       super.dispose(dataKey)
     }
+
+    /**
+     * @returns a new UTC moment configured with the locale
+     */
+    newMoment(...args) {
+      return moment(...args).utc().locale(this.config.lang)
+    }
+
+    /**
+     * @returns the lower date limit on the datepicker.
+     */
+    getDateStart() {
+      return this.config.date.start
+    }
+
+
+    /**
+     * @returns the upper date limit on the datepicker
+     */
+    getDateEnd() {
+      return this.config.date.end
+    }
+
+    /**
+     * For use with multidate pickers.
+     * @returns - array of UTC moments representing the internal date objects of the first datepicker in the selection.
+     */
+    getDates() {
+      return this.dates.clonedArray()
+    }
+
+    /**
+     * For multidate pickers, returns the latest date selected.
+     * @returns - the latest UTC moment selected of the first datepicker in the selection.
+     */
+    getDate() {
+      let m = this.dates.last()
+      if (typeof m !== 'undefined') {
+        return m.clone()
+      }
+      else {
+        return null
+      }
+    }
+
+    /**
+     * Sets the internal date list. For use with multidate pickers.
+     * @param dates - one or more String|moment - will be converted to UTC
+     * @returns {Datepicker}
+     */
+    setDates(...dates) {
+      this.update(...dates)
+      return this
+    }
+
+    /**
+     * @see #setDates
+     * @param date
+     */
+    setDate(date) {
+      this.setDates(date)
+    }
+
+    /**
+     * Sets a new lower date limit on the datepicker.
+     * Omit (or provide an otherwise falsey value) to unset the limit.
+     * @param dateStart
+     * @returns {Datepicker}
+     */
+    setDateStart(dateStart) {
+      if (dateStart) {
+        // verify/reparse
+        this.config.date.start = this.parseDate(dateStart)
+      }
+      else {
+        // default to beginning of time
+        this.config.date.start = this.startOfAllTime()
+      }
+      // called from #normalizeConfig
+      this.update()
+      return this
+    }
+
+    /**
+     * Sets a new upper date limit on the datepicker.
+     * Omit (or provide an otherwise falsey value) to unset the limit.
+     * @param dateEnd
+     * @returns {Datepicker}
+     */
+    setDateEnd(dateEnd) {
+
+      if (dateEnd) {
+        // verify/reparse
+        this.config.date.end = this.parseDate(dateEnd)
+      }
+      else {
+        // default to beginning of time
+        this.config.date.end = this.endOfAllTime()
+      }
+      // called from #normalizeConfig
+      this.update()
+      return this
+    }
+
+    /**
+     * Sets the days that should be disabled
+     * Omit (or provide an otherwise falsey value) to unset.
+     * @param dates - String|Moment|Array of String|Moment
+     * @returns {Datepicker}
+     */
+    setDatesDisabled(dates) {
+      let dateArray = dates
+      // Disabled dates
+      if (!Array.isArray(dateArray)) {
+        dateArray = [dateArray]
+      }
+
+      let newDisabled = []
+      for (let d of dateArray) {
+        newDisabled.push(this.parseDate(d))
+      }
+      this.config.date.disabled = newDisabled
+      // called from #normalizeConfig
+      this.update()
+      return this
+    }
+
+    /**
+     * Sets the days of week that should be disabled.  See config.daysOfWeek.disabled
+     * Omit (or provide an otherwise falsey value) to unset.
+     * @param days
+     * @returns {Datepicker}
+     */
+    setDaysOfWeekDisabled(days) {
+      this.config.daysOfWeek.disabled = days
+      this.normalizeConfig()
+      this.update()
+      return this
+    }
+
+    /**
+     * Sets the days of week that should be highlighted. See config.daysOfWeek.highlighted
+     * Omit (or provide an otherwise falsey value) to unset.
+     * @param days
+     * @returns {Datepicker}
+     */
+    setDaysOfWeekHighlighted(days) {
+      this.config.daysOfWeek.highlighted = days
+      this.normalizeConfig()
+      this.update()
+      return this
+    }
+
+    // ------------------------------------------------------------------------
+    // protected
+
+    /**
+     *
+     * @param range - a {DateRange} from moment-range - provide a falsey value to unset
+     */
+    setRange(range) {
+      this.range = range
+      this.renderer.fill();
+    }
+
 
     /**
      * delegate to reneder to obtain picker element
@@ -166,18 +399,20 @@ const Datepicker = (($) => {
       this.renderer.$picker
     }
 
-    /**
-     * @returns a new UTC moment configured with the locale
-     */
-    newMoment() {
-      return moment().utc().locale(this.config.lang)
-    }
-
-    // ------------------------------------------------------------------------
-    // protected
-
     // ------------------------------------------------------------------------
     // private
+    showMode(dir) {
+      if (dir) {
+        this.viewMode = Math.max(this.config.view.min, Math.min(this.config.view.max, this.viewMode + dir))
+      }
+      this.$picker
+        .children('div')
+        .hide()
+        .filter(`.datepicker-${this.config.view.modes[this.viewMode].cssClass}`) // days|months|years|decades|centuries
+        .show()
+      this.updateNavArrows()  // FIXME: redundant?
+    }
+
     buildEvents() {
       let events = {
         keyup: (ev) => this.keyup(ev),
@@ -245,7 +480,7 @@ const Datepicker = (($) => {
           click: () => this.click()
         }],
         [$(window), {
-          resize: () => this.place()
+          resize: () => this.renderer.place()
         }],
         [$(document), {
           mousedown: (ev) => {
@@ -263,6 +498,227 @@ const Datepicker = (($) => {
         }]
       ]
     }
+
+    /**
+     *
+     * @param date - start date
+     * @param dir - direction/number of units
+     * @param unit - day|month|year etc to use with moment#add
+     * @returns {*}
+     */
+    moveAvailableDate(date, dir, unit) {
+      let m = date.clone()
+      do {
+        m = m.add(dir, unit)
+        //m = this[fn](m, dir)
+
+        if (!this.dateWithinRange(m))
+          return false
+
+        unit = 'day'
+      }
+      while (this.dateIsDisabled(m))
+
+      return m
+    }
+
+
+    toggleMultidate(date) {
+      var index = this.dates.contains(date)
+      if (!date) {
+        this.dates.clear()
+      }
+
+      if (index !== -1) {
+        if (this.config.multidate.enabled === true || this.config.multidate.enabled > 1 || this.config.toggleActive) {
+          this.dates.remove(index)
+        }
+      }
+      else if (this.config.multidate.enabled === false) {
+        this.dates.clear()
+        this.dates.push(date)
+      }
+      else {
+        this.dates.push(date)
+      }
+
+      if (typeof this.config.multidate.enabled === 'number')
+        while (this.dates.length() > this.config.multidate.enabled)
+          this.dates.remove(0)
+    }
+
+    // FIXME: this was called _setDate - WHY? different than #setDate, can this use setDate?
+    clickDate(date, which) {
+      if (!which || which === 'date') {
+        this.toggleMultidate(date)
+      }
+      if (!which || which === 'view') {
+        this.viewDate = date
+      }
+
+      this.renderer.fill()
+      this.setInputValue()
+      if (!which || which !== 'view') {
+        this._trigger('changeDate')
+      }
+      let $e
+      if (this.isInput) {
+        $e = this.$element
+      }
+      else if (this.component) {
+        $e = this.$element.find('input')
+      }
+      if ($e) {
+        $e.change()
+      }
+      if (this.config.autoclose && (!which || which === 'date')) {
+        this.hide()
+      }
+    }
+
+    click(ev) {
+      ev.preventDefault()
+      ev.stopPropagation()
+
+      let $target = $(ev.target)
+
+      // Clicked on the switch
+      if ($target.hasClass('datepicker-switch')) {
+        this.showMode(1)
+      }
+
+      // Clicked on prev or next
+      let $navArrow = $target.closest('.prev, .next')
+      if ($navArrow.length > 0) {
+        let dir = this.config.view.modes[this.viewMode].navStep * ($navArrow.hasClass('prev') ? -1 : 1)
+        if (this.viewMode === 0) {
+          this.viewDate.add(dir, 'month')
+          this._trigger('changeMonth', this.viewDate)
+        }
+        else {
+          this.viewDate.add(dir, 'year')
+          if (this.viewMode === 1) {
+            this._trigger('changeYear', this.viewDate)
+          }
+        }
+        this.renderer.fill()
+      }
+
+      // Clicked on today button
+      if ($target.hasClass('today')) {
+        this.showMode(-2)
+        this.clickDate(this.newMoment(), this.config.today.button === 'linked' ? null : 'view')
+      }
+
+      // Clicked on clear button
+      if ($target.hasClass('clear')) {
+        this.clearDates()
+      }
+
+      if (!$target.hasClass('disabled')) {
+        // Clicked on a day
+        if ($target.hasClass('day')) {
+          let day = parseInt($target.text(), 10) || 1
+          let year = this.viewDate.year()
+          let month = this.viewDate.month()
+          let monthChanged = false
+          let yearChanged = false
+
+          // From last month
+          if ($target.hasClass('old')) {
+            if (month === 0) {
+              month = 11
+              year = year - 1
+              monthChanged = true
+              yearChanged = true
+            }
+            else {
+              month = month - 1
+              monthChanged = true
+            }
+          }
+
+          // From next month
+          if ($target.hasClass('new')) {
+            if (month === 11) {
+              month = 0
+              year = year + 1
+              monthChanged = true
+              yearChanged = true
+            }
+            else {
+              month = month + 1
+              monthChanged = true
+            }
+          }
+          this.clickDate(this.newMoment(year, month, day))
+          if (yearChanged) {
+            this._trigger('changeYear', this.viewDate)
+          }
+          if (monthChanged) {
+            this._trigger('changeMonth', this.viewDate)
+          }
+        }
+
+        // Clicked on a month
+        if ($target.hasClass('month')) {
+          this.viewDate.date(1)
+          let day = 1
+          let month = $target.parent().find('span').index($target)
+          let year = this.viewDate.year()
+          this.viewDate.month(month)
+          this._trigger('changeMonth', this.viewDate)
+          if (this.config.view.min === 1) {
+            this.clickDate(this.newMoment(year, month, day))
+            this.showMode()
+          }
+          else {
+            this.showMode(-1)
+          }
+          this.renderer.fill()
+        }
+
+        // Clicked on a year
+        if ($target.hasClass('year')
+          || $target.hasClass('decade')
+          || $target.hasClass('century')) {
+          this.viewDate.setUTCDate(1)
+
+          let day = 1
+          let month = 0
+          let year = parseInt($target.text(), 10) || 0
+          this.viewDate.year(year)
+
+          if ($target.hasClass('year')) {
+            this._trigger('changeYear', this.viewDate)
+            if (this.config.view.min === 2) {
+              this.clickDate(this.newMoment(year, month, day))
+            }
+          }
+          if ($target.hasClass('decade')) {
+            this._trigger('changeDecade', this.viewDate)
+            if (this.config.view.min === 3) {
+              this.clickDate(this.newMoment(year, month, day))
+            }
+          }
+          if ($target.hasClass('century')) {
+            this._trigger('changeCentury', this.viewDate)
+            if (this.config.view.min === 4) {
+              this.clickDate(this.newMoment(year, month, day))
+            }
+          }
+
+          this.showMode(-1)
+          this.renderer.fill()
+        }
+      }
+
+      if (this.isPickerVisible() && this._focused_from) {
+        $(this._focused_from).focus()
+      }
+      this._focused_from = undefined
+    }
+
 
     // FIXME: nomenclature to be onKe*
     keyup(ev) {
@@ -313,35 +769,35 @@ const Datepicker = (($) => {
           dir = Key.is(ev, Keycodes.LEFT, Keycodes.UP) ? -1 : 1
           if (this.viewMode === 0) {
             if (ev.ctrlKey) {
-              newViewDate = this.moveAvailableDate(focusDate, dir, 'moveYear')
+              newViewDate = this.moveAvailableDate(focusDate, dir, 'year')
 
               if (newViewDate)
                 this._trigger('changeYear', this.viewDate)
             }
             else if (ev.shiftKey) {
-              newViewDate = this.moveAvailableDate(focusDate, dir, 'moveMonth')
+              newViewDate = this.moveAvailableDate(focusDate, dir, 'month')
 
               if (newViewDate)
                 this._trigger('changeMonth', this.viewDate)
             }
             else if (Key.is(ev, Keycodes.LEFT, Keycodes.RIGHT)) {
-              newViewDate = this.moveAvailableDate(focusDate, dir, 'moveDay')
+              newViewDate = this.moveAvailableDate(focusDate, dir, 'day')
             }
             else if (!this.weekOfDateIsDisabled(focusDate)) {
-              newViewDate = this.moveAvailableDate(focusDate, dir, 'moveWeek')
+              newViewDate = this.moveAvailableDate(focusDate, dir, 'week')
             }
           }
           else if (this.viewMode === 1) {
             if (Key.is(ev, Keycodes.UP, Keycodes.DOWN)) {
               dir = dir * 4
             }
-            newViewDate = this.moveAvailableDate(focusDate, dir, 'moveMonth')
+            newViewDate = this.moveAvailableDate(focusDate, dir, 'month')
           }
           else if (this.viewMode === 2) {
             if (Key.is(ev, Keycodes.UP, Keycodes.DOWN)) {
               dir = dir * 4
             }
-            newViewDate = this.moveAvailableDate(focusDate, dir, 'moveYear')
+            newViewDate = this.moveAvailableDate(focusDate, dir, 'year')
           }
           if (newViewDate) {
             this.focusDate = this.viewDate = newViewDate
@@ -355,7 +811,7 @@ const Datepicker = (($) => {
             break
           focusDate = this.focusDate || this.dates.last() || this.viewDate
           if (this.config.keyboard.navigation) {
-            this._toggle_multidate(focusDate)
+            this.toggleMultidate(focusDate)
             dateChanged = true
           }
           this.focusDate = null
@@ -435,9 +891,9 @@ const Datepicker = (($) => {
         return
       if (!this.isInline)
         this.$picker().appendTo(this.config.container)
-      this.place()
+      this.renderer.place()
       this.$picker().show()
-      this._attachSecondaryEvents()
+      this.attachSecondaryEvents()
       this._trigger('show')
       if ((window.navigator.msMaxTouchPoints || 'ontouchstart' in document) && !this.config.keyboard.touch) {
         $(this.$element).blur()
@@ -473,6 +929,10 @@ const Datepicker = (($) => {
     }
 
     normalizeConfig() {
+      // disallow updates - must call #update after
+      let originalAllowUpdate = this.allowUpdate
+      this.allowUpdate = false
+
       // Normalize views as view-type integers
       this.config.view.start = this.resolveViewType(this.config.view.start)
       this.config.view.min = this.resolveViewType(this.config.view.min)
@@ -501,20 +961,13 @@ const Datepicker = (($) => {
       // Start/End or Min/max dates
       this.setDateStart(this.config.date.start)
       this.setDateEnd(this.config.date.end)
-
-      // Disabled dates
-      if (!Array.isArray(this.config.date.disabled)) {
-        this.config.date.disabled = [this.config.date.disabled]
-      }
-
-      let newDisabled = []
-      for (let d of this.config.date.disabled) {
-        newDisabled.push(this.parseDate(d))
-      }
-      this.config.date.disabled = newDisabled
+      this.setDatesDisabled(this.config.date.disabled)
 
       // Default date - if unspecified, it is now
       this.config.date.default = this.config.date.default || this.moment.clone()
+
+      // restore allowUpdate
+      this.allowUpdate = originalAllowUpdate
     }
 
     formatDate(mom, format = this.config.format) {
@@ -547,9 +1000,9 @@ const Datepicker = (($) => {
       }
     }
 
-    shouldBeHighlighted(date){
+    shouldBeHighlighted(date) {
       return $.inArray(date.day(), this.config.daysOfWeek.highlighted) !== -1
-      }
+    }
 
     weekOfDateIsDisabled(date) {
       return $.inArray(date.day(), this.config.daysOfWeek.disabled) !== -1
@@ -603,78 +1056,27 @@ const Datepicker = (($) => {
       }
     }
 
-    /**
-     * @returns the lower date limit on the datepicker.
-     */
-    getDateStart() {
-      return this.config.date.start
-    }
-
-    /**
-     * Sets a new lower date limit on the datepicker.
-     * Omit (or provide an otherwise falsey value) to unset the limit.
-     * @param dateStart
-     * @returns {Datepicker}
-     */
-    setDateStart(dateStart) {
-      if (dateStart) {
-        // verify/reparse
-        this.config.date.start = this.parseDate(dateStart)
+    clearDates() {
+      let element = null
+      if (this.isInput) {
+        element = this.$element
       }
-      else {
-        // default to beginning of time
-        this.config.date.start = this.startOfAllTime()
+      else if (this.component) {
+        element = this.$element.find('input')
+      }
+
+      if (element) {
+        element.val('')
       }
 
       this.update()
-      return this
-    }
+      this._trigger('changeDate')
 
-    /**
-     * @returns the upper date limit on the datepicker
-     */
-    getDateEnd() {
-      return this.config.date.end
-    }
-
-    /**
-     * Sets a new upper date limit on the datepicker.
-     * Omit (or provide an otherwise falsey value) to unset the limit.
-     * @param dateEnd
-     * @returns {Datepicker}
-     */
-    setDateEnd(dateEnd) {
-
-      if (dateEnd) {
-        // verify/reparse
-        this.config.date.end = this.parseDate(dateEnd)
+      if (this.config.autoclose) {
+        this.hide()
       }
-      else {
-        // default to beginning of time
-        this.config.date.end = this.endOfAllTime()
-      }
-
-      this.update()
-      return this
     }
 
-    /**
-     * Sets the internal date list. For use with multidate pickers.
-     * @param dates - one or more String|moment - will be converted to UTC
-     * @returns {Datepicker}
-     */
-    setDates(...dates) {
-      this.update(...dates);
-      return this;
-    }
-
-    /**
-     * @see #setDates
-     * @param date
-     */
-    setDate(date) {
-      this.setDates(date)
-    }
 
     /**
      *
@@ -709,20 +1111,20 @@ const Datepicker = (($) => {
     }
 
     setInputValue() {
-      var formatted = this.getDateFormatted();
+      let formatted = this.getDateFormatted()
       if (!this.isInput) {
         if (this.component) {
-          this.$element.find('input').val(formatted);  // FIXME: find $input in constructor and replace a bunch of these?
+          this.$element.find('input').val(formatted)  // FIXME: find $input in constructor and replace a bunch of these?
         }
       }
       else {
-        this.$element.val(formatted);
+        this.$element.val(formatted)
       }
-      return this;
+      return this
     }
 
     getDateFormatted(format = this.config.format) {
-      return this.dates.formattedArray(format).join(this.config.multidate.separator);
+      return this.dates.formattedArray(format).join(this.config.multidate.separator)
     }
 
     resolveViewDate() {
@@ -741,7 +1143,7 @@ const Datepicker = (($) => {
     }
 
     /**
-     * Whether passed in or discovered from the element, resolve a new {Dates}
+     * resolve a new {Dates}
      *
      * @param dates
      * @returns {Dates}
@@ -760,14 +1162,16 @@ const Datepicker = (($) => {
           newDatesArray = this.$element.val()
         }
         else {
-          newDatesArray = this.$element.data('date') || this.$element.find('input').val()
+          newDatesArray = /*this.$element.data('date') ||*/ this.$element.find('input').val()
         }
 
-        if (newDatesArray && this.config.multidate.enabled)
+        if (newDatesArray && this.config.multidate.enabled) {
           newDatesArray = newDatesArray.split(this.config.multidate.separator)
-        else
+        }
+        else {
           newDatesArray = [newDatesArray]
-        delete this.$element.data().date
+        }
+        //delete this.$element.data().date
       }
 
       newDatesArray = $.map(newDatesArray, $.proxy(function (date) {
@@ -783,20 +1187,114 @@ const Datepicker = (($) => {
     }
 
 
+    attachEvents() {
+      this.detachEvents()
+      this.applyEvents(this.events)
+    }
+
+    detachEvents() {
+      this.unapplyEvents(this.events)
+    }
+
+    attachSecondaryEvents() {
+      this.detachSecondaryEvents()
+      this.applyEvents(this.secondaryEvents)
+    }
+
+    detachSecondaryEvents() {
+      this.unapplyEvents(this.secondaryEvents)
+    }
+
+    applyEvents(evs) {
+      for (let i = 0, el, ch, ev; i < evs.length; i++) {
+        el = evs[i][0]
+        if (evs[i].length === 2) {
+          ch = undefined
+          ev = evs[i][1]
+        }
+        else if (evs[i].length === 3) {
+          ch = evs[i][1]
+          ev = evs[i][2]
+        }
+        el.on(ev, ch)
+      }
+    }
+
+    unapplyEvents(evs) {
+      for (let i = 0, el, ev, ch; i < evs.length; i++) {
+        el = evs[i][0]
+        if (evs[i].length === 2) {
+          ch = undefined
+          ev = evs[i][1]
+        }
+        else if (evs[i].length === 3) {
+          ch = evs[i][1]
+          ev = evs[i][2]
+        }
+        el.off(ev, ch)
+      }
+    }
+
+
     // ------------------------------------------------------------------------
     // static
     static _jQueryInterface(config) {
-      return this.each(function () {
-        let $element = $(this)
-        let data = $element.data(DATA_KEY)
+      let methodResult = undefined
+      return this.each(
+        function () {
+          let $element = $(this)
+          let data = $element.data(DATA_KEY)
+          // Options priority: js args, data-attrs, Default const
+          let _config = $.extend(
+            {},
+            Default,
+            $this.data(),
+            typeof config === 'object' && config  // config could be a string method name.
+          )
 
-        if (!data) {
-          data = new Datepicker($element, config)
-          $element.data(DATA_KEY, data)
+          // instantiate a Datepicker or a DateRangePicker
+          if (!data) {
+            // FIXME: I really think this should be encapsulated in DateRangePicker, and not here.
+            if ($element.hasClass('input-daterange') || _config.inputs) {
+              data = new DateRangePicker($element,
+                $.extend(_config, {inputs: _config.inputs || $element.find('input').toArray()})
+              )
+            }
+            else {
+              data = new Datepicker($element, _config)
+            }
+            $element.data(DATA_KEY, data)
+          }
+
+          // call public methods jquery style
+          if (typeof config === 'string') {
+            if (data[config] === undefined) {
+              throw new Error(`No method named "${config}"`)
+            }
+            methodResult = data[config]()
+          }
         }
-      })
+      )
+
+      // return method result if there is one
+      if (methodResult !== undefined) {
+        return methodResult
+      }
+      else {
+        return $element
+      }
     }
   }
+
+  /**
+   * ------------------------------------------------------------------------
+   * Data Api implementation
+   * ------------------------------------------------------------------------
+   */
+  $(document).on(Event.CLICK_DATA_API, Selector.DATA_PROVIDE, function (event) {
+    event.preventDefault()
+    Datepicker._jQueryInterface.call(this, 'show')
+  })
 
   /**
    * ------------------------------------------------------------------------
