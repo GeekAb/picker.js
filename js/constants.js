@@ -28,12 +28,12 @@ export const Event = {
   CLICK_DATA_API: `click${EVENT_KEY}${DATA_API_KEY}`
 }
 
-const ClassPrefix = {
+export const ClassPrefix = {
   ORIENT: `${NAME}-orient`
 }
 
 // `${NAME}-`
-const ClassName = {
+export const ClassName = {
   NAME: NAME,
   PREV: 'prev',
   NEXT: 'next',

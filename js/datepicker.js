@@ -44,28 +44,23 @@ const Datepicker = (($) => {
       max: 'centuries', // Set a maximum limit for the view mode
       modes: [
         {
-          cssClass: 'days',
-          navFnc: 'Month',
+          cssClass: ClassName.DAYS,
           navStep: 1
         },
         {
-          cssClass: 'months',
-          navFnc: 'FullYear',
+          cssClass: ClassName.MONTHS,
           navStep: 1
         },
         {
-          cssClass: 'years',
-          navFnc: 'FullYear',
+          cssClass: ClassName.YEARS,
           navStep: 10
         },
         {
-          cssClass: 'decades',
-          navFnc: 'FullDecade',
+          cssClass: ClassName.DECADES,
           navStep: 100
         },
         {
-          cssClass: 'centuries',
-          navFnc: 'FullCentury',
+          cssClass: ClassName.CENTURIES,
           navStep: 1000
         }]
     },
@@ -382,9 +377,9 @@ const Datepicker = (($) => {
       this.$picker
         .children('div')
         .hide()
-        .filter(`.datepicker-${this.config.view.modes[this.viewMode].cssClass}`) // days|months|years|decades|centuries
+        .filter(this.config.view.modes[this.viewMode].cssClass) // days|months|years|decades|centuries
         .show()
-      this.updateNavArrows()  // FIXME: redundant?
+      this.renderer.updateNavArrows()  // FIXME: redundant?
     }
 
     buildEvents() {
