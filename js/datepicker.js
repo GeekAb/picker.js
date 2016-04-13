@@ -95,6 +95,7 @@ const Datepicker = (($) => {
     // Popper.js options - see https://popper.js.org/
     popper: {
       // any popper.js options are valid here and will be passed to that component
+      placement: 'right'
     },
     // FIXME: remove if using popper?
     /*
@@ -104,7 +105,8 @@ const Datepicker = (($) => {
 
      “auto” triggers “smart orientation” of the picker. Horizontal orientation will default to “left” and left offset will be tweaked to keep the picker inside the browser viewport; vertical orientation will simply choose “top” or “bottom”, whichever will show more of the picker in the viewport.
      */
-    orientation: "auto",
+    //orientation: "auto",
+
 
     template: main,
 
@@ -452,9 +454,9 @@ const Datepicker = (($) => {
         [this.renderer.$picker, {
           click: () => this.click()
         }],
-        [$(window), {
-          resize: () => this.renderer.place()
-        }],
+        //[$(window), {
+        //  resize: () => this.renderer.place()
+        //}],
         [$(document), {
           mousedown: (ev) => {
             // Clicked outside the datepicker, hide it
@@ -864,12 +866,18 @@ const Datepicker = (($) => {
     //
     show() {
       let element = this.component ? this.$element.find('input') : this.$element
-      if (element.attr('readonly') && this.config.enableOnReadonly === false)
+      if (element.attr('readonly') && this.config.enableOnReadonly === false) {
         return
-      if (!this.isInline)
-        this.renderer.$picker.appendTo(this.config.container)
-      this.renderer.place()
-      this.renderer.$picker.show()
+      }
+
+      //if (!this.isInline) {
+      //  this.renderer.$picker.appendTo(this.config.container)
+      //}
+
+      //this.renderer.place()
+      //this.renderer.$picker.show()
+      this.renderer.show()
+
       this.attachSecondaryEvents()
       this._trigger(Event.SHOW)
       if ((window.navigator.msMaxTouchPoints || 'ontouchstart' in document) && !this.config.keyboard.touch) {
@@ -878,17 +886,20 @@ const Datepicker = (($) => {
       return this
     }
 
-    isPickerVisible() {
-      return this.renderer.$picker.is(':visible')
-    }
+    //isPickerVisible() {
+    //  return this.renderer.$picker.is(':visible')
+    //}
 
     hide() {
-      if (this.isInline)
+      if (this.isInline || !this.renderer.isShowing()) {
         return this
-      if (!this.isPickerVisible())
-        return this
+      }
+
       this.focusDate = null
-      this.renderer.$picker.hide().detach()
+
+      //this.renderer.$picker.hide().detach()
+      this.renderer.hide()
+
       this.detachSecondaryEvents()
       this.viewMode = this.config.view.start
       this.showMode()
@@ -939,39 +950,39 @@ const Datepicker = (($) => {
 
       // --------------------
       // Orientation
-      let orientationTokens = String(this.config.orientation).toLowerCase().split(/\s+/g)
-      let orientation = this.config.orientation.toLowerCase()
-      orientationTokens = $.grep(orientationTokens, (word) => {
-        return /^auto|left|right|top|bottom$/.test(word)
-      })
-      // default the orientation
-      this.config.orientation = {x: 'auto', y: 'auto'}
-      if (!orientation || orientation === 'auto') {
-        // no action
-      }
-      else if (orientationTokens.length === 1) {
-        switch (orientationTokens[0]) {
-          case 'top':
-          case 'bottom':
-            this.config.orientation.y = orientationTokens[0]
-            break
-          case 'left':
-          case 'right':
-            this.config.orientation.x = orientationTokens[0]
-            break
-        }
-      }
-      else {
-        orientation = $.grep(orientationTokens, (word) => {
-          return /^left|right$/.test(word)
-        })
-        this.config.orientation.x = orientation[0] || 'auto'
-
-        orientation = $.grep(orientationTokens, (word) => {
-          return /^top|bottom$/.test(word)
-        })
-        this.config.orientation.y = orientation[0] || 'auto'
-      }
+      //let orientationTokens = String(this.config.orientation).toLowerCase().split(/\s+/g)
+      //let orientation = this.config.orientation.toLowerCase()
+      //orientationTokens = $.grep(orientationTokens, (word) => {
+      //  return /^auto|left|right|top|bottom$/.test(word)
+      //})
+      //// default the orientation
+      //this.config.orientation = {x: 'auto', y: 'auto'}
+      //if (!orientation || orientation === 'auto') {
+      //  // no action
+      //}
+      //else if (orientationTokens.length === 1) {
+      //  switch (orientationTokens[0]) {
+      //    case 'top':
+      //    case 'bottom':
+      //      this.config.orientation.y = orientationTokens[0]
+      //      break
+      //    case 'left':
+      //    case 'right':
+      //      this.config.orientation.x = orientationTokens[0]
+      //      break
+      //  }
+      //}
+      //else {
+      //  orientation = $.grep(orientationTokens, (word) => {
+      //    return /^left|right$/.test(word)
+      //  })
+      //  this.config.orientation.x = orientation[0] || 'auto'
+      //
+      //  orientation = $.grep(orientationTokens, (word) => {
+      //    return /^top|bottom$/.test(word)
+      //  })
+      //  this.config.orientation.y = orientation[0] || 'auto'
+      //}
 
 
       // Default date - if unspecified, it is now

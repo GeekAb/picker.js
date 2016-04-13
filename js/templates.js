@@ -1,7 +1,13 @@
 import {ClassName} from './constants'
 
-export const leftArrow = `<i class="material-icons">keyboard_arrow_left</i>`
-export const rightArrow = `<i class="material-icons">keyboard_arrow_right</i>`
+// move these to a bmd template
+//export const leftArrow = `<i class="material-icons">keyboard_arrow_left</i>`
+//export const rightArrow = `<i class="material-icons">keyboard_arrow_right</i>`
+
+// originals
+export const leftArrow = '&laquo;'
+export const rightArrow = '&raquo;'
+
 
 // head
 export const head =

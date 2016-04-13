@@ -1,0 +1,64 @@
+// pruned from popper.css on their site
+//colors
+$popper-bg: rgba(255, 193, 7, 1);
+
+// scss-lint:disable SelectorFormat
+.popper {
+  //position: absolute;
+  padding: 10px;
+  text-align: center;
+  background: $popper-bg;
+  //width: 150px;
+  .popper__arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+    margin: 5px;
+    border-style: solid;
+  }
+}
+.popper[x-placement^="top"] {
+  margin-bottom: 5px;
+  .popper__arrow {
+    bottom: -5px;
+    left: calc(50% - 5px);
+    margin-top: 0;
+    margin-bottom: 0;
+    border-color: $popper-bg transparent transparent;
+    border-width: 5px 5px 0;
+  }
+}
+.popper[x-placement^="bottom"] {
+  margin-top: 5px;
+  .popper__arrow {
+    top: -5px;
+    left: calc(50% - 5px);
+    margin-top: 0;
+    margin-bottom: 0;
+    border-color: transparent transparent $popper-bg;
+    border-width: 0 5px 5px;
+  }
+}
+.popper[x-placement^="right"] {
+  margin-left: 5px;
+  .popper__arrow {
+    top: calc(50% - 5px);
+    left: -5px;
+    margin-right: 0;
+    margin-left: 0;
+    border-color: transparent $popper-bg transparent transparent;
+    border-width: 5px 5px 5px 0;
+  }
+}
+.popper[x-placement^="left"] {
+  margin-right: 5px;
+  .popper__arrow {
+    top: calc(50% - 5px);
+    right: -5px;
+    margin-right: 0;
+    margin-left: 0;
+    border-color: transparent transparent transparent $popper-bg;
+    border-width: 5px 0 5px 5px;
+  }
+}
+// scss-lint:enable SelectorFormat
