@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Required meta tags always come first -->
   <meta charset="utf-8">
-  <title>Datepicker for Bootstrap</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <title>Datepicker for Bootstrap and Bootstrap Material Design</title>
   <script src="//code.jquery.com/jquery-2.2.3.min.js"></script>
   <link id="base-css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
   <link id="db-css" href="../dist/datepicker-bs3.css" rel="stylesheet">
@@ -56,18 +60,19 @@
 <body>
 
 <div class="navbar navbar-inverse navbar-fixed-top">
-  <div class="navbar-inner">
-    <div class="container">
-      <a class="brand navbar-brand" href="https://github.com/rosskevin/bootstrap-material-design-datepicker">bootstrap-material-design-datepicker</a>
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Sandbox</a></li>
-        <!--<li><a href="http://bootstrap-material-design-datepicker.readthedocs.org/" taget="_blank">Read the Docs</a></li>-->
-        <li><a href="https://github.com/rosskevin/bootstrap-material-design-datepicker" taget="_blank">GitHub</a></li>
-      </ul>
+  <div class="container-fluid">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="brand navbar-brand" href="https://github.com/rosskevin/bootstrap-material-design-datepicker">bootstrap-material-design-datepicker</a>
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="#">Sandbox</a></li>
+          <!--<li><a href="http://bootstrap-material-design-datepicker.readthedocs.org/" taget="_blank">Read the Docs</a></li>-->
+          <li><a href="https://github.com/rosskevin/bootstrap-material-design-datepicker" taget="_blank">GitHub</a></li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>
-
 <div class="container">
   <h2>bootstrap-material-design-datepicker sandbox
     <small>&alpha;lph&alpha;</small>
@@ -93,131 +98,69 @@
   </style>
   <form class="form-inline sandbox-form" id="sandbox">
     <div class="well">
-      Type:<br>
 
-      <label for="markup-text" class="inline radio">
-        <input name="markup" id="markup-text" value="input" type="radio" checked>
-        Text input
-        <script type="text/html" class="html" data-version="3">
-          <input type="text" class="form-control">
-        </script>
-        <script type="text/plain" class="selector" data-version="*">
-              input
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        </script>
-      </label>
-      <label for="markup-component" class="inline radio">
-        <input name="markup" id="markup-component" value="component" type="radio">
-        Component
-        <script type="text/html" class="html" data-version="3">
-          <div class="input-group date">
-            <input type="text" class="form-control"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label for="language">Language</label>
+            <select class="form-control" id="language" name="language">
+              <option value="en">en</option>
+            </select>
+            <script>
+              $(function () {
+                for (var lang in $.fn.datepicker.dates) {
+                  if (!$('#language option[value=' + lang + ']').length)
+                    $('<option value="' + lang + '">' + lang + '</option>').appendTo('#language')
+                }
+              });
+            </script>
           </div>
-        </script>
-        <script type="text/plain" class="selector" data-version="3">
-              .input-group.date
+        </div>
+      </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        </script>
-      </label>
-      <label for="markup-inline" class="inline radio">
-        <input name="markup" id="markup-inline" value="embedded" type="radio">
-        Embedded / inline
-        <script type="text/html" class="html" data-version="*">
-          <div></div>
-        </script>
-        <script type="text/plain" class="selector" data-version="*">
-              div
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        </script>
-      </label>
-      <label for="markup-range" class="inline radio">
-        <input name="markup" id="markup-range" value="range" type="radio">
-        Range
-        <script type="text/html" class="html" data-version="3">
-          <div class="input-daterange input-group" id="datepicker">
-            <input type="text" class="input-sm form-control" name="start"/>
-            <span class="input-group-addon">to</span>
-            <input type="text" class="input-sm form-control" name="end"/>
-          </div>
-        </script>
-        <script type="text/plain" class="selector" data-version="*">
-              .input-daterange
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        </script>
-      </label>
-
-      <br><br>
-
-      Options:<br>
-
+      <div class="row">
+        <div class="col-md-12">
+          <label>Type:</label>
+          <label for="markup-text" class="radio-inline">
+            <input name="markup" id="markup-text" value="input" type="radio" checked>
+            Text input
+            <script type="text/html" class="html" data-version="3">
+              <input type="text" class="form-control">
+            </script>
+            <script type="text/plain" class="selector" data-version="*">input</script>
+          </label>
+          <label for="markup-component" class="radio-inline">
+            <input name="markup" id="markup-component" value="component" type="radio">
+            Component
+            <script type="text/html" class="html" data-version="3">
+              <div class="input-group date">
+                <input type="text" class="form-control"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+              </div>
+            </script>
+            <script type="text/plain" class="selector" data-version="3">.input-group.date</script>
+          </label>
+          <label for="markup-inline" class="radio-inline">
+            <input name="markup" id="markup-inline" value="embedded" type="radio">
+            Embedded / inline
+            <script type="text/html" class="html" data-version="*">
+              <div></div>
+            </script>
+            <script type="text/plain" class="selector" data-version="*">div</script>
+          </label>
+          <label for="markup-range" class="radio-inline">
+            <input name="markup" id="markup-range" value="range" type="radio">
+            Range
+            <script type="text/html" class="html" data-version="3">
+              <div class="input-daterange input-group" id="datepicker">
+                <input type="text" class="input-sm form-control" name="start"/>
+                <span class="input-group-addon">to</span>
+                <input type="text" class="input-sm form-control" name="end"/>
+              </div>
+            </script>
+            <script type="text/plain" class="selector" data-version="*">.input-daterange</script>
+          </label>
+        </div>
+      </div>
       <div class="row">
         <div class="col-md-2">
           <div class="form-group">
@@ -263,6 +206,20 @@
               <option value="2" selected>2 / years</option>
             </select>
           </div>
+          <div class="form-group">
+            <label for="orientation">Orientation</label>
+            <select class="form-control" id="orientation" name="orientation">
+              <option value="auto">auto</option>
+              <option value="top auto">top auto</option>
+              <option value="bottom auto">bottom auto</option>
+              <option value="auto left">auto left</option>
+              <option value="top left">top left</option>
+              <option value="bottom left">bottom left</option>
+              <option value="auto right">auto right</option>
+              <option value="top right">top right</option>
+              <option value="bottom right">bottom right</option>
+            </select>
+          </div>
         </div>
 
         <!--column 3-->
@@ -283,42 +240,8 @@
             </select>
           </div>
           <div class="form-group">
-            <label for="language">Language</label>
-            <select class="form-control" id="language" name="language">
-              <option value="en">en</option>
-            </select>
-            <script>
-              $(function () {
-                for (var lang in $.fn.datepicker.dates) {
-                  if (!$('#language option[value=' + lang + ']').length)
-                    $('<option value="' + lang + '">' + lang + '</option>').appendTo('#language')
-                }
-              });
-            </script>
-          </div>
-          <div class="form-group">
-            <label for="orientation">Orientation</label>
-            <select class="form-control" id="orientation" name="orientation">
-              <option value="auto">auto</option>
-              <option value="top auto">top auto</option>
-              <option value="bottom auto">bottom auto</option>
-              <option value="auto left">auto left</option>
-              <option value="top left">top left</option>
-              <option value="bottom left">bottom left</option>
-              <option value="auto right">auto right</option>
-              <option value="top right">top right</option>
-              <option value="bottom right">bottom right</option>
-            </select>
-          </div>
-        </div>
-
-        <!--column 4-->
-        <div class="col-md-2">
-          <div class="form-group">
-
             <label for="multidate">Multidate</label>
             <input type="text" class="input-small input-sm form-control" id="multidate" name="multidate" placeholder="false" title="false, true, or a number">
-
           </div>
           <div class="form-group">
             <label for="multidateSeparator">Multidate separator</label>
@@ -326,8 +249,7 @@
           </div>
         </div>
 
-        <!--column 5-->
-
+        <!--column 4-->
         <div class="col-md-2">
           <div class="checkbox">
             <label for="calendarWeeks">
@@ -360,24 +282,6 @@
             </label>
           </div>
           <div class="checkbox">
-            <label for="beforeShowDay">
-              <input id="beforeShowDay" name="beforeShowDay" type="checkbox">
-              Before-show-day callback
-            </label>
-          </div>
-          <div class="checkbox">
-            <label for="beforeShowMonth">
-              <input id="beforeShowMonth" name="beforeShowMonth" type="checkbox">
-              Before-show-month callback
-            </label>
-          </div>
-          <div class="checkbox">
-            <label for="beforeShowYear">
-              <input id="beforeShowYear" name="beforeShowYear" type="checkbox">
-              Before-show-year callback
-            </label>
-          </div>
-          <div class="checkbox">
             <label for="datesDisabled">
               <input id="datesDisabled" name="datesDisabled" type="checkbox">
               datesDisabled
@@ -397,11 +301,32 @@
           </div>
         </div>
 
+        <div class="col-md-3">
+          <label>Callbacks</label>
+          <div class="checkbox">
+            <label for="beforeShowDay">
+              <input id="beforeShowDay" name="beforeShowDay" type="checkbox">
+              Before-show-day callback
+            </label>
+          </div>
+          <div class="checkbox">
+            <label for="beforeShowMonth">
+              <input id="beforeShowMonth" name="beforeShowMonth" type="checkbox">
+              Before-show-month callback
+            </label>
+          </div>
+          <div class="checkbox">
+            <label for="beforeShowYear">
+              <input id="beforeShowYear" name="beforeShowYear" type="checkbox">
+              Before-show-year callback
+            </label>
+          </div>
+        </div>
       </div>
 
 
       <div class="row">
-        <div class="form-group">
+        <div class="form-group col-md-12">
           <label>Days of week disabled:</label>
           <label class="checkbox-inline"><input type="checkbox" name="daysOfWeekDisabled" value="0">0</label>
           <label class="checkbox-inline"><input type="checkbox" name="daysOfWeekDisabled" value="1">1</label>
@@ -413,7 +338,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="form-group">
+        <div class="form-group col-md-12">
           <label>Days of week highlighted: </label>
           <label class="checkbox-inline"><input type="checkbox" name="daysOfWeekHighlighted" value="0">0</label>
           <label class="checkbox-inline"><input type="checkbox" name="daysOfWeekHighlighted" value="1">1</label>
