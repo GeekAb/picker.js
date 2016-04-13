@@ -13,14 +13,15 @@ const Renderer = class extends Base {
   constructor(datepicker) {
     super(Default)
     this.dp = datepicker
-    this.config = this.db.config // shortcut reference to same config
+    this.config = this.dp.config // shortcut reference to same config
     this.$picker = $(this.config.template)
   }
 
   dispose() {
     super.dispose()
-    this.dp = null
+    this.$picker.remove()
     this.$picker = null
+    this.dp = null
   }
 
   // FIXME: evaluate this and remove any code we can delegate to popper.js
@@ -58,8 +59,7 @@ const Renderer = class extends Base {
       if (this.config.orientation.x === 'right')
         left -= calendarWidth - width
     }
-    // auto x orientation is best-placement: if it crosses a window
-    // edge, fudge it sideways
+    // auto x orientation is best-placement: if it crosses a window edge, fudge it sideways
     else {
       if (offset.left < 0) {
         // component is outside the window on the left side. Move it into visible range
@@ -87,10 +87,12 @@ const Renderer = class extends Base {
     }
 
     this.$picker.addClass(`${ClassPrefix.ORIENT}-${yorient}`)
-    if (yorient === 'top')
+    if (yorient === 'top') {
       top -= calendarHeight + parseInt(this.$picker.css('padding-top'))
-    else
+    }
+    else {
       top += height
+    }
 
     if (this.config.rtl) {
       let right = windowWidth - (left + width)
@@ -113,9 +115,9 @@ const Renderer = class extends Base {
   // FIXME: appears to be called in #fill and from the db constructor - redundant? naming?
   renderMonths(viewDate) {
     let html = ''
-    for (let i of 11) { // 0..11
+    for (let i = 0; i < 12; i++) { // 0..11
       let focused = viewDate && viewDate.month() === i ? ClassName.FOCUSED : ''
-      html += `<span class="${ClassName.MONTH} ${focused}">${this.db.newMoment().month(i).format(`MMM`)}</span>` // Jan
+      html += `<span class="${ClassName.MONTH} ${focused}">${this.dp.newMoment().month(i).format(`MMM`)}</span>` // Jan
     }
     this.$picker.find(`${Selector.MONTHS} td`).html(html)
   }
@@ -210,7 +212,7 @@ const Renderer = class extends Base {
       for (let i in $months) {
         //$.each($months, function (i, month) {
         let $month = $($months[i])
-        let moDate = this.db.newMoment().year(year).month(i).startOf('month')
+        let moDate = this.dp.newMoment().year(year).month(i).startOf('month')
         let before = this.config.beforeShowMonth(moDate)
         if (before === undefined) {
           before = {}
@@ -318,8 +320,8 @@ const Renderer = class extends Base {
     let year = parseInt(currentYear / factor, 10) * factor
     let startStep = parseInt(startYear / step, 10) * step
     let endStep = parseInt(endYear / step, 10) * step
-    let steps = $.map(this.dates.array, function (d) {
-      return parseInt(d.getUTCFullYear() / step, 10) * step
+    let steps = $.map(this.dp.dates.array, function (d) {
+      return parseInt(d.year() / step, 10) * step
     })
 
     $view.find(Selector.SWITCH).text(`${year}-${year + step * 9}`)
@@ -341,7 +343,7 @@ const Renderer = class extends Base {
       if (thisYear < startStep || thisYear > endStep) {
         classes.push(ClassName.DISABLED)
       }
-      if (thisYear === this.viewDate.getFullYear()) {
+      if (thisYear === this.dp.viewDate.year()) {
         classes.push(ClassName.FOCUSED)
       }
 
@@ -354,9 +356,9 @@ const Renderer = class extends Base {
        classes: A String representing additional CSS classes to apply to the date’s cell
        tooltip: A tooltip to apply to this date, via the title HTML attribute
        */
-      if (callback !== $.noop) {
+      if (callback !== undefined) {
         //before = callback(new Date(thisYear, 0, 1))
-        let m = this.db.newMoment().year(thisYear).month(0).startOf('month')
+        let m = this.dp.newMoment().year(thisYear).month(0).startOf('month')
         let before = callback(m)
 
         if (before === undefined) {
@@ -425,7 +427,7 @@ const Renderer = class extends Base {
     let year = viewDate.year()
     let month = viewDate.month()
 
-    let today = this.db.newMoment().local()
+    let today = this.dp.newMoment().local()
 
     if (date.year() < year || (date.year() === year && date.month() < month)) {
       classes.push(ClassName.OLD)

@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/rosskevin/bootstrap-material-design-datepicker#readme",
   "dependencies": {
+    "babel-polyfill": "^6.7.4",
     "bootstrap-material-design": "https://github.com/fezvrasta/bootstrap-material-design/tarball/dist",
     "extend": "^3.0.0",
     "moment": "^2.12.0",

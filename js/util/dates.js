@@ -1,11 +1,11 @@
 /**
  * Helper converted from legacy code, not sure we need to keep it but for ease of conversion of the entire
  *  codebase, I've kept it.  TODO: Revisit this later to see if we actually need it.
+ *  FIXME: if we keep this after refactoring, we _have_ to rename it.
  */
 const Dates = class {
   constructor(...moments) {
-    this.array = []
-    this.array.push(moments)
+    this.array = [].concat(moments)
   }
 
   last() {
@@ -21,11 +21,10 @@ const Dates = class {
   }
 
   get(i) {
-    return this.slice(i)[0]
+    return this.array.slice(i)[0]
   }
 
   contains(other) {
-
     for (let i in this.array) {
       let m = this.array[i]
       if (m.isSame(other)) {

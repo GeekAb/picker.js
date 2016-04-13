@@ -91,10 +91,21 @@ const Datepicker = (($) => {
       disabled: [],   // Days of the week that should be disabled. Example: disable weekends: [0,6]
       highlighted: [] // Days of the week that should be highlighted. Example: highlight weekends: [0,6].
     },
+
     // Popper.js options - see https://popper.js.org/
     popper: {
       // any popper.js options are valid here and will be passed to that component
     },
+    // FIXME: remove if using popper?
+    /*
+     A space-separated string consisting of one or two of “left” or “right”, “top” or “bottom”, and “auto” (may be omitted); for example, “top left”, “bottom” (horizontal orientation will default to “auto”), “right” (vertical orientation will default to “auto”), “auto top”. Allows for fixed placement of the picker popup.
+
+     “orientation” refers to the location of the picker popup’s “anchor”; you can also think of it as the location of the trigger element (input, component, etc) relative to the picker.
+
+     “auto” triggers “smart orientation” of the picker. Horizontal orientation will default to “left” and left offset will be tweaked to keep the picker inside the browser viewport; vertical orientation will simply choose “top” or “bottom”, whichever will show more of the picker in the viewport.
+     */
+    orientation: "auto",
+
     template: main,
 
 
@@ -126,8 +137,9 @@ const Datepicker = (($) => {
   class Datepicker extends Base {
 
     constructor($element, ...configs) {
-      super($element, Default, ...configs)
+      super(Default, ...configs)
 
+      this.$element = $element
       this.dates = new Dates()
 
       // get our own utc instance and configure the locale
@@ -164,14 +176,14 @@ const Datepicker = (($) => {
       this.attachEvents()
 
       if (this.isInline) {
-        this.$picker.addClass('datepicker-inline').appendTo(this.$element)
+        this.renderer.$picker.addClass('datepicker-inline').appendTo(this.$element)
       }
       else {
-        this.$picker.addClass('datepicker-dropdown dropdown-menu')
+        this.renderer.$picker.addClass('datepicker-dropdown dropdown-menu')
       }
 
       if (this.config.rtl) {
-        this.$picker.addClass('datepicker-rtl')
+        this.renderer.$picker.addClass('datepicker-rtl')
       }
 
       this.viewMode = this.config.view.start
@@ -191,8 +203,6 @@ const Datepicker = (($) => {
       this.hide()
       this.detachEvents()
       this.detachSecondaryEvents()
-      this.$picker.remove()
-      this.$picker = null
       this.renderer.dispose()
       this.renderer = null
       super.dispose(dataKey)
@@ -362,21 +372,13 @@ const Datepicker = (($) => {
       this.renderer.fill();
     }
 
-
-    /**
-     * delegate to reneder to obtain picker element
-     */
-    $picker() {
-      this.renderer.$picker
-    }
-
     // ------------------------------------------------------------------------
     // private
     showMode(dir) {
       if (dir) {
         this.viewMode = Math.max(this.config.view.min, Math.min(this.config.view.max, this.viewMode + dir))
       }
-      this.$picker
+      this.renderer.$picker
         .children('div')
         .hide()
         .filter(this.config.view.modes[this.viewMode].cssClass) // days|months|years|decades|centuries
@@ -447,7 +449,7 @@ const Datepicker = (($) => {
       }
 
       this.secondaryEvents = [
-        [this.$picker(), {
+        [this.renderer.$picker, {
           click: () => this.click()
         }],
         [$(window), {
@@ -459,9 +461,9 @@ const Datepicker = (($) => {
             if (!(
                 this.$element.is(ev.target) ||
                 this.$element.find(ev.target).length ||
-                this.$picker().is(ev.target) ||
-                this.$picker().find(ev.target).length ||
-                this.$picker().hasClass('datepicker-inline')
+                this.renderer.$picker.is(ev.target) ||
+                this.renderer.$picker.find(ev.target).length ||
+                this.renderer.$picker.hasClass('datepicker-inline')
               )) {
               this.hide()
             }
@@ -828,7 +830,11 @@ const Datepicker = (($) => {
         date = altdate.clone()
       }
       else {
-        this.dates.last().clone()
+        date = this.dates.last()
+        if(date){
+          //clone it if present
+          date = date.clone()
+        }
       }
 
       super.trigger(event, {
@@ -861,9 +867,9 @@ const Datepicker = (($) => {
       if (element.attr('readonly') && this.config.enableOnReadonly === false)
         return
       if (!this.isInline)
-        this.$picker().appendTo(this.config.container)
+        this.renderer.$picker.appendTo(this.config.container)
       this.renderer.place()
-      this.$picker().show()
+      this.renderer.$picker.show()
       this.attachSecondaryEvents()
       this._trigger(Event.SHOW)
       if ((window.navigator.msMaxTouchPoints || 'ontouchstart' in document) && !this.config.keyboard.touch) {
@@ -873,7 +879,7 @@ const Datepicker = (($) => {
     }
 
     isPickerVisible() {
-      return this.$picker().is(':visible')
+      return this.renderer.$picker.is(':visible')
     }
 
     hide() {
@@ -882,8 +888,8 @@ const Datepicker = (($) => {
       if (!this.isPickerVisible())
         return this
       this.focusDate = null
-      this.$picker().hide().detach()
-      this._detachSecondaryEvents()
+      this.renderer.$picker.hide().detach()
+      this.detachSecondaryEvents()
       this.viewMode = this.config.view.start
       this.showMode()
 
@@ -930,6 +936,44 @@ const Datepicker = (($) => {
       this.setDateEnd(this.config.date.end)
       this.setDatesDisabled(this.config.date.disabled)
 
+
+      // --------------------
+      // Orientation
+      let orientationTokens = String(this.config.orientation).toLowerCase().split(/\s+/g)
+      let orientation = this.config.orientation.toLowerCase()
+      orientationTokens = $.grep(orientationTokens, (word) => {
+        return /^auto|left|right|top|bottom$/.test(word)
+      })
+      // default the orientation
+      this.config.orientation = {x: 'auto', y: 'auto'}
+      if (!orientation || orientation === 'auto') {
+        // no action
+      }
+      else if (orientationTokens.length === 1) {
+        switch (orientationTokens[0]) {
+          case 'top':
+          case 'bottom':
+            this.config.orientation.y = orientationTokens[0]
+            break
+          case 'left':
+          case 'right':
+            this.config.orientation.x = orientationTokens[0]
+            break
+        }
+      }
+      else {
+        orientation = $.grep(orientationTokens, (word) => {
+          return /^left|right$/.test(word)
+        })
+        this.config.orientation.x = orientation[0] || 'auto'
+
+        orientation = $.grep(orientationTokens, (word) => {
+          return /^top|bottom$/.test(word)
+        })
+        this.config.orientation.y = orientation[0] || 'auto'
+      }
+
+
       // Default date - if unspecified, it is now
       this.config.date.default = this.config.date.default || this.moment.clone()
 
@@ -942,9 +986,15 @@ const Datepicker = (($) => {
     }
 
     parseDates(...dates) {
+      //if(!dates || dates.length < 1){
+      //  return []
+      //}
+
       let results = []
       for (let date of dates) {
-        results.push(this.parseDate(date))
+        if (date) {
+          results.push(this.parseDate(date))
+        }
       }
       return results
     }
@@ -1058,16 +1108,16 @@ const Datepicker = (($) => {
      * @param date - one or more - String|moment - optional
      * @returns {Datepicker}
      */
-    update(...dates) {
+    update(...moments) {
       if (!this.allowUpdate) {
         return this
       }
 
       let oldDates = this.dates.copy()
-      this.dates = this.resolveDates(...dates)
+      this.dates = this.resolveDates(...moments)
       this.resolveViewDate()
 
-      if (dates) {
+      if (moments) {
         // args passed means setting date by clicking?  FIXME: how about making this more explicit?
         this.setInputValue()
       }
@@ -1126,7 +1176,7 @@ const Datepicker = (($) => {
     resolveDates(...dates) {
       let newDatesArray = null
       if (dates) {
-        newDatesArray = this.parseDates(dates)
+        newDatesArray = this.parseDates(...dates)
       }
       else {
         if (this.isInput) {
