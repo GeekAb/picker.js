@@ -98,36 +98,58 @@
       <label for="markup-text" class="inline radio">
         <input name="markup" id="markup-text" value="input" type="radio" checked>
         Text input
-        <script type="text/html" class="html" data-version="2">
-          <input type="text">
-        </script>
         <script type="text/html" class="html" data-version="3">
           <input type="text" class="form-control">
         </script>
         <script type="text/plain" class="selector" data-version="*">
               input
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         </script>
       </label>
       <label for="markup-component" class="inline radio">
         <input name="markup" id="markup-component" value="component" type="radio">
         Component
-        <script type="text/html" class="html" data-version="2">
-          <div class="input-append date">
-            <input type="text" class="span2"><span class="add-on"><i class="icon-th"></i></span>
-          </div>
-        </script>
         <script type="text/html" class="html" data-version="3">
           <div class="input-group date">
             <input type="text" class="form-control"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
           </div>
         </script>
-        <script type="text/plain" class="selector" data-version="2">
-              .input-append.date
-
-        </script>
         <script type="text/plain" class="selector" data-version="3">
               .input-group.date
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         </script>
       </label>
@@ -140,18 +162,28 @@
         <script type="text/plain" class="selector" data-version="*">
               div
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         </script>
       </label>
       <label for="markup-range" class="inline radio">
         <input name="markup" id="markup-range" value="range" type="radio">
         Range
-        <script type="text/html" class="html" data-version="2">
-          <div class="input-daterange" id="datepicker">
-            <input type="text" class="input-small" name="start"/>
-            <span class="add-on">to</span>
-            <input type="text" class="input-small" name="end"/>
-          </div>
-        </script>
         <script type="text/html" class="html" data-version="3">
           <div class="input-daterange input-group" id="datepicker">
             <input type="text" class="input-sm form-control" name="start"/>
@@ -162,6 +194,23 @@
         <script type="text/plain" class="selector" data-version="*">
               .input-daterange
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         </script>
       </label>
 
@@ -169,156 +218,212 @@
 
       Options:<br>
 
-      <label for="format">Format
-        <input class="span2 col-md-2 form-control" id="format" name="format" type="text" placeholder="mm/dd/yyyy"></label>
-      <label for="weekStart">Week start
-        <input class="span1 col-md-1 form-control" id="weekStart" name="weekStart" type="text" placeholder="0"></label>
-      <label for="startDate">Start date
-        <input class="span2 col-md-2 form-control" id="startDate" name="startDate" type="text" placeholder="-Infinity"></label>
-      <label for="endDate">End date
-        <input class="span2 col-md-2 form-control" id="endDate" name="endDate" type="text" placeholder="+Infinity"></label>
-      <label for="startView">Start view
-        <select class="span2 col-md-2 form-control" id="startView" name="startView">
-          <option value="0">0 / month</option>
-          <option value="1">1 / year</option>
-          <option value="2">2 / decade</option>
-        </select>
-      </label>
-      <label for="minViewMode">Min view mode
-        <select class="span2 col-md-2 form-control" id="minViewMode" name="minViewMode">
-          <option value="0">0 / days</option>
-          <option value="1">1 / months</option>
-          <option value="2">2 / years</option>
-        </select>
-      </label>
-      <label for="maxViewMode">Max view mode
-        <select class="span2 col-md-2 form-control" id="maxViewMode" name="maxViewMode">
-          <option value="0">0 / days</option>
-          <option value="1">1 / months</option>
-          <option value="2" selected>2 / years</option>
-        </select>
-      </label>
-      <label for="todayBtn" class="inline checkbox">Today button
-        <select class="span2 col-md-2 form-control" id="todayBtn" name="todayBtn">
-          <option value="false">disabled</option>
-          <option value="true">enabled (unlinked)</option>
-          <option value="linked">linked</option>
-        </select>
-      </label>
-      <label for="clearBtn" class="inline checkbox">Clear button
-        <select class="span2 col-md-2 form-control" id="clearBtn" name="clearBtn">
-          <option value="false">disabled</option>
-          <option value="true">enabled</option>
-        </select>
-      </label>
-      <label for="language">Language
-        <select class="span1 col-md-1 form-control" id="language" name="language">
-          <option value="en">en</option>
-        </select>
-        <script>
-          $(function () {
-            for (var lang in $.fn.datepicker.dates) {
-              if (!$('#language option[value=' + lang + ']').length)
-                $('<option value="' + lang + '">' + lang + '</option>').appendTo('#language')
-            }
-          });
-        </script>
-      </label>
-      <label for="orientation">Orientation
-        <select class="span2 col-md-2 form-control" id="orientation" name="orientation">
-          <option value="auto">auto</option>
-          <option value="top auto">top auto</option>
-          <option value="bottom auto">bottom auto</option>
-          <option value="auto left">auto left</option>
-          <option value="top left">top left</option>
-          <option value="bottom left">bottom left</option>
-          <option value="auto right">auto right</option>
-          <option value="top right">top right</option>
-          <option value="bottom right">bottom right</option>
-        </select>
-      </label>
+      <div class="row">
+        <div class="col-md-2">
+          <div class="form-group">
+            <label for="format" for="format">Format</label>
+            <input class="form-control" id="format" name="format" type="text" placeholder="mm/dd/yyyy">
+          </div>
+          <div class="form-group">
+            <label for="weekStart" for="weekStart">Week start</label>
+            <input class="col-md-1 form-control" id="weekStart" name="weekStart" type="text" placeholder="0">
+          </div>
+          <div class="form-group">
+            <label for="startDate" for="startDate">Start date</label>
+            <input class="form-control" id="startDate" name="startDate" type="text">
+          </div>
+          <div class="form-group">
+            <label for="endDate">End date</label>
+            <input class="form-control" id="endDate" name="endDate" type="text"></label>
+          </div>
+        </div>
 
-      <br>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label for="startView">Start view</label>
+            <select class="form-control" id="startView" name="startView">
+              <option value="0">0 / month</option>
+              <option value="1">1 / year</option>
+              <option value="2">2 / decade</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="minViewMode">Min view mode</label>
+            <select class="form-control" id="minViewMode" name="minViewMode">
+              <option value="0">0 / days</option>
+              <option value="1">1 / months</option>
+              <option value="2">2 / years</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="maxViewMode">Max view mode</label>
+            <select class="form-control" id="maxViewMode" name="maxViewMode">
+              <option value="0">0 / days</option>
+              <option value="1">1 / months</option>
+              <option value="2" selected>2 / years</option>
+            </select>
+          </div>
+        </div>
 
-      <label for="multidate">Multidate
-        <input type="text" class="input-small input-sm form-control" id="multidate" name="multidate" placeholder="false" title="false, true, or a number">
-      </label>
-      <label for="multidateSeparator">Multidate separator
-        <input type="text" class="input-small input-sm form-control" id="multidateSeparator" name="multidateSeparator" placeholder=",">
-      </label>
+        <!--column 3-->
+        <div class="col-md-2">
+          <div class="form-group">
+            <label for="todayBtn">Today button</label>
+            <select class="form-control" id="todayBtn" name="todayBtn">
+              <option value="false">disabled</option>
+              <option value="true">enabled (unlinked)</option>
+              <option value="linked">linked</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="clearBtn">Clear button</label>
+            <select class="form-control" id="clearBtn" name="clearBtn">
+              <option value="false">disabled</option>
+              <option value="true">enabled</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="language">Language</label>
+            <select class="form-control" id="language" name="language">
+              <option value="en">en</option>
+            </select>
+            <script>
+              $(function () {
+                for (var lang in $.fn.datepicker.dates) {
+                  if (!$('#language option[value=' + lang + ']').length)
+                    $('<option value="' + lang + '">' + lang + '</option>').appendTo('#language')
+                }
+              });
+            </script>
+          </div>
+          <div class="form-group">
+            <label for="orientation">Orientation</label>
+            <select class="form-control" id="orientation" name="orientation">
+              <option value="auto">auto</option>
+              <option value="top auto">top auto</option>
+              <option value="bottom auto">bottom auto</option>
+              <option value="auto left">auto left</option>
+              <option value="top left">top left</option>
+              <option value="bottom left">bottom left</option>
+              <option value="auto right">auto right</option>
+              <option value="top right">top right</option>
+              <option value="bottom right">bottom right</option>
+            </select>
+          </div>
+        </div>
 
-      <br>
+        <!--column 4-->
+        <div class="col-md-2">
+          <div class="form-group">
 
-          <span>Days of week disabled:
-            <label class="checkbox"><input type="checkbox" name="daysOfWeekDisabled" value="0"> 0</label>
-            <label class="checkbox"><input type="checkbox" name="daysOfWeekDisabled" value="1"> 1</label>
-            <label class="checkbox"><input type="checkbox" name="daysOfWeekDisabled" value="2"> 2</label>
-            <label class="checkbox"><input type="checkbox" name="daysOfWeekDisabled" value="3"> 3</label>
-            <label class="checkbox"><input type="checkbox" name="daysOfWeekDisabled" value="4"> 4</label>
-            <label class="checkbox"><input type="checkbox" name="daysOfWeekDisabled" value="5"> 5</label>
-            <label class="checkbox"><input type="checkbox" name="daysOfWeekDisabled" value="6"> 6</label>
-          </span>
+            <label for="multidate">Multidate</label>
+            <input type="text" class="input-small input-sm form-control" id="multidate" name="multidate" placeholder="false" title="false, true, or a number">
 
-      <br>
+          </div>
+          <div class="form-group">
+            <label for="multidateSeparator">Multidate separator</label>
+            <input type="text" class="input-small input-sm form-control" id="multidateSeparator" name="multidateSeparator" placeholder=",">
+          </div>
+        </div>
 
-          <span>Days of week highlighted:
-            <label class="checkbox"><input type="checkbox" name="daysOfWeekHighlighted" value="0"> 0</label>
-            <label class="checkbox"><input type="checkbox" name="daysOfWeekHighlighted" value="1"> 1</label>
-            <label class="checkbox"><input type="checkbox" name="daysOfWeekHighlighted" value="2"> 2</label>
-            <label class="checkbox"><input type="checkbox" name="daysOfWeekHighlighted" value="3"> 3</label>
-            <label class="checkbox"><input type="checkbox" name="daysOfWeekHighlighted" value="4"> 4</label>
-            <label class="checkbox"><input type="checkbox" name="daysOfWeekHighlighted" value="5"> 5</label>
-            <label class="checkbox"><input type="checkbox" name="daysOfWeekHighlighted" value="6"> 6</label>
-          </span>
+        <!--column 5-->
 
-      <br>
+        <div class="col-md-2">
+          <div class="checkbox">
+            <label for="calendarWeeks">
+              <input id="calendarWeeks" name="calendarWeeks" type="checkbox">
+              Calendar weeks
+            </label>
+          </div>
+          <div class="checkbox">
+            <label for="autoclose">
+              <input id="autoclose" name="autoclose" type="checkbox">
+              Autoclose
+            </label>
+          </div>
+          <div class="checkbox">
+            <label for="todayHighlight">
+              <input id="todayHighlight" name="todayHighlight" type="checkbox">
+              Today highlight
+            </label>
+          </div>
+          <div class="checkbox">
+            <label for="keyboardNavigation">
+              <input id="keyboardNavigation" name="keyboardNavigation" type="checkbox" checked>
+              Keyboard navigation
+            </label>
+          </div>
+          <div class="checkbox">
+            <label for="forceParse">
+              <input id="forceParse" name="forceParse" type="checkbox" checked>
+              Force parse
+            </label>
+          </div>
+          <div class="checkbox">
+            <label for="beforeShowDay">
+              <input id="beforeShowDay" name="beforeShowDay" type="checkbox">
+              Before-show-day callback
+            </label>
+          </div>
+          <div class="checkbox">
+            <label for="beforeShowMonth">
+              <input id="beforeShowMonth" name="beforeShowMonth" type="checkbox">
+              Before-show-month callback
+            </label>
+          </div>
+          <div class="checkbox">
+            <label for="beforeShowYear">
+              <input id="beforeShowYear" name="beforeShowYear" type="checkbox">
+              Before-show-year callback
+            </label>
+          </div>
+          <div class="checkbox">
+            <label for="datesDisabled">
+              <input id="datesDisabled" name="datesDisabled" type="checkbox">
+              datesDisabled
+            </label>
+          </div>
+          <div class="checkbox">
+            <label for="toggleActive">
+              <input id="toggleActive" name="toggleActive" type="checkbox">
+              Toggle Active
+            </label>
+          </div>
+          <div class="checkbox">
+            <label for="defaultViewDate">
+              <input id="defaultViewDate" name="defaultViewDate" type="checkbox">
+              DefaultViewDate option
+            </label>
+          </div>
+        </div>
 
-      <label for="calendarWeeks" class="inline checkbox">
-        <input id="calendarWeeks" name="calendarWeeks" type="checkbox">
-        Calendar weeks
-      </label>
-      <label for="autoclose" class="inline checkbox">
-        <input id="autoclose" name="autoclose" type="checkbox">
-        Autoclose
-      </label>
-      <label for="todayHighlight" class="inline checkbox">
-        <input id="todayHighlight" name="todayHighlight" type="checkbox">
-        Today highlight
-      </label>
-      <label for="keyboardNavigation" class="inline checkbox">
-        <input id="keyboardNavigation" name="keyboardNavigation" type="checkbox" checked>
-        Keyboard navigation
-      </label>
-      <label for="forceParse" class="inline checkbox">
-        <input id="forceParse" name="forceParse" type="checkbox" checked>
-        Force parse
-      </label>
-      <label for="beforeShowDay" class="inline checkbox">
-        <input id="beforeShowDay" name="beforeShowDay" type="checkbox">
-        Before-show-day callback
-      </label>
-      <label for="beforeShowMonth" class="inline checkbox">
-        <input id="beforeShowMonth" name="beforeShowMonth" type="checkbox">
-        Before-show-month callback
-      </label>
-      <label for="beforeShowYear" class="inline checkbox">
-        <input id="beforeShowYear" name="beforeShowYear" type="checkbox">
-        Before-show-year callback
-      </label>
-      <label for="datesDisabled" class="inline checkbox">
-        <input id="datesDisabled" name="datesDisabled" type="checkbox">
-        datesDisabled
-      </label>
-      <label for="toggleActive" class="inline checkbox">
-        <input id="toggleActive" name="toggleActive" type="checkbox">
-        Toggle Active
-      </label>
-      <label for="defaultViewDate" class="inline checkbox">
-        <input id="defaultViewDate" name="defaultViewDate" type="checkbox">
-        DefaultViewDate option
-      </label>
+      </div>
 
-      <br></br>
+
+      <div class="row">
+        <div class="form-group">
+          <label>Days of week disabled:</label>
+          <label class="checkbox-inline"><input type="checkbox" name="daysOfWeekDisabled" value="0">0</label>
+          <label class="checkbox-inline"><input type="checkbox" name="daysOfWeekDisabled" value="1">1</label>
+          <label class="checkbox-inline"><input type="checkbox" name="daysOfWeekDisabled" value="2">2</label>
+          <label class="checkbox-inline"><input type="checkbox" name="daysOfWeekDisabled" value="3">3</label>
+          <label class="checkbox-inline"><input type="checkbox" name="daysOfWeekDisabled" value="4">4</label>
+          <label class="checkbox-inline"><input type="checkbox" name="daysOfWeekDisabled" value="5">5</label>
+          <label class="checkbox-inline"><input type="checkbox" name="daysOfWeekDisabled" value="6">6</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group">
+          <label>Days of week highlighted: </label>
+          <label class="checkbox-inline"><input type="checkbox" name="daysOfWeekHighlighted" value="0">0</label>
+          <label class="checkbox-inline"><input type="checkbox" name="daysOfWeekHighlighted" value="1">1</label>
+          <label class="checkbox-inline"><input type="checkbox" name="daysOfWeekHighlighted" value="2">2</label>
+          <label class="checkbox-inline"><input type="checkbox" name="daysOfWeekHighlighted" value="3">3</label>
+          <label class="checkbox-inline"><input type="checkbox" name="daysOfWeekHighlighted" value="4">4</label>
+          <label class="checkbox-inline"><input type="checkbox" name="daysOfWeekHighlighted" value="5">5</label>
+          <label class="checkbox-inline"><input type="checkbox" name="daysOfWeekHighlighted" value="6">6</label>
+        </div>
+      </div>
 
       <button class="btn btn-warning" type="button" id="ch_bs"></button>
       <button class="btn btn-danger" type="reset">Reset to defaults</button>
@@ -422,9 +527,9 @@
       }
 
       function update_code() {
-        var code = build_code(),
-          html = code[0],
-          js = code[1];
+        var code = build_code()
+        var html = code[0]
+        var js = code[1]
 
         var print_html = html.replace(/</g, '&lt;').replace(/>/g, '&gt;')
         $('#sandbox-html').html(prettyPrintOne(print_html, 'html', true));
@@ -531,8 +636,8 @@
 
   </script>
   <div class="row form-horizontal">
-    <div class="span5 col-md-5" id="sandbox-container"></div>
-    <div class="span7 col-md-7">
+    <div class="col-md-5" id="sandbox-container"></div>
+    <div class="col-md-7">
       <pre class="prettyprint linenums" id="sandbox-html"></pre>
       <pre class="prettyprint linenums" id="sandbox-js"></pre>
     </div>
