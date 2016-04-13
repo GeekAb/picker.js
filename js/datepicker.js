@@ -178,14 +178,14 @@ const Datepicker = (($) => {
       this.attachEvents()
 
       if (this.isInline) {
-        this.renderer.$picker.addClass('datepicker-inline').appendTo(this.$element)
+        this.renderer.$picker.addClass(ClassName.INLINE).appendTo(this.$element)
       }
       else {
-        this.renderer.$picker.addClass('datepicker-dropdown dropdown-menu')
+        this.renderer.$picker.addClass(ClassName.DROPDOWN)
       }
 
       if (this.config.rtl) {
-        this.renderer.$picker.addClass('datepicker-rtl')
+        this.renderer.$picker.addClass(ClassName.RTL)
       }
 
       this.viewMode = this.config.view.start
@@ -214,7 +214,10 @@ const Datepicker = (($) => {
      * @returns a new UTC moment configured with the locale
      */
     newMoment(...args) {
-      return moment(...args).utc().locale(this.config.lang)
+      let m = moment(args)
+      m.utc()
+      m.locale(this.config.lang)
+      return m
     }
 
     /**
@@ -383,7 +386,7 @@ const Datepicker = (($) => {
       this.renderer.$picker
         .children('div')
         .hide()
-        .filter(this.config.view.modes[this.viewMode].cssClass) // days|months|years|decades|centuries
+        .filter(`.${this.config.view.modes[this.viewMode].cssClass}`) // days|months|years|decades|centuries
         .show()
       this.renderer.updateNavArrows()  // FIXME: redundant?
     }
@@ -422,7 +425,7 @@ const Datepicker = (($) => {
         this.events = [
           [this.$element, {
             click: () => this.show(),
-            keydown: () => this.keydown()
+            keydown: (ev) => this.keydown(ev)
           }]
         ]
       }
@@ -430,13 +433,13 @@ const Datepicker = (($) => {
         // Component: listen for blur on element descendants
         [this.$element, '*', {
           blur: (ev) => {
-            this._focused_from = ev.target
+            this.focusedFromElement = ev.target
           }
         }],
         // Input: listen for blur on element
         [this.$element, {
           blur: (ev) => {
-            this._focused_from = ev.target
+            this.focusedFromElement = ev.target
           }
         }]
       )
@@ -452,7 +455,7 @@ const Datepicker = (($) => {
 
       this.secondaryEvents = [
         [this.renderer.$picker, {
-          click: () => this.click()
+          click: (ev) => this.click(ev)
         }],
         //[$(window), {
         //  resize: () => this.renderer.place()
@@ -688,10 +691,10 @@ const Datepicker = (($) => {
         }
       }
 
-      if (this.isPickerVisible() && this._focused_from) {
-        $(this._focused_from).focus()
+      if (this.renderer.isShowing() && this.focusedFromElement) {
+        $(this.focusedFromElement).focus()
       }
-      this._focused_from = undefined
+      this.focusedFromElement = undefined
     }
 
 
@@ -711,7 +714,7 @@ const Datepicker = (($) => {
 
     // FIXME: nomenclature to be onKe*
     keydown(ev) {
-      if (!this.isPickerVisible()) {
+      if (!this.renderer.isShowing()) {
         if (Key.is(ev, Keycodes.DOWN, Keycodes.ESC)) { // allow down to re-show picker
           this.show()
           ev.stopPropagation()
@@ -793,7 +796,7 @@ const Datepicker = (($) => {
           this.viewDate = this.dates.last() || this.viewDate
           this.setInputValue()
           this.renderer.fill() // FIXME: why not use this.update()?
-          if (this.isPickerVisible()) {
+          if (this.renderer.isShowing()) {
             ev.preventDefault()
             ev.stopPropagation()
             if (this.config.autoclose)
@@ -833,7 +836,7 @@ const Datepicker = (($) => {
       }
       else {
         date = this.dates.last()
-        if(date){
+        if (date) {
           //clone it if present
           date = date.clone()
         }

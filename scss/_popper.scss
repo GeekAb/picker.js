@@ -1,13 +1,16 @@
 // pruned from popper.css on their site
-//colors
-$popper-bg: rgba(255, 193, 7, 1);
+
+// Colors that _must_ be defined
+//$popper-bg: transparent !default; //rgba(255, 193, 7, 1);
+//$popper-border-color: $popper-bg !default;
 
 // scss-lint:disable SelectorFormat
 .popper {
-  //position: absolute;
+  position: absolute;  // temporary workaround - see https://github.com/FezVrasta/popper.js/issues/25#issuecomment-209614175
   padding: 10px;
   text-align: center;
   background: $popper-bg;
+  border: solid 1px $popper-border-color;
   //width: 150px;
   .popper__arrow {
     position: absolute;
@@ -16,49 +19,53 @@ $popper-bg: rgba(255, 193, 7, 1);
     margin: 5px;
     border-style: solid;
   }
-}
-.popper[x-placement^="top"] {
-  margin-bottom: 5px;
-  .popper__arrow {
-    bottom: -5px;
-    left: calc(50% - 5px);
-    margin-top: 0;
-    margin-bottom: 0;
-    border-color: $popper-bg transparent transparent;
-    border-width: 5px 5px 0;
+
+  &[x-placement^="top"] {
+    margin-bottom: 5px;
+    .popper__arrow {
+      bottom: -5px;
+      left: calc(50% - 5px);
+      margin-top: 0;
+      margin-bottom: 0;
+      border-color: $popper-border-color transparent transparent;
+      border-width: 5px 5px 0;
+    }
   }
-}
-.popper[x-placement^="bottom"] {
-  margin-top: 5px;
-  .popper__arrow {
-    top: -5px;
-    left: calc(50% - 5px);
-    margin-top: 0;
-    margin-bottom: 0;
-    border-color: transparent transparent $popper-bg;
-    border-width: 0 5px 5px;
+
+  &[x-placement^="right"] {
+    margin-left: 5px;
+    .popper__arrow {
+      top: calc(50% - 5px);
+      left: -5px;
+      margin-right: 0;
+      margin-left: 0;
+      border-color: transparent $popper-border-color transparent transparent;
+      border-width: 5px 5px 5px 0;
+    }
   }
-}
-.popper[x-placement^="right"] {
-  margin-left: 5px;
-  .popper__arrow {
-    top: calc(50% - 5px);
-    left: -5px;
-    margin-right: 0;
-    margin-left: 0;
-    border-color: transparent $popper-bg transparent transparent;
-    border-width: 5px 5px 5px 0;
+
+  &[x-placement^="bottom"] {
+    margin-top: 5px;
+    .popper__arrow {
+      top: -5px;
+      left: calc(50% - 5px);
+      margin-top: 0;
+      margin-bottom: 0;
+      border-color: transparent transparent $popper-border-color;
+      border-width: 0 5px 5px;
+    }
   }
-}
-.popper[x-placement^="left"] {
-  margin-right: 5px;
-  .popper__arrow {
-    top: calc(50% - 5px);
-    right: -5px;
-    margin-right: 0;
-    margin-left: 0;
-    border-color: transparent transparent transparent $popper-bg;
-    border-width: 5px 0 5px 5px;
+
+  &[x-placement^="left"] {
+    margin-right: 5px;
+    .popper__arrow {
+      top: calc(50% - 5px);
+      right: -5px;
+      margin-right: 0;
+      margin-left: 0;
+      border-color: transparent transparent transparent $popper-border-color;
+      border-width: 5px 0 5px 5px;
+    }
   }
 }
 // scss-lint:enable SelectorFormat

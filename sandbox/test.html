@@ -18,6 +18,7 @@
 
   <script src="../dist/bootstrap-material-design-datepicker.iife.js"></script>
 
+  <!--
   <script>
     // bootlint
     $(function () {
@@ -29,6 +30,7 @@
       document.body.appendChild(s)
     })
   </script>
+  -->
 </head>
 
 <body>
@@ -41,7 +43,8 @@
   </form>
 </div>
 <script>
-  $('input').datepicker({})
+  var $input = $('input')
+  $input.datepicker({}).datepicker('show')
 </script>
 </body>
 </html>

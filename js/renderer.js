@@ -20,9 +20,12 @@ const Renderer = class extends Base {
   }
 
   show() {
-    console.log(`dp.element`, this.dp.$element[0])
-    this.popper = new Popper(this.dp.$element[0], {content: 'Foo'}, this.config.popper)
-    //this.popper = new Popper(this.dp.$element[0], {allow: 'node', content: this.$picker[0]}, this.config.popper)
+    if (this.isShowing()) {
+      return
+    }
+
+    //this.popper = new Popper(this.dp.$element[0], {content: 'Foo'}, this.config.popper)
+    this.popper = new Popper(this.dp.$element[0], {allow: 'node', content: this.$picker[0]}, this.config.popper)
     this.shown = true
   }
 
@@ -32,11 +35,14 @@ const Renderer = class extends Base {
     }
 
     this.popper.destroy()
+    // workaround for failure to destroy https://github.com/FezVrasta/popper.js/issues/30
+    this.popper._popper.parentNode.removeChild(this.popper._popper)
+
     this.popper = undefined
     this.shown = false
   }
 
-  isShowing(){
+  isShowing() {
     return this.shown
   }
 

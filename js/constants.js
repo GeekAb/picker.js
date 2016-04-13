@@ -37,8 +37,6 @@ export const ClassName = {
   PREV: 'prev',
   NEXT: 'next',
   DOW: `dow`,
-  TITLE: `${NAME}-title`,
-  SWITCH: `${NAME}-switch`,
   TODAY: `today`,
   CLEAR: `clear`,
   SELECTED: `selected`,
@@ -48,6 +46,14 @@ export const ClassName = {
   FOCUSED: `focused`,
   NEW: `new`,
   OLD: `old`,
+
+
+  TITLE: `${NAME}-title`,
+  SWITCH: `${NAME}-switch`,
+
+  INLINE: `${NAME}-inline`,
+  DROPDOWN: `${NAME}-dropdown`, // used to also have dropdown-menu
+  RTL: `${NAME}-rtl`,
 
   DAY: 'day',
   MONTH: 'month',
