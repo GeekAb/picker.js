@@ -10,6 +10,10 @@ const Base = class {
     this.config = extend(true, {}, Default, ...configs)
   }
 
+  i18n(key){
+    return this.config.i18n[this.config.lang][key] || ''
+  }
+
   dispose(dataKey = null) {
     if(dataKey) {
       $.removeData(this.$element, dataKey)

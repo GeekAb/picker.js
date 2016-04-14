@@ -27,11 +27,6 @@ export const Event = {
   CLICK_DATA_API: `click${EVENT_KEY}${DATA_API_KEY}`
 }
 
-export const ClassPrefix = {
-  ORIENT: `${NAME}-orient`
-}
-
-// `${NAME}-`
 export const ClassName = {
   NAME: NAME,
   PREV: 'prev',
@@ -67,14 +62,7 @@ export const ClassName = {
   // range
   RANGE: 'range',
   RANGE_START: 'range-start',
-  RANGE_END: 'range-end',
-
-  // orientation
-  TOP: `${ClassPrefix.ORIENT}-top`,
-  BOTTOM: `${ClassPrefix.ORIENT}-bottom`,
-  RIGHT: `${ClassPrefix.ORIENT}-right`,
-  LEFT: `${ClassPrefix.ORIENT}-left`
-
+  RANGE_END: 'range-end'
 }
 
 export const Selector = {

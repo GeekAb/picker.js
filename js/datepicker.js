@@ -17,7 +17,16 @@ const Datepicker = (($) => {
 
   const JQUERY_NO_CONFLICT = $.fn[JQUERY_NAME]
   const Default = {
+    // lang defaults to en, most i18n comes from moment's locales.
     lang: 'en',
+    // i18n - for the very few strings we use.
+    i18n: {
+      en: {
+        today: 'Today',
+        clear: 'Clear'
+      }
+    },
+
     autoclose: false, // Whether or not to close the datepicker immediately when a date is selected
     toggleActive: false, // If true, selecting the currently active date in the datepicker will unset the respective date. This option is always true when the multidate option is being used
     forceParse: true, // force parsing of the input value when the picker is closed. That is, when an invalid date is left in the input field by the user, the picker will forcibly parse that value, and set the input’s value to the new, valid date, conforming to the given format.
@@ -97,19 +106,8 @@ const Datepicker = (($) => {
       // any popper.js options are valid here and will be passed to that component
       placement: 'right'
     },
-    // FIXME: remove if using popper?
-    /*
-     A space-separated string consisting of one or two of “left” or “right”, “top” or “bottom”, and “auto” (may be omitted); for example, “top left”, “bottom” (horizontal orientation will default to “auto”), “right” (vertical orientation will default to “auto”), “auto top”. Allows for fixed placement of the picker popup.
-
-     “orientation” refers to the location of the picker popup’s “anchor”; you can also think of it as the location of the trigger element (input, component, etc) relative to the picker.
-
-     “auto” triggers “smart orientation” of the picker. Horizontal orientation will default to “left” and left offset will be tweaked to keep the picker inside the browser viewport; vertical orientation will simply choose “top” or “bottom”, whichever will show more of the picker in the viewport.
-     */
-    //orientation: "auto",
-
 
     template: main,
-
 
     // -------------------
     // callbacks  FIXME: better way to do this?
@@ -949,44 +947,6 @@ const Datepicker = (($) => {
       this.setDateStart(this.config.date.start)
       this.setDateEnd(this.config.date.end)
       this.setDatesDisabled(this.config.date.disabled)
-
-
-      // --------------------
-      // Orientation
-      //let orientationTokens = String(this.config.orientation).toLowerCase().split(/\s+/g)
-      //let orientation = this.config.orientation.toLowerCase()
-      //orientationTokens = $.grep(orientationTokens, (word) => {
-      //  return /^auto|left|right|top|bottom$/.test(word)
-      //})
-      //// default the orientation
-      //this.config.orientation = {x: 'auto', y: 'auto'}
-      //if (!orientation || orientation === 'auto') {
-      //  // no action
-      //}
-      //else if (orientationTokens.length === 1) {
-      //  switch (orientationTokens[0]) {
-      //    case 'top':
-      //    case 'bottom':
-      //      this.config.orientation.y = orientationTokens[0]
-      //      break
-      //    case 'left':
-      //    case 'right':
-      //      this.config.orientation.x = orientationTokens[0]
-      //      break
-      //  }
-      //}
-      //else {
-      //  orientation = $.grep(orientationTokens, (word) => {
-      //    return /^left|right$/.test(word)
-      //  })
-      //  this.config.orientation.x = orientation[0] || 'auto'
-      //
-      //  orientation = $.grep(orientationTokens, (word) => {
-      //    return /^top|bottom$/.test(word)
-      //  })
-      //  this.config.orientation.y = orientation[0] || 'auto'
-      //}
-
 
       // Default date - if unspecified, it is now
       this.config.date.default = this.config.date.default || this.moment.clone()

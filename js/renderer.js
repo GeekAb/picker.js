@@ -53,95 +53,6 @@ const Renderer = class extends Base {
     this.dp = null
   }
 
-
-  // FIXME: evaluate this and remove any code we can delegate to popper.js
-  //place() {
-  //if (this.isInline)
-  //  return this
-  //let calendarWidth = this.$picker.outerWidth()
-  //let calendarHeight = this.$picker.outerHeight()
-  //let visualPadding = 10
-  //let container = $(this.config.container)
-  //let windowWidth = container.width()
-  //let scrollTop = this.config.container === 'body' ? $(document).scrollTop() : container.scrollTop()
-  //let appendOffset = container.offset()
-  //
-  //let parentsZindex = []
-  //this.dp.$element.parents().each(function () {
-  //  let itemZIndex = $(this).css('z-index')
-  //  if (itemZIndex !== 'auto' && itemZIndex !== 0) parentsZindex.push(parseInt(itemZIndex))
-  //})
-  //let zIndex = Math.max.apply(Math, parentsZindex) + this.config.zIndexOffset
-  //let offset = this.component ? this.component.parent().offset() : this.dp.$element.offset()
-  //let height = this.component ? this.component.outerHeight(true) : this.dp.$element.outerHeight(false)
-  //let width = this.component ? this.component.outerWidth(true) : this.dp.$element.outerWidth(false)
-  //let left = offset.left - appendOffset.left,
-  //  top = offset.top - appendOffset.top
-  //
-  //if (this.config.container !== 'body') {
-  //  top += scrollTop
-  //}
-  //
-  //this.$picker.removeClass([ClassName.TOP, ClassName.RIGHT, ClassName.BOTTOM, ClassName.LEFT])
-  //
-  //if (this.config.orientation.x !== 'auto') {
-  //  this.$picker.addClass(`${ClassPrefix.ORIENT}-${this.config.orientation.x}`)
-  //  if (this.config.orientation.x === 'right')
-  //    left -= calendarWidth - width
-  //}
-  //// auto x orientation is best-placement: if it crosses a window edge, fudge it sideways
-  //else {
-  //  if (offset.left < 0) {
-  //    // component is outside the window on the left side. Move it into visible range
-  //    this.$picker.addClass(ClassName.LEFT)
-  //    left -= offset.left - visualPadding
-  //  }
-  //  else if (left + calendarWidth > windowWidth) {
-  //    // the calendar passes the widow right edge. Align it to component right side
-  //    this.$picker.addClass(ClassName.RIGHT)
-  //    left += width - calendarWidth
-  //  }
-  //  else {
-  //    // Default to left
-  //    this.$picker.addClass(ClassName.LEFT)
-  //  }
-  //}
-  //
-  //// auto y orientation is best-situation: top or bottom, no fudging,
-  //// decision based on which shows more of the calendar
-  //let yorient = this.config.orientation.y
-  //let top_overflow
-  //if (yorient === 'auto') {
-  //  top_overflow = -scrollTop + top - calendarHeight
-  //  yorient = top_overflow < 0 ? 'bottom' : 'top'
-  //}
-  //
-  //this.$picker.addClass(`${ClassPrefix.ORIENT}-${yorient}`)
-  //if (yorient === 'top') {
-  //  top -= calendarHeight + parseInt(this.$picker.css('padding-top'))
-  //}
-  //else {
-  //  top += height
-  //}
-  //
-  //if (this.config.rtl) {
-  //  let right = windowWidth - (left + width)
-  //  this.$picker.css({
-  //    top: top,
-  //    right: right,
-  //    zIndex: zIndex
-  //  })
-  //}
-  //else {
-  //  this.$picker.css({
-  //    top: top,
-  //    left: left,
-  //    zIndex: zIndex
-  //  })
-  //}
-  //  return this
-  //}
-
   // FIXME: appears to be called in #fill and from the db constructor - redundant? naming?
   renderMonths(viewDate) {
     let html = ''
@@ -173,8 +84,9 @@ const Renderer = class extends Base {
     let endYear = this.config.date.end.year()
     let endMonth = this.config.date.end.month()
 
-    //let todaytxt = dates[this.config.language].today || dates['en'].today || ''
-    //let cleartxt = dates[this.config.language].clear || dates['en'].clear || ''
+    //FIXME: remove these????
+    let todayText = this.i18n('today')
+    let clearText = this.i18n('clear')
     //let titleFormat = dates[this.config.language].titleFormat || dates['en'].titleFormat
     let titleFormat = `ddd, MMM D` // Thu, Apr 13
 
@@ -182,9 +94,9 @@ const Renderer = class extends Base {
       return
     this.$picker.find(`${Selector.DAYS} ${Selector.SWITCH}`).text(this.dp.formatDate(viewDate, titleFormat))
     // FIXME: remove option?
-    //this.$picker.find('tfoot .today').text(todaytxt).toggle(this.config.today.button !== false)
+    this.$picker.find('tfoot .today').text(todayText).toggle(this.config.today.button !== false)
     // FIXME: remove option?
-    //this.$picker.find('tfoot .clear').text(cleartxt).toggle(this.config.clearBtn !== false)
+    this.$picker.find('tfoot .clear').text(clearText).toggle(this.config.clearBtn !== false)
     // FIXME: remove option? title text?
     this.$picker.find(`thead ${Selector.TITLE}`).text(this.config.title).toggle(this.config.title !== '')
     this.updateNavArrows(viewDate)
