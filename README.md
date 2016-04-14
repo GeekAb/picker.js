@@ -6,7 +6,24 @@ A datepicker for bootstrap-material-design v4
 ## Goal 
 
 1. An ES2015 `datepicker` for [bootstrap-material-design](https://github.com/FezVrasta/bootstrap-material-design/tree/v4-dev) that meets the [Material Design specification](https://www.google.com/design/spec/components/pickers.html#)
-2. After refactoring, pull out the reusable pieces into a separate package that allows for pluggable renderers/templates
+2. Support multiple variations, including BS3, BS4, and BMD4
+
+
+## Developing
+
+### Basics
+1. Install Gulp 4 - `npm install -g gulpjs/gulp-cli#4.0`
+1. Install dependencies - `npm install`
+1. Full build - `gulp`
+
+### Typical
+
+I usually have two terminals open, just to speed up everything during development builds:
+
+1. `gulp js:watch`
+1. `gulp css:watch`
+
+Open the `sandbox/index.html` or the `sandbox/test.html` in a browser and you should be good to go.
 
 
 ## Credits

@@ -1,5 +1,5 @@
 import Base from './base'
-import {Selector, ClassName, ClassPrefix, Visibility} from './constants'
+import {Selector, ClassName, Visibility} from './constants'
 import Popper from 'popper.js'
 
 const Default = {
