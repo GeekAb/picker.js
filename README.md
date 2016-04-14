@@ -1,5 +1,5 @@
-# bootstrap-material-design-datepicker
-A datepicker for bootstrap-material-design v4
+# picker.js
+A picker for dates, date ranges, (and hopefully times) for multiple frameworks including Bootstrap 3, Bootstrap 4, and Material Design for Bootstrap 4
 
 **Work in progress**
 

@@ -46,13 +46,13 @@ const js = new Aggregate(gulp, 'js',
     parallel(gulp,
       new RollupUmd(gulp, preset, rollupConfig, {
         options: {
-          dest: 'bootstrap-material-design-datepicker.umd.js',
+          dest: 'picker.js.umd.js',
           moduleName: 'bootstrapMaterialDesign'
         }
       }),
       new RollupIife(gulp, preset, rollupConfig, {
         options: {
-          dest: 'bootstrap-material-design-datepicker.iife.js',
+          dest: 'picker.js.iife.js',
           moduleName: 'bootstrapMaterialDesign'
         }
       })
@@ -100,14 +100,14 @@ new Aggregate(gulp, 'publish',
 
     all,
 
-    //new Jekyll(gulp, preset, {options: {raw: 'baseurl: "/bootstrap-material-design-datepicker"'}}),
+    //new Jekyll(gulp, preset, {options: {raw: 'baseurl: "/picker.js"'}}),
 
     new PublishBuild(gulp, preset)
 
     //new PublishGhPages(gulp, preset, {
     //  options: {
     //    remote: {
-    //      repo: 'git@github.com:rosskevin/bootstrap-material-design-datepicker.git' // FIXME: temporary, remove this option when we are deploying to our home repo
+    //      repo: 'git@github.com:rosskevin/picker.js.git' // FIXME: temporary, remove this option when we are deploying to our home repo
     //    }
     //  }
     //})

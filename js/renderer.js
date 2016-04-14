@@ -25,7 +25,7 @@ const Renderer = class extends Base {
     }
 
     //this.popper = new Popper(this.dp.$element[0], {content: 'Foo'}, this.config.popper)
-    this.popper = new Popper(this.dp.$element[0], {allow: 'node', content: this.$picker[0]}, this.config.popper)
+    this.popper = new Popper(this.dp.$element, {contentType: 'node', content: this.$picker}, this.config.popper)
     this.shown = true
   }
 
