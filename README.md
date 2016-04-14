@@ -5,9 +5,26 @@ A picker for dates, date ranges, (and hopefully times) for multiple frameworks i
 
 ## Goal 
 
-1. An ES2015 `datepicker` for [bootstrap-material-design](https://github.com/FezVrasta/bootstrap-material-design/tree/v4-dev) that meets the [Material Design specification](https://www.google.com/design/spec/components/pickers.html#)
-2. Support multiple variations, including BS3, BS4, and BMD4
+1. An ES2015 base classes for use in multiple renderings 
+2. Variations of `datepicker`:
+    - Bootstrap 3 (ported code)
+    - Bootstrap 4
+    - [bootstrap-material-design](https://github.com/FezVrasta/bootstrap-material-design/tree/v4-dev) 4 picker that meets the [Material Design specification](https://www.google.com/design/spec/components/pickers.html#)
+3. (future) add time pickers - starting with material design    
 
+## Why?
+The bootsrap-datepicker project had 415 open issue and 64 open pull requests.  One reason for this is it bit off a big chunk, including all date functionality and rendering/placement functionality.
+
+Maintaining that project may be too much, and we want to _expand_ it!  
+
+## Strategy/Tactics
+- [x] Port the bootstrap-datepicker code to ES2015 classes
+- [x] Remove all date parsing code/locales and substitute [moment.js](http://momentjs.com/)
+- [x] Remove all the UI placement code, and substitute with [popper.js](http://popper.js.org/)
+- [ ] Refactor large codebase into maintainable/encapsulated classes
+- [ ] Port the tests
+- [ ] Create `presets` for rendering on different frameworks       
+  
 
 ## Developing
 
