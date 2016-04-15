@@ -33,6 +33,19 @@ const EventManager = class extends Base {
     super.dispose()
   }
 
+  onShown() {
+    this.attachSecondaryEvents()
+    this._trigger(Event.SHOW)
+    if ((window.navigator.msMaxTouchPoints || 'ontouchstart' in document) && !this.config.keyboard.touch) {
+      $(this.dp.$element).blur()
+    }
+  }
+
+  onHidden() {
+    this.detachSecondaryEvents()
+    this._trigger(Event.HIDE)
+  }
+
 
   click(ev) {
     ev.preventDefault()
@@ -162,13 +175,7 @@ const EventManager = class extends Base {
         this.renderer.fill()
       }
     }
-
-    if (this.dp.isShowing() && this.focusedFromElement) {
-      $(this.focusedFromElement).focus()
-    }
-    this.focusedFromElement = undefined
   }
-
 
   // FIXME: nomenclature to be onKe*
   keyup(ev) {
@@ -283,20 +290,14 @@ const EventManager = class extends Base {
         break
     }
     if (dateChanged) {
-      if (this.dp.dates.length())
+      if (this.dp.dates.length()) {
         this._trigger(Event.DATE_CHANGE)
-      else
+      }
+      else {
         this._trigger(Event.DATE_CLEAR)
-      let element
-      if (this.dp.isInput) {
-        element = this.dp.$element
       }
-      else if (this.component) {
-        element = this.dp.$element.find('input')
-      }
-      if (element) {
-        element.change()
-      }
+
+      this.dp.$input.change()
     }
   }
 
@@ -342,71 +343,32 @@ const EventManager = class extends Base {
     let events = {
       keyup: (ev) => this.keyup(ev),
       keydown: (ev) => this.keydown(ev),
-      paste: (ev) => this.paste(ev)
+      paste: (ev) => this.paste(ev),
+      click: () => this.dp.show()
     }
 
     if (this.config.showOnFocus === true) {
       events.focus = () => this.dp.show()
     }
 
-    if (this.dp.isInput) { // single input
-      this.events = [
-        [this.dp.$element, events]
-      ]
-    }
-    else if (this.component && this.hasInput) { // component: input + button
-      this.events = [
-        // For components that are not readonly, allow keyboard nav
-        [this.dp.$element.find('input'), events],
-        [this.component, {
-          click: () => this.dp.show()
-        }]
-      ]
-    }
-    else if (this.isInline) {  // inline datepicker
-      //this.isInline = true
-      //       kross moved this to constructor
-      // legacy, do we need to avoid else
-    }
-    else {
-      this.events = [
-        [this.dp.$element, {
-          click: () => this.dp.show(),
-          keydown: (ev) => this.keydown(ev)
-        }]
-      ]
-    }
-    this.events.push(
-      // Component: listen for blur on element descendants
-      [this.dp.$element, '*', {
-        blur: (ev) => {
-          this.focusedFromElement = ev.target
-        }
-      }],
-      // Input: listen for blur on element
-      [this.dp.$element, {
-        blur: (ev) => {
-          this.focusedFromElement = ev.target
-        }
-      }]
-    )
+    // single input
+    this.events = [
+      [this.dp.$input, events]
+    ]
+
 
     if (this.config.immediateUpdates) {
+
+      let immediateUpdateEvents = {}
+      immediateUpdateEvents[`${Event.YEAR_CHANGE} ${Event.MONTH_CHANGE}`] = (ev) => this.dp.update()(ev.date)
       // Trigger input updates immediately on changed year/month
-      this.events.push([this.dp.$element, {
-        'changeYear changeMonth': (e) => {
-          this.dp.update()(e.date)
-        }
-      }])
+      this.events.push(
+        [this.dp.$element, immediateUpdateEvents]
+      )
     }
 
     this.secondaryEvents = [
-      [this.renderer.$picker, {
-        click: (ev) => this.click(ev)
-      }],
-      //[$(window), {
-      //  resize: () => this.renderer.place()
-      //}],
+      [this.renderer.$picker, { click: (ev) => this.click(ev) }],
       [$(document), {
         mousedown: (ev) => {
           // Clicked outside the datepicker, hide it
@@ -415,7 +377,7 @@ const EventManager = class extends Base {
               this.dp.$element.find(ev.target).length ||
               this.renderer.$picker.is(ev.target) ||
               this.renderer.$picker.find(ev.target).length ||
-              this.renderer.$picker.hasClass('datepicker-inline')
+              this.renderer.$picker.hasClass(ClassName.INLINE)
             )) {
             this.dp.hide()
           }

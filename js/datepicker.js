@@ -158,13 +158,16 @@ const Datepicker = (($) => {
 
       // inline datepicker if target is a div
       this.isInline = this.$element.is('div')
-      this.isInput = this.$element.is('input')
 
-      // component? FIXME: better name?
-      this.component = this.$element.hasClass('date') ? this.$element.find('.add-on, .input-group-addon, .btn') : false
-      this.hasInput = this.component && this.$element.find('input').length
-      if (this.component && this.component.length === 0)
-        this.component = false
+      // find the $input right now
+      if (this.$element.is('input')) {
+        this.$input = this.$element
+      }
+      else if (this.component) {
+        this.$input = this.$element.find('input')
+      }
+
+      // FIXME: data-datepicker-toggle='#input-id' or whatever pattern bootstrap uses for toggle - `click: () => this.show()` instead of old `component` or add-on
 
       // initialize the renderer and create the $picker element
       this.renderer = new Renderer(this)
@@ -211,11 +214,11 @@ const Datepicker = (($) => {
     newMoment(...args) {
       let m = null
 
-      if(args.length < 1) {
+      if (args.length < 1) {
         // if no args, use the current date/time (cannot pass in null otherwise time is zeroed)
         m = moment()
       }
-      else{
+      else {
         m = moment(args)
       }
 
@@ -458,16 +461,8 @@ const Datepicker = (($) => {
       if (!which || which !== 'view') {
         this.eventManager._trigger(Event.DATE_CHANGE)
       }
-      let $e
-      if (this.isInput) {
-        $e = this.$element
-      }
-      else if (this.component) {
-        $e = this.$element.find('input')
-      }
-      if ($e) {
-        $e.change()
-      }
+
+      this.$input.change()
       if (this.config.autoclose && (!which || which === 'date')) {
         this.hide()
       }
@@ -479,25 +474,19 @@ const Datepicker = (($) => {
 
     //
     show() {
-      if (this.isShowing()) {
+      if (this.isInline || this.isShowing()) {
         return
       }
 
-      let element = this.component ? this.$element.find('input') : this.$element
-      if (element.attr('readonly') && this.config.enableOnReadonly === false) {
+      if (this.$input.attr('readonly') && this.config.enableOnReadonly === false) {
         return
       }
 
-      //this.popper = new Popper(this.dp.$element[0], {content: 'Foo'}, this.config.popper)
+      // popper
       this.popper = new Popper(this.$element, {contentType: 'node', content: this.renderer.$picker}, this.config.popper)
       this.shown = true
 
-
-      this.eventManager.attachSecondaryEvents()
-      this.eventManager._trigger(Event.SHOW)
-      if ((window.navigator.msMaxTouchPoints || 'ontouchstart' in document) && !this.config.keyboard.touch) {
-        $(this.$element).blur()
-      }
+      this.eventManager.onShown()
       return this
     }
 
@@ -516,21 +505,19 @@ const Datepicker = (($) => {
         return
       }
 
+      // popper
       this.popper.destroy()
       this.popper._popper.parentNode.removeChild(this.popper._popper) // workaround for failure to destroy https://github.com/FezVrasta/popper.js/issues/30
       this.popper = undefined
       this.shown = false
 
-
-      this.eventManager.detachSecondaryEvents()
+      this.eventManager.onHidden()
       this.view = this.config.view.start
       this.showView()
 
-      if (this.config.forceParse &&
-        (this.isInput && this.$element.val() || this.hasInput && this.$element.find('input').val())) {
+      if (this.config.forceParse && this.$input.val()) {
         this.setInputValue()
       }
-      this.eventManager._trigger(Event.HIDE)
       return this
     }
 
@@ -680,17 +667,7 @@ const Datepicker = (($) => {
     }
 
     clearDates() {
-      let element = null
-      if (this.isInput) {
-        element = this.$element
-      }
-      else if (this.component) {
-        element = this.$element.find('input')
-      }
-
-      if (element) {
-        element.val('')
-      }
+      this.$input.val('')
 
       this.update()
       this.eventManager._trigger(Event.DATE_CHANGE)
@@ -735,14 +712,7 @@ const Datepicker = (($) => {
 
     setInputValue() {
       let formatted = this.getDateFormatted()
-      if (!this.isInput) {
-        if (this.component) {
-          this.$element.find('input').val(formatted)  // FIXME: find $input in constructor and replace a bunch of these?
-        }
-      }
-      else {
-        this.$element.val(formatted)
-      }
+      this.$input.val(formatted)
       return this
     }
 
@@ -777,12 +747,7 @@ const Datepicker = (($) => {
         newDatesArray = this.parseDates(...dates)
       }
       else {
-        if (this.isInput) {
-          newDatesArray = this.$element.val()
-        }
-        else {
-          newDatesArray = /*this.$element.data('date') ||*/ this.$element.find('input').val()
-        }
+        newDatesArray = this.$input.val()
 
         if (newDatesArray && this.config.multidate.enabled) {
           newDatesArray = newDatesArray.split(this.config.multidate.separator)
