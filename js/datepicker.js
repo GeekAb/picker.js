@@ -2,10 +2,11 @@ import Base from './base'
 import Renderer from './renderer'
 import EventManager from './eventManager'
 import DateArray from './util/dateArray'
+import DateRangePicker from './dateRangePicker'
+import {JQUERY_NAME, DATA_KEY, Event, Selector, ClassName, Unit, View} from './constants'
+import Popper from 'popper.js'
 import moment from 'moment'
 import {main} from './templates'
-import {JQUERY_NAME, DATA_KEY, Event, Selector, ClassName, Unit, View} from './constants'
-import DateRangePicker from './dateRangePicker'
 
 /**
  * Datepicker for fields using momentjs for all date-based functionality.
@@ -139,6 +140,7 @@ const Datepicker = (($) => {
       super(Default, ...configs)
 
       this.$element = $element
+      this.shown = false
       this.dates = new DateArray()
 
       // get our own utc instance and configure the locale
@@ -198,7 +200,8 @@ const Datepicker = (($) => {
       this.hide()
       this.eventManager.dispose()
       this.renderer.dispose()
-      this.renderer = null
+      this.renderer = undefined
+      this.popper = undefined
       super.dispose(dataKey)
     }
 
@@ -470,21 +473,25 @@ const Datepicker = (($) => {
       }
     }
 
+    isShowing() {
+      return this.shown
+    }
 
     //
     show() {
+      if (this.isShowing()) {
+        return
+      }
+
       let element = this.component ? this.$element.find('input') : this.$element
       if (element.attr('readonly') && this.config.enableOnReadonly === false) {
         return
       }
 
-      //if (!this.isInline) {
-      //  this.renderer.$picker.appendTo(this.config.container)
-      //}
+      //this.popper = new Popper(this.dp.$element[0], {content: 'Foo'}, this.config.popper)
+      this.popper = new Popper(this.$element, {contentType: 'node', content: this.renderer.$picker}, this.config.popper)
+      this.shown = true
 
-      //this.renderer.place()
-      //this.renderer.$picker.show()
-      this.renderer.show()
 
       this.eventManager.attachSecondaryEvents()
       this.eventManager._trigger(Event.SHOW)
@@ -499,14 +506,21 @@ const Datepicker = (($) => {
     //}
 
     hide() {
-      if (this.isInline || !this.renderer.isShowing()) {
+      if (this.isInline || !this.isShowing()) {
         return this
       }
 
       this.focusDate = null
 
-      //this.renderer.$picker.hide().detach()
-      this.renderer.hide()
+      if (!this.popper) {
+        return
+      }
+
+      this.popper.destroy()
+      this.popper._popper.parentNode.removeChild(this.popper._popper) // workaround for failure to destroy https://github.com/FezVrasta/popper.js/issues/30
+      this.popper = undefined
+      this.shown = false
+
 
       this.eventManager.detachSecondaryEvents()
       this.view = this.config.view.start

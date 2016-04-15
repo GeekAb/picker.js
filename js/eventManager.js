@@ -26,10 +26,10 @@ const EventManager = class extends Base {
   dispose() {
     this.detachEvents()
     this.detachSecondaryEvents()
-    this.dp = null
-    this.renderer = null
-    this.events = null
-    this.secondaryEvents = null
+    this.dp = undefined
+    this.renderer = undefined
+    this.events = undefined
+    this.secondaryEvents = undefined
     super.dispose()
   }
 
@@ -163,7 +163,7 @@ const EventManager = class extends Base {
       }
     }
 
-    if (this.renderer.isShowing() && this.focusedFromElement) {
+    if (this.dp.isShowing() && this.focusedFromElement) {
       $(this.focusedFromElement).focus()
     }
     this.focusedFromElement = undefined
@@ -186,9 +186,9 @@ const EventManager = class extends Base {
 
   // FIXME: nomenclature to be onKe*
   keydown(ev) {
-    if (!this.renderer.isShowing()) {
+    if (!this.dp.isShowing()) {
       if (Key.is(ev, Keycodes.DOWN, Keycodes.ESC)) { // allow down to re-show picker
-        this.show()
+        this.dp.show()
         ev.stopPropagation()
       }
       return
@@ -268,7 +268,7 @@ const EventManager = class extends Base {
         this.dp.viewDate = this.dp.dates.last() || this.dp.viewDate
         this.dp.setInputValue()
         this.renderer.fill() // FIXME: why not use this.dp.update()()?
-        if (this.renderer.isShowing()) {
+        if (this.dp.isShowing()) {
           ev.preventDefault()
           ev.stopPropagation()
           if (this.config.autoclose)
@@ -346,7 +346,7 @@ const EventManager = class extends Base {
     }
 
     if (this.config.showOnFocus === true) {
-      events.focus = () => this.show()
+      events.focus = () => this.dp.show()
     }
 
     if (this.dp.isInput) { // single input
@@ -359,7 +359,7 @@ const EventManager = class extends Base {
         // For components that are not readonly, allow keyboard nav
         [this.dp.$element.find('input'), events],
         [this.component, {
-          click: () => this.show()
+          click: () => this.dp.show()
         }]
       ]
     }
@@ -371,7 +371,7 @@ const EventManager = class extends Base {
     else {
       this.events = [
         [this.dp.$element, {
-          click: () => this.show(),
+          click: () => this.dp.show(),
           keydown: (ev) => this.keydown(ev)
         }]
       ]

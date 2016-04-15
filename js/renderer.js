@@ -1,6 +1,5 @@
 import Base from './base'
 import {Selector, ClassName, Unit, View, Visibility} from './constants'
-import Popper from 'popper.js'
 
 const Default = {
   debug: true
@@ -16,41 +15,13 @@ const Renderer = class extends Base {
     this.dp = datepicker
     this.config = this.dp.config // shortcut reference to same config
     this.$picker = $(this.config.template)
-    this.shown = false
   }
 
   dispose() {
     this.$picker.remove()
-    this.$picker = null
-    this.dp = null
+    this.$picker = undefined
+    this.dp = undefined
     super.dispose()
-  }
-
-  show() {
-    if (this.isShowing()) {
-      return
-    }
-
-    //this.popper = new Popper(this.dp.$element[0], {content: 'Foo'}, this.config.popper)
-    this.popper = new Popper(this.dp.$element, {contentType: 'node', content: this.$picker}, this.config.popper)
-    this.shown = true
-  }
-
-  hide() {
-    if (!this.popper) {
-      return
-    }
-
-    this.popper.destroy()
-    // workaround for failure to destroy https://github.com/FezVrasta/popper.js/issues/30
-    this.popper._popper.parentNode.removeChild(this.popper._popper)
-
-    this.popper = undefined
-    this.shown = false
-  }
-
-  isShowing() {
-    return this.shown
   }
 
   // FIXME: appears to be called in #fill and from the db constructor - redundant? naming?
