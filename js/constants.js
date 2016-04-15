@@ -27,6 +27,24 @@ export const Event = {
   CLICK_DATA_API: `click${EVENT_KEY}${DATA_API_KEY}`
 }
 
+export const View = {
+  DAYS: 0,
+  MONTHS: 1,
+  YEARS: 2,
+  DECADES: 3,
+  CENTURIES: 4
+}
+
+export const Unit = {
+  // units
+  DAY: 'day',
+  WEEK: 'week',
+  MONTH: 'month',
+  YEAR: 'year',
+  DECADE: 'decade',
+  CENTURY: 'century'
+}
+
 export const ClassName = {
   NAME: NAME,
   PREV: 'prev',
@@ -49,9 +67,6 @@ export const ClassName = {
   INLINE: `${NAME}-inline`,
   DROPDOWN: `${NAME}-dropdown`, // used to also have dropdown-menu
   RTL: `${NAME}-rtl`,
-
-  DAY: 'day',
-  MONTH: 'month',
 
   DAYS: `${NAME}-days`,
   MONTHS: `${NAME}-months`,

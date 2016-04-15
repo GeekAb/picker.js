@@ -1,5 +1,5 @@
 import Base from './base'
-import {Selector, ClassName, Visibility} from './constants'
+import {Selector, ClassName, Unit, View, Visibility} from './constants'
 import Popper from 'popper.js'
 
 const Default = {
@@ -58,7 +58,7 @@ const Renderer = class extends Base {
     let html = ''
     for (let i = 0; i < 12; i++) { // 0..11
       let focused = viewDate && viewDate.month() === i ? ClassName.FOCUSED : ''
-      html += `<span class="${ClassName.MONTH} ${focused}">${this.dp.newMoment().month(i).format(`MMM`)}</span>` // Jan
+      html += `<span class="${Unit.MONTH} ${focused}">${this.dp.newMoment().month(i).format(`MMM`)}</span>` // Jan
     }
     this.$picker.find(`${Selector.MONTHS} td`).html(html)
   }
@@ -103,7 +103,7 @@ const Renderer = class extends Base {
     this.renderMonths(viewDate)
 
     // get prevMonth moment set to same day of the week
-    let prevMonth = viewDate.clone().startOf('month').subtract(1, 'day') // end of last month
+    let prevMonth = viewDate.clone().startOf(Unit.MONTH).subtract(1, 'day') // end of last month
     prevMonth.day(prevMonth.day() - (prevMonth.day() - this.config.week.start + 7) % 7) // set day of week
 
     // TODO: not sure why 42 days is added (yet)...
@@ -120,7 +120,7 @@ const Renderer = class extends Base {
     let monthsTitle = `use year here?`//dates[this.config.language].monthsTitle || dates['en'].monthsTitle || 'Months'
     let $months = this.$picker.find(Selector.MONTHS)
       .find(Selector.SWITCH)
-      .text(this.config.view.max < 2 ? monthsTitle : year)
+      .text(this.config.view.max < View.YEARS ? monthsTitle : year)
       .end()
       .find('span').removeClass(ClassName.ACTIVE)
 
@@ -154,7 +154,7 @@ const Renderer = class extends Base {
       for (let i in $months) {
         //$.each($months, function (i, month) {
         let $month = $($months[i])
-        let moDate = this.dp.newMoment().year(year).month(i).startOf('month')
+        let moDate = this.dp.newMoment().year(year).month(i).startOf(Unit.MONTH)
         let before = this.config.beforeShowMonth(moDate)
         if (before === undefined) {
           before = {}
@@ -174,7 +174,7 @@ const Renderer = class extends Base {
     // Generating decade/years picker
     this.fillYearsView(
       Selector.YEARS,
-      'year',
+      Unit.YEAR,
       10,
       1,
       year,
@@ -186,7 +186,7 @@ const Renderer = class extends Base {
     // Generating century/decades picker
     this.fillYearsView(
       Selector.DECADES,
-      'decade',
+      Unit.DECADE,
       100,
       10,
       year,
@@ -198,7 +198,7 @@ const Renderer = class extends Base {
     // Generating millennium/centuries picker
     this.fillYearsView(
       Selector.CENTURIES,
-      'century',
+      Unit.CENTURY,
       1000,
       100,
       year,
@@ -217,7 +217,7 @@ const Renderer = class extends Base {
     let month = viewDate.month()
 
     switch (this.dp.viewMode) {
-      case 0:
+      case View.DAYS:
         if (year <= this.config.date.start.year() && month <= this.config.date.start.month()) {
           this.$picker.find(Selector.PREV).css(Visibility.HIDDEN)
         }
@@ -231,17 +231,17 @@ const Renderer = class extends Base {
           this.$picker.find(Selector.NEXT).css(Visibility.VISIBLE)
         }
         break
-      case 1:
-      case 2:
-      case 3:
-      case 4:
-        if (year <= this.config.date.start.year() || this.config.view.max < 2) {
+      case View.MONTHS:
+      case View.YEARS:
+      case View.DECADES:
+      case View.CENTURIES:
+        if (year <= this.config.date.start.year() || this.config.view.max < View.YEARS) {
           this.$picker.find(Selector.PREV).css(Visibility.HIDDEN)
         }
         else {
           this.$picker.find(Selector.PREV).css(Visibility.VISIBLE)
         }
-        if (year >= this.config.date.end.year() || this.config.view.max < 2) {
+        if (year >= this.config.date.end.year() || this.config.view.max < View.YEARS) {
           this.$picker.find(Selector.NEXT).css(Visibility.HIDDEN)
         }
         else {
@@ -300,7 +300,7 @@ const Renderer = class extends Base {
        */
       if (callback !== undefined) {
         //before = callback(new Date(thisYear, 0, 1))
-        let m = this.dp.newMoment().year(thisYear).month(0).startOf('month')
+        let m = this.dp.newMoment().year(thisYear).month(0).startOf(Unit.MONTH)
         let before = callback(m)
 
         if (before === undefined) {
@@ -330,7 +330,7 @@ const Renderer = class extends Base {
       html.push('<tr>')
     }
     let classNames = this.getClassNames(viewDate, prevMonth)
-    classNames.push(ClassName.DAY)
+    classNames.push(Unit.DAY)
 
     /*
      A function that takes a date as a parameter and returns one of the following values:

@@ -5,7 +5,7 @@ import Keycodes from './util/keycodes'
 import Key from './util/key'
 import Dates from './util/dates'
 import Renderer from './renderer'
-import {JQUERY_NAME, DATA_KEY, Event, Selector, ClassName} from './constants'
+import {JQUERY_NAME, DATA_KEY, Event, Selector, ClassName, Unit, View} from './constants'
 import DateRangePicker from './dateRangePicker'
 
 /**
@@ -212,7 +212,16 @@ const Datepicker = (($) => {
      * @returns a new UTC moment configured with the locale
      */
     newMoment(...args) {
-      let m = moment(args)
+      let m = null
+
+      if(args.length < 1) {
+        // if no args, use the current date/time (cannot pass in null otherwise time is zeroed)
+        m = moment()
+      }
+      else{
+        m = moment(args)
+      }
+
       m.utc()
       m.locale(this.config.lang)
       return m
@@ -491,7 +500,7 @@ const Datepicker = (($) => {
         if (!this.dateWithinRange(m))
           return false
 
-        unit = 'day'
+        unit = Unit.DAY
       }
       while (this.dateIsDisabled(m))
 
@@ -560,20 +569,20 @@ const Datepicker = (($) => {
 
       // Clicked on the switch
       if ($target.hasClass(ClassName.SWITCH)) {
-        this.showMode(1)
+        this.showMode(View.MONTHS)
       }
 
       // Clicked on prev or next
       let $navArrow = $target.closest(`${Selector.PREV}, ${Selector.NEXT}`)
       if ($navArrow.length > 0) {
         let dir = this.config.view.modes[this.viewMode].navStep * ($navArrow.hasClass(ClassName.PREV) ? -1 : 1)
-        if (this.viewMode === 0) {
-          this.viewDate.add(dir, 'month')
+        if (this.viewMode === View.DAYS) {
+          this.viewDate.add(dir, Unit.MONTH)
           this._trigger(Event.MONTH_CHANGE, this.viewDate)
         }
         else {
-          this.viewDate.add(dir, 'year')
-          if (this.viewMode === 1) {
+          this.viewDate.add(dir, Unit.YEAR)
+          if (this.viewMode === View.MONTHS) {
             this._trigger(Event.YEAR_CHANGE, this.viewDate)
           }
         }
@@ -593,7 +602,7 @@ const Datepicker = (($) => {
 
       if (!$target.hasClass(ClassName.DISABLED)) {
         // Clicked on a day
-        if ($target.hasClass(ClassName.DAY)) {
+        if ($target.hasClass(Unit.DAY)) {
           let day = parseInt($target.text(), 10) || 1
           let year = this.viewDate.year()
           let month = this.viewDate.month()
@@ -637,14 +646,14 @@ const Datepicker = (($) => {
         }
 
         // Clicked on a month
-        if ($target.hasClass('month')) {
+        if ($target.hasClass(Unit.MONTH)) {
           this.viewDate.date(1)
           let day = 1
           let month = $target.parent().find('span').index($target)
           let year = this.viewDate.year()
           this.viewDate.month(month)
           this._trigger(Event.MONTH_CHANGE, this.viewDate)
-          if (this.config.view.min === 1) {
+          if (this.config.view.min === View.MONTHS) {
             this.clickDate(this.newMoment(year, month, day))
             this.showMode()
           }
@@ -654,36 +663,28 @@ const Datepicker = (($) => {
           this.renderer.fill()
         }
 
-        // Clicked on a year
-        if ($target.hasClass('year')
-          || $target.hasClass('decade')
-          || $target.hasClass('century')) {
-          this.viewDate.setUTCDate(1)
+        // Clicked on a year|decade|century
+        if ($target.hasClass(Unit.YEAR)
+          || $target.hasClass(Unit.DECADE)
+          || $target.hasClass(Unit.CENTURY)) {
+          //this.viewDate.startOf(Unit.MONTH)
 
-          let day = 1
-          let month = 0
           let year = parseInt($target.text(), 10) || 0
           this.viewDate.year(year)
 
-          if ($target.hasClass('year')) {
+          if ($target.hasClass(Unit.YEAR)) {
             this._trigger(Event.YEAR_CHANGE, this.viewDate)
-            if (this.config.view.min === 2) {
-              this.clickDate(this.newMoment(year, month, day))
-            }
           }
-          if ($target.hasClass('decade')) {
+          if ($target.hasClass(Unit.DECADE)) {
             this._trigger(Event.DECADE_CHANGE, this.viewDate)
-            if (this.config.view.min === 3) {
-              this.clickDate(this.newMoment(year, month, day))
-            }
           }
-          if ($target.hasClass('century')) {
+          if ($target.hasClass(Unit.CENTURY)) {
             this._trigger(Event.CENTURY_CHANGE, this.viewDate)
-            if (this.config.view.min === 4) {
-              this.clickDate(this.newMoment(year, month, day))
-            }
           }
 
+          if (this.config.view.min === View.YEARS) {
+            this.clickDate(this.viewDate)
+          }
           this.showMode(-1)
           this.renderer.fill()
         }
@@ -743,37 +744,37 @@ const Datepicker = (($) => {
           if (!this.config.keyboard.navigation || this.config.daysOfWeek.disabled.length === 7)
             break
           dir = Key.is(ev, Keycodes.LEFT, Keycodes.UP) ? -1 : 1
-          if (this.viewMode === 0) {
+          if (this.viewMode === View.DAYS) {
             if (ev.ctrlKey) {
-              newViewDate = this.moveAvailableDate(focusDate, dir, 'year')
+              newViewDate = this.moveAvailableDate(focusDate, dir, Unit.YEAR)
 
               if (newViewDate)
                 this._trigger(Event.YEAR_CHANGE, this.viewDate)
             }
             else if (ev.shiftKey) {
-              newViewDate = this.moveAvailableDate(focusDate, dir, 'month')
+              newViewDate = this.moveAvailableDate(focusDate, dir, Unit.MONTH)
 
               if (newViewDate)
                 this._trigger(Event.MONTH_CHANGE, this.viewDate)
             }
             else if (Key.is(ev, Keycodes.LEFT, Keycodes.RIGHT)) {
-              newViewDate = this.moveAvailableDate(focusDate, dir, 'day')
+              newViewDate = this.moveAvailableDate(focusDate, dir, Unit.DAY)
             }
             else if (!this.weekOfDateIsDisabled(focusDate)) {
-              newViewDate = this.moveAvailableDate(focusDate, dir, 'week')
+              newViewDate = this.moveAvailableDate(focusDate, dir, Unit.WEEK)
             }
           }
-          else if (this.viewMode === 1) {
+          else if (this.viewMode === View.MONTHS) {
             if (Key.is(ev, Keycodes.UP, Keycodes.DOWN)) {
               dir = dir * 4
             }
-            newViewDate = this.moveAvailableDate(focusDate, dir, 'month')
+            newViewDate = this.moveAvailableDate(focusDate, dir, Unit.MONTH)
           }
-          else if (this.viewMode === 2) {
+          else if (this.viewMode === View.YEARS) {
             if (Key.is(ev, Keycodes.UP, Keycodes.DOWN)) {
               dir = dir * 4
             }
-            newViewDate = this.moveAvailableDate(focusDate, dir, 'year')
+            newViewDate = this.moveAvailableDate(focusDate, dir, Unit.YEAR)
           }
           if (newViewDate) {
             this.focusDate = this.viewDate = newViewDate
@@ -921,7 +922,7 @@ const Datepicker = (($) => {
       // Normalize views as view-type integers
       this.config.view.start = this.resolveViewType(this.config.view.start)
       this.config.view.min = this.resolveViewType(this.config.view.min)
-      this.config.view.max = this.resolveViewType(this.config.view.max)
+      this.config.view.max = this.resolveViewType(this.config.view.max, View.YEARS) // default to years (slightly different than other view resolution)
 
       // Check that the start view is between min and max
       this.config.view.start = Math.min(this.config.view.start, this.config.view.max)
@@ -1012,7 +1013,7 @@ const Datepicker = (($) => {
         this.weekOfDateIsDisabled(date) ||
         $.grep(this.config.date.disabled,
           (d) => {
-            return date.isSame(d, 'day')
+            return date.isSame(d, Unit.DAY)
           }
         ).length > 0
       )
@@ -1023,29 +1024,32 @@ const Datepicker = (($) => {
     }
 
     startOfDay(moment = this.moment) {
-      return moment.clone().startOf('day')
+      return moment.clone().startOf(Unit.DAY)
     }
 
     startOfAllTime(moment = this.moment) {
-      return moment.clone().startOf('year').year(0)
+      return moment.clone().startOf(Unit.YEAR).year(0)
     }
 
     endOfAllTime(moment = this.moment) {
-      return moment.clone().endOf('year').year(2200) // ?? better value to set for this?
+      return moment.clone().endOf(Unit.YEAR).year(2200) // ?? better value to set for this?
     }
 
-    resolveViewType(view) {
+    resolveViewType(view, defaultValue = View.DAYS) {
       if (typeof view === 'string') {
         let value = null
         switch (view) {
+          case 'days':
+            value = View.DAYS
+            break
           case 'months':
-            value = 1
+            value = View.MONTHS
             break
           case 'years':
-            value = 2
+            value = View.YEARS
             break
           default:
-            value = 0
+            value = defaultValue
             break
         }
         return value
