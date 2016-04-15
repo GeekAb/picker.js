@@ -459,7 +459,7 @@ const Datepicker = (($) => {
       this.renderer.fill()
       this.setInputValue()
       if (!which || which !== 'view') {
-        this.eventManager._trigger(Event.DATE_CHANGE)
+        this.eventManager.trigger(Event.DATE_CHANGE)
       }
 
       this.$input.change()
@@ -670,7 +670,7 @@ const Datepicker = (($) => {
       this.$input.val('')
 
       this.update()
-      this.eventManager._trigger(Event.DATE_CHANGE)
+      this.eventManager.trigger(Event.DATE_CHANGE)
 
       if (this.config.autoclose) {
         this.hide()
@@ -699,10 +699,10 @@ const Datepicker = (($) => {
       else if (this.dates.length()) {
         // setting date by typing
         if (String(oldDates.array) !== String(this.dates.array))
-          this.eventManager._trigger(Event.DATE_CHANGE)
+          this.eventManager.trigger(Event.DATE_CHANGE)
       }
       if (!this.dates.length() && oldDates.length()) {
-        this.eventManager._trigger(Event.DATE_CLEAR)
+        this.eventManager.trigger(Event.DATE_CLEAR)
       }
 
       this.renderer.fill()

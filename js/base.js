@@ -28,24 +28,6 @@ const Base = class {
     }
   }
 
-  /**
-   *
-    * @param eventKey
-   * @param object/hash - properties will be set on event
-   * @returns {boolean} - if false, code should get out because handler prevented
-   */
-  trigger(eventKey, object = {}){
-    let event = $.Event(eventKey ,object)
-    $(this.$element).trigger(event)
-    if (event.isDefaultPrevented()) {
-      this.debug(`default prevented on ${eventKey}`)
-      return false
-    }
-    else{
-      return true
-    }
-  }
-
   //---------------------
   // logger shortcuts
 

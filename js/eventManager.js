@@ -1,5 +1,5 @@
 import Base from './base'
-import {Selector, ClassName, Unit, View} from './constants'
+import {Selector, ClassName, Unit, View, Event} from './constants'
 import Keycodes from './util/keycodes'
 import Key from './util/key'
 
@@ -15,11 +15,42 @@ const EventManager = class extends Base {
     this.renderer = this.dp.renderer
     this.config = this.dp.config // shortcut reference to same config
 
-    //
-    this.events = []
-    this.secondaryEvents = []
+    // build events
+    let events = {
+      keyup: (ev) => this.onKeyup(ev),
+      keydown: (ev) => this.onKeydown(ev),
+      paste: (ev) => this.onPaste(ev),
+      click: () => this.dp.show()
+    }
 
-    this.buildEvents()
+    if (this.config.showOnFocus === true) {
+      events.focus = () => this.dp.show()
+    }
+
+    // single input
+    this.events = [
+      [this.dp.$input, events]
+    ]
+
+    if (this.config.immediateUpdates) {
+
+      let immediateUpdateEvents = {}
+      immediateUpdateEvents[`${Event.YEAR_CHANGE} ${Event.MONTH_CHANGE}`] = (ev) => this.dp.update()(ev.date)
+      // Trigger input updates immediately on changed year/month
+      this.events.push(
+        [this.dp.$element, immediateUpdateEvents]
+      )
+    }
+
+    // build secondary events
+    this.secondaryEvents = [
+      [this.renderer.$picker, {click: (ev) => this.onClick(ev)}],
+      [$(document), {
+        mousedown: (ev) => this.onMousedown(ev)
+      }]
+    ]
+
+    //
     this.attachEvents()
   }
 
@@ -35,7 +66,7 @@ const EventManager = class extends Base {
 
   onShown() {
     this.attachSecondaryEvents()
-    this._trigger(Event.SHOW)
+    this.trigger(Event.SHOW)
     if ((window.navigator.msMaxTouchPoints || 'ontouchstart' in document) && !this.config.keyboard.touch) {
       $(this.dp.$element).blur()
     }
@@ -43,11 +74,23 @@ const EventManager = class extends Base {
 
   onHidden() {
     this.detachSecondaryEvents()
-    this._trigger(Event.HIDE)
+    this.trigger(Event.HIDE)
   }
 
+  onMousedown(ev) {
+    // if clicked outside the datepicker, hide it
+    if (!(
+        this.dp.$element.is(ev.target) ||
+        this.dp.$element.find(ev.target).length ||
+        this.renderer.$picker.is(ev.target) ||
+        this.renderer.$picker.find(ev.target).length ||
+        this.renderer.$picker.hasClass(ClassName.INLINE)
+      )) {
+      this.dp.hide()
+    }
+  }
 
-  click(ev) {
+  onClick(ev) {
     ev.preventDefault()
     ev.stopPropagation()
 
@@ -64,12 +107,12 @@ const EventManager = class extends Base {
       let dir = this.config.view.modes[this.dp.view].navStep * ($navArrow.hasClass(ClassName.PREV) ? -1 : 1)
       if (this.dp.view === View.DAYS) {
         this.dp.viewDate.add(dir, Unit.MONTH)
-        this._trigger(Event.MONTH_CHANGE, this.dp.viewDate)
+        this.trigger(Event.MONTH_CHANGE, this.dp.viewDate)
       }
       else {
         this.dp.viewDate.add(dir, Unit.YEAR)
         if (this.dp.view === View.MONTHS) {
-          this._trigger(Event.YEAR_CHANGE, this.dp.viewDate)
+          this.trigger(Event.YEAR_CHANGE, this.dp.viewDate)
         }
       }
       this.renderer.fill()
@@ -124,10 +167,10 @@ const EventManager = class extends Base {
         }
         this.dp.clickDate(this.dp.newMoment(year, month, day))
         if (yearChanged) {
-          this._trigger(Event.YEAR_CHANGE, this.dp.viewDate)
+          this.trigger(Event.YEAR_CHANGE, this.dp.viewDate)
         }
         if (monthChanged) {
-          this._trigger(Event.MONTH_CHANGE, this.dp.viewDate)
+          this.trigger(Event.MONTH_CHANGE, this.dp.viewDate)
         }
       }
 
@@ -138,7 +181,7 @@ const EventManager = class extends Base {
         let month = $target.parent().find('span').index($target)
         let year = this.dp.viewDate.year()
         this.dp.viewDate.month(month)
-        this._trigger(Event.MONTH_CHANGE, this.dp.viewDate)
+        this.trigger(Event.MONTH_CHANGE, this.dp.viewDate)
         if (this.config.view.min === View.MONTHS) {
           this.dp.clickDate(this.dp.newMoment(year, month, day))
           this.dp.showView()
@@ -159,13 +202,13 @@ const EventManager = class extends Base {
         this.dp.viewDate.year(year)
 
         if ($target.hasClass(Unit.YEAR)) {
-          this._trigger(Event.YEAR_CHANGE, this.dp.viewDate)
+          this.trigger(Event.YEAR_CHANGE, this.dp.viewDate)
         }
         if ($target.hasClass(Unit.DECADE)) {
-          this._trigger(Event.DECADE_CHANGE, this.dp.viewDate)
+          this.trigger(Event.DECADE_CHANGE, this.dp.viewDate)
         }
         if ($target.hasClass(Unit.CENTURY)) {
-          this._trigger(Event.CENTURY_CHANGE, this.dp.viewDate)
+          this.trigger(Event.CENTURY_CHANGE, this.dp.viewDate)
         }
 
         if (this.config.view.min === View.YEARS) {
@@ -177,8 +220,7 @@ const EventManager = class extends Base {
     }
   }
 
-  // FIXME: nomenclature to be onKe*
-  keyup(ev) {
+  onKeyup(ev) {
     if (Key.isNot(ev,
         Keycodes.ESC,
         Keycodes.LEFT,
@@ -191,8 +233,7 @@ const EventManager = class extends Base {
       this.dp.update()()
   }
 
-  // FIXME: nomenclature to be onKe*
-  keydown(ev) {
+  onKeydown(ev) {
     if (!this.dp.isShowing()) {
       if (Key.is(ev, Keycodes.DOWN, Keycodes.ESC)) { // allow down to re-show picker
         this.dp.show()
@@ -212,8 +253,9 @@ const EventManager = class extends Base {
           this.dp.viewDate = this.dp.dates.last() || this.dp.viewDate
           this.renderer.fill() // FIXME: why not use this.dp.update()()?
         }
-        else
+        else {
           this.dp.hide()
+        }
         ev.preventDefault()
         ev.stopPropagation()
         break
@@ -229,13 +271,13 @@ const EventManager = class extends Base {
             newViewDate = this.dp.moveAvailableDate(focusDate, dir, Unit.YEAR)
 
             if (newViewDate)
-              this._trigger(Event.YEAR_CHANGE, this.dp.viewDate)
+              this.trigger(Event.YEAR_CHANGE, this.dp.viewDate)
           }
           else if (ev.shiftKey) {
             newViewDate = this.dp.moveAvailableDate(focusDate, dir, Unit.MONTH)
 
             if (newViewDate)
-              this._trigger(Event.MONTH_CHANGE, this.dp.viewDate)
+              this.trigger(Event.MONTH_CHANGE, this.dp.viewDate)
           }
           else if (Key.is(ev, Keycodes.LEFT, Keycodes.RIGHT)) {
             newViewDate = this.dp.moveAvailableDate(focusDate, dir, Unit.DAY)
@@ -291,39 +333,17 @@ const EventManager = class extends Base {
     }
     if (dateChanged) {
       if (this.dp.dates.length()) {
-        this._trigger(Event.DATE_CHANGE)
+        this.trigger(Event.DATE_CHANGE)
       }
       else {
-        this._trigger(Event.DATE_CLEAR)
+        this.trigger(Event.DATE_CLEAR)
       }
 
       this.dp.$input.change()
     }
   }
 
-  //FIXME: normalize these signatures? to be the same as #trigger in Base class?
-  _trigger(event, altdate) {
-    let date = null
-    if (altdate) {
-      date = altdate.clone()
-    }
-    else {
-      date = this.dp.dates.last()
-      if (date) {
-        //clone it if present
-        date = date.clone()
-      }
-    }
-
-    super.trigger(event, {
-      type: event,
-      date: date,
-      dates: this.dp.dates.clonedArray()
-    })
-  }
-
-  // FIXME: nomenclature to be onKe*
-  paste(ev) {
+  onPaste(ev) {
     let dateString = null
     if (ev.originalEvent.clipboardData && ev.originalEvent.clipboardData.types
       && $.inArray('text/plain', ev.originalEvent.clipboardData.types) !== -1) {
@@ -339,51 +359,42 @@ const EventManager = class extends Base {
     ev.preventDefault()
   }
 
-  buildEvents() {
-    let events = {
-      keyup: (ev) => this.keyup(ev),
-      keydown: (ev) => this.keydown(ev),
-      paste: (ev) => this.paste(ev),
-      click: () => this.dp.show()
+  trigger(event, altdate) {
+    let date = null
+    if (altdate) {
+      date = altdate.clone()
+    }
+    else {
+      date = this.dp.dates.last()
+      if (date) {
+        //clone it if present
+        date = date.clone()
+      }
     }
 
-    if (this.config.showOnFocus === true) {
-      events.focus = () => this.dp.show()
+    this.fire(event, {
+      type: event,
+      date: date,
+      dates: this.dp.dates.clonedArray()
+    })
+  }
+
+  /**
+   *
+   * @param eventKey
+   * @param object/hash - properties will be set on event
+   * @returns {boolean} - if false, code should get out because handler prevented
+   */
+  fire(eventKey, object = {}) {
+    let event = $.Event(eventKey, object)
+    this.dp.$element.trigger(event)
+    if (event.isDefaultPrevented()) {
+      this.debug(`default prevented on ${eventKey}`)
+      return false
     }
-
-    // single input
-    this.events = [
-      [this.dp.$input, events]
-    ]
-
-
-    if (this.config.immediateUpdates) {
-
-      let immediateUpdateEvents = {}
-      immediateUpdateEvents[`${Event.YEAR_CHANGE} ${Event.MONTH_CHANGE}`] = (ev) => this.dp.update()(ev.date)
-      // Trigger input updates immediately on changed year/month
-      this.events.push(
-        [this.dp.$element, immediateUpdateEvents]
-      )
+    else {
+      return true
     }
-
-    this.secondaryEvents = [
-      [this.renderer.$picker, { click: (ev) => this.click(ev) }],
-      [$(document), {
-        mousedown: (ev) => {
-          // Clicked outside the datepicker, hide it
-          if (!(
-              this.dp.$element.is(ev.target) ||
-              this.dp.$element.find(ev.target).length ||
-              this.renderer.$picker.is(ev.target) ||
-              this.renderer.$picker.find(ev.target).length ||
-              this.renderer.$picker.hasClass(ClassName.INLINE)
-            )) {
-            this.dp.hide()
-          }
-        }
-      }]
-    ]
   }
 
   attachEvents() {

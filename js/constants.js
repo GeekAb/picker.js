@@ -4,7 +4,7 @@
  * ------------------------------------------------------------------------
  */
 export const NAME = 'datepicker'
-export const DATA_KEY = `.${NAME}`
+export const DATA_KEY = `${NAME}`
 export const EVENT_KEY = `.${DATA_KEY}`
 export const DATA_API_KEY = '.data-api'
 export const JQUERY_NAME = NAME // `bmd${NAME.charAt(0).toUpperCase() + NAME.slice(1)}`
