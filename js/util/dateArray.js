@@ -3,7 +3,7 @@
  *  codebase, I've kept it.  TODO: Revisit this later to see if we actually need it.
  *  FIXME: if we keep this after refactoring, we _have_ to rename it.
  */
-const Dates = class {
+const DateArray = class {
   constructor(...moments) {
     this.array = [].concat(moments)
   }
@@ -44,7 +44,7 @@ const Dates = class {
   }
 
   copy() {
-    return new Dates(...this.array)
+    return new DateArray(...this.array)
   }
 
   clonedArray(){
@@ -65,4 +65,4 @@ const Dates = class {
   }
 }
 
-export default Dates
+export default DateArray

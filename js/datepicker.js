@@ -3,7 +3,7 @@ import moment from 'moment'
 import {main} from './templates'
 import Keycodes from './util/keycodes'
 import Key from './util/key'
-import Dates from './util/dates'
+import DateArray from './util/dateArray'
 import Renderer from './renderer'
 import {JQUERY_NAME, DATA_KEY, Event, Selector, ClassName, Unit, View} from './constants'
 import DateRangePicker from './dateRangePicker'
@@ -140,7 +140,7 @@ const Datepicker = (($) => {
       super(Default, ...configs)
 
       this.$element = $element
-      this.dates = new Dates()
+      this.dates = new DateArray()
 
       // get our own utc instance and configure the locale
       this.moment = this.newMoment()
@@ -1146,10 +1146,10 @@ const Datepicker = (($) => {
     }
 
     /**
-     * resolve a new {Dates}
+     * resolve a new {DateArray}
      *
      * @param dates
-     * @returns {Dates}
+     * @returns {DateArray}
      */
     resolveDates(...dates) {
       let newDatesArray = null
@@ -1178,7 +1178,7 @@ const Datepicker = (($) => {
         return (!this.dateWithinRange(date) || !date)
       }, true)
 
-      return new Dates(...newDatesArray)
+      return new DateArray(...newDatesArray)
     }
 
 
