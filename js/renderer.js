@@ -19,6 +19,13 @@ const Renderer = class extends Base {
     this.shown = false
   }
 
+  dispose() {
+    this.$picker.remove()
+    this.$picker = null
+    this.dp = null
+    super.dispose()
+  }
+
   show() {
     if (this.isShowing()) {
       return
@@ -44,13 +51,6 @@ const Renderer = class extends Base {
 
   isShowing() {
     return this.shown
-  }
-
-  dispose() {
-    super.dispose()
-    this.$picker.remove()
-    this.$picker = null
-    this.dp = null
   }
 
   // FIXME: appears to be called in #fill and from the db constructor - redundant? naming?
@@ -208,7 +208,7 @@ const Renderer = class extends Base {
     )
   }
 
-  // called publicly from dp#showMode
+  // called publicly from dp#showView
   updateNavArrows(viewDate) {
     if (!this.allowUpdate)
       return

@@ -2,7 +2,7 @@ import extend from 'extend'
 import stringify from 'stringify-object'
 
 const Default = {
-  debug: true
+  debug: false
 }
 
 const Base = class {
