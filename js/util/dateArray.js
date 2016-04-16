@@ -59,7 +59,7 @@ const DateArray = class {
   formattedArray(format){
     let formatted = []
     for(let m of this.array){
-      formatted.push(m.format(format))
+      formatted.push(m.local().format(format))  // needs to be local as it is displayed or put into the input
     }
     return formatted
   }

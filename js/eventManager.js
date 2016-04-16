@@ -95,15 +95,15 @@ const EventManager = class extends Base {
     ev.stopPropagation()
 
     let $target = $(ev.target)
+    let $navArrow = $target.closest(`${Selector.PREV}, ${Selector.NEXT}`)
 
     // Clicked on the switch
     if ($target.hasClass(ClassName.SWITCH)) {
-      this.dp.showView(View.MONTHS)
+      this.dp.changeView(1)
     }
 
     // Clicked on prev or next
-    let $navArrow = $target.closest(`${Selector.PREV}, ${Selector.NEXT}`)
-    if ($navArrow.length > 0) {
+    else if ($navArrow.length > 0) {
       let dir = this.config.view.modes[this.dp.view].navStep * ($navArrow.hasClass(ClassName.PREV) ? -1 : 1)
       if (this.dp.view === View.DAYS) {
         this.dp.viewDate.add(dir, Unit.MONTH)
@@ -119,17 +119,17 @@ const EventManager = class extends Base {
     }
 
     // Clicked on today button
-    if ($target.hasClass(ClassName.TODAY)) {
-      this.dp.showView(-2)
-      this.dp.clickDate(this.dp.newMoment(), this.config.today.button === 'linked' ? null : 'view')
+    else if ($target.hasClass(ClassName.TODAY)) {
+      this.dp.showView(View.DAYS)
+      this.dp.clickDate(this.dp.newMoment(), this.config.today.button === true ? null : 'view')
     }
 
     // Clicked on clear button
-    if ($target.hasClass(ClassName.CLEAR)) {
+    else if ($target.hasClass(ClassName.CLEAR)) {
       this.dp.clearDates()
     }
 
-    if (!$target.hasClass(ClassName.DISABLED)) {
+    else if (!$target.hasClass(ClassName.DISABLED)) {
       // Clicked on a day
       if ($target.hasClass(Unit.DAY)) {
         let day = parseInt($target.text(), 10) || 1
@@ -187,7 +187,7 @@ const EventManager = class extends Base {
           this.dp.showView()
         }
         else {
-          this.dp.showView(-1)
+          this.dp.showView(View.DAYS)
         }
         this.renderer.fill()
       }
@@ -214,7 +214,7 @@ const EventManager = class extends Base {
         if (this.config.view.min === View.YEARS) {
           this.dp.clickDate(this.dp.viewDate)
         }
-        this.dp.showView(-1)
+        this.dp.changeView(-1)
         this.renderer.fill()
       }
     }

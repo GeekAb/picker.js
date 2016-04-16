@@ -42,8 +42,8 @@ const Datepicker = (($) => {
     immediateUpdates: false, // if true, selecting a year or month in the datepicker will update the input value immediately. Otherwise, only selecting a day of the month will update the input value immediately.
     title: '', // string that will appear on top of the datepicker. If empty the title will be hidden.
     today: {
-      button: false, // If true or “linked”, displays a “Today” button at the bottom of the datepicker to select the current date. If true, the “Today” button will only move the current date into view if “linked”, the current date will also be selected.
-      highlight: false // If true, highlights the current date.
+      button: true, // If true, displays a “Today” button at the bottom of the datepicker to select the current date
+      highlight: true // If true, highlights the current date.
     },
 
     //-----------------
@@ -191,6 +191,7 @@ const Datepicker = (($) => {
       this.hide()
       this.eventManager.dispose()
       this.renderer.dispose()
+      this.eventManager = undefined
       this.renderer = undefined
       this.popper = undefined
       super.dispose(dataKey)
@@ -268,6 +269,59 @@ const Datepicker = (($) => {
      */
     setDate(date) {
       this.setDates(date)
+    }
+
+    // FIXME: this was called _setDate - WHY? different than #setDate, can this use setDate?
+    clickDate(date, which) {
+      if (!which || which === 'date') {
+        this.toggleMultidate(date)
+      }
+      if (!which || which === 'view') {
+        this.viewDate = date
+      }
+
+      this.renderer.fill()
+      this.setInputValue()
+      if (!which || which !== 'view') {
+        this.eventManager.trigger(Event.DATE_CHANGE)
+      }
+
+      this.$input.change()
+      if (this.config.autoclose && (!which || which === 'date')) {
+        this.hide()
+      }
+    }
+
+    /**
+     *
+     * @param date - one or more - String|moment - optional
+     * @returns {Datepicker}
+     */
+    update(...moments) {
+      if (!this.allowUpdate) {
+        return this
+      }
+
+      let oldDates = this.dates.copy()
+      this.dates = this.resolveDates(...moments)
+      this.resolveViewDate()
+
+      if (moments) {
+        // args passed means setting date by clicking?  FIXME: how about making this more explicit?
+        this.setInputValue()
+      }
+      else if (this.dates.length()) {
+        // setting date by typing
+        if (String(oldDates.array) !== String(this.dates.array))
+          this.eventManager.trigger(Event.DATE_CHANGE)
+      }
+      if (!this.dates.length() && oldDates.length()) {
+        this.eventManager.trigger(Event.DATE_CLEAR)
+      }
+
+      this.renderer.fill()
+      this.$element.change()
+      return this
     }
 
     /**
@@ -374,10 +428,21 @@ const Datepicker = (($) => {
 
     // ------------------------------------------------------------------------
     // private
-    showView(dir) {
-      if (dir) {
-        this.view = Math.max(this.config.view.min, Math.min(this.config.view.max, this.view + dir))
-      }
+
+    /**
+     * Change view given the direction
+     * @param direction
+     */
+    changeView(direction) {
+      this.showView(Math.max(this.config.view.min, Math.min(this.config.view.max, this.view + direction)))
+    }
+
+    /**
+     * Show a specific view by id.
+     * @param viewId
+     */
+    showView(viewId = this.view) {
+      this.view = viewId
       this.renderer.$picker
         .children('div')
         .hide()
@@ -385,7 +450,6 @@ const Datepicker = (($) => {
         .show()
       this.renderer.updateNavArrows()  // FIXME: redundant?
     }
-
 
     /**
      *
@@ -398,7 +462,6 @@ const Datepicker = (($) => {
       let m = date.clone()
       do {
         m = m.add(dir, unit)
-        //m = this[fn](m, dir)
 
         if (!this.dateWithinRange(m))
           return false
@@ -433,27 +496,6 @@ const Datepicker = (($) => {
       if (typeof this.config.multidate.enabled === 'number')
         while (this.dates.length() > this.config.multidate.enabled)
           this.dates.remove(0)
-    }
-
-    // FIXME: this was called _setDate - WHY? different than #setDate, can this use setDate?
-    clickDate(date, which) {
-      if (!which || which === 'date') {
-        this.toggleMultidate(date)
-      }
-      if (!which || which === 'view') {
-        this.viewDate = date
-      }
-
-      this.renderer.fill()
-      this.setInputValue()
-      if (!which || which !== 'view') {
-        this.eventManager.trigger(Event.DATE_CHANGE)
-      }
-
-      this.$input.change()
-      if (this.config.autoclose && (!which || which === 'date')) {
-        this.hide()
-      }
     }
 
     isShowing() {
@@ -663,39 +705,6 @@ const Datepicker = (($) => {
       if (this.config.autoclose) {
         this.hide()
       }
-    }
-
-
-    /**
-     *
-     * @param date - one or more - String|moment - optional
-     * @returns {Datepicker}
-     */
-    update(...moments) {
-      if (!this.allowUpdate) {
-        return this
-      }
-
-      let oldDates = this.dates.copy()
-      this.dates = this.resolveDates(...moments)
-      this.resolveViewDate()
-
-      if (moments) {
-        // args passed means setting date by clicking?  FIXME: how about making this more explicit?
-        this.setInputValue()
-      }
-      else if (this.dates.length()) {
-        // setting date by typing
-        if (String(oldDates.array) !== String(this.dates.array))
-          this.eventManager.trigger(Event.DATE_CHANGE)
-      }
-      if (!this.dates.length() && oldDates.length()) {
-        this.eventManager.trigger(Event.DATE_CLEAR)
-      }
-
-      this.renderer.fill()
-      this.$element.change()
-      return this
     }
 
     setInputValue() {

@@ -171,7 +171,7 @@ const Renderer = class extends Base {
     )
   }
 
-  // called publicly from dp#showView
+  // called publicly from dp#changeView
   updateNavArrows(viewDate) {
     if (!this.allowUpdate)
       return
@@ -230,7 +230,7 @@ const Renderer = class extends Base {
 
   renderDay(viewDate, prevMonth, html) {
     let before = null
-    let tooltip = null
+    let tooltip = ''
     if (prevMonth.day() === this.config.week.start) {
       html.push('<tr>')
     }
