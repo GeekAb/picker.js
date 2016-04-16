@@ -153,6 +153,7 @@ const Datepicker = (($) => {
       this.normalizeConfig()
 
       //
+      this.view = this.config.view.start
       this.viewDate = this.config.date.default
       this.focusDate = null
 
@@ -172,24 +173,11 @@ const Datepicker = (($) => {
       // initialize the renderer and create the $picker element
       this.renderer = new Renderer(this)
 
-      //
+
+      // initialize the EventManager
       this.eventManager = new EventManager(this)
 
-      if (this.isInline) {
-        this.renderer.$picker.addClass(ClassName.INLINE).appendTo(this.$element)
-      }
-      else {
-        this.renderer.$picker.addClass(ClassName.DROPDOWN)
-      }
-
-      if (this.config.rtl) {
-        this.renderer.$picker.addClass(ClassName.RTL)
-      }
-
-      this.view = this.config.view.start
-
-      this.renderer.fillDow()
-      this.renderer.renderMonths()  // FIXME see definition for notes
+      // turn back on updates
       this.allowUpdate = true
       this.update()
       this.showView()

@@ -15,6 +15,19 @@ const Renderer = class extends Base {
     this.dp = datepicker
     this.config = this.dp.config // shortcut reference to same config
     this.$picker = $(this.config.template)
+
+    if (this.dp.isInline) {
+      this.$picker.addClass(ClassName.INLINE).appendTo(this.dp.$element)
+    }
+    else {
+      this.$picker.addClass(ClassName.DROPDOWN)
+    }
+
+    if (this.config.rtl) {
+      this.$picker.addClass(ClassName.RTL)
+    }
+
+    this.renderDaysOfWeekHeader()
   }
 
   dispose() {
@@ -22,27 +35,6 @@ const Renderer = class extends Base {
     this.$picker = undefined
     this.dp = undefined
     super.dispose()
-  }
-
-  // FIXME: appears to be called in #fill and from the db constructor - redundant? naming?
-  renderMonths(viewDate) {
-    let html = ''
-    for (let i = 0; i < 12; i++) { // 0..11
-      let focused = viewDate && viewDate.month() === i ? ClassName.FOCUSED : ''
-      html += `<span class="${Unit.MONTH} ${focused}">${this.dp.newMoment().month(i).format(`MMM`)}</span>` // Jan
-    }
-    this.$picker.find(`${Selector.MONTHS} td`).html(html)
-  }
-
-  fillDow() {
-    let dowCnt = this.config.week.start
-    let html = '<tr>'
-    while (dowCnt < this.config.week.start + 7) {
-      let disabledClass = ($.inArray(dowCnt, this.config.daysOfWeek.disabled) > -1) ? ClassName.DISABLED : ''
-      html += `<th class="${ClassName.DOW} ${disabledClass}">${this.dp.newMoment().day((dowCnt++) % 7).format('dd')}</th>`
-    }
-    html += '</tr>'
-    this.$picker.find(`${Selector.DAYS} thead`).append(html)
   }
 
   fill() {
@@ -225,6 +217,67 @@ const Renderer = class extends Base {
   // ------------------------------------------------------------------------
   // private
 
+  renderDaysOfWeekHeader() {
+    let dowCnt = this.config.week.start
+    let html = '<tr>'
+    while (dowCnt < this.config.week.start + 7) {
+      let disabledClass = ($.inArray(dowCnt, this.config.daysOfWeek.disabled) > -1) ? ClassName.DISABLED : ''
+      html += `<th class="${ClassName.DOW} ${disabledClass}">${this.dp.newMoment().day((dowCnt++) % 7).format('dd')}</th>`
+    }
+    html += '</tr>'
+    this.$picker.find(`${Selector.DAYS} thead`).append(html)
+  }
+
+  renderDay(viewDate, prevMonth, html) {
+    let before = null
+    let tooltip = null
+    if (prevMonth.day() === this.config.week.start) {
+      html.push('<tr>')
+    }
+    let classNames = this.getClassNames(viewDate, prevMonth)
+    classNames.push(Unit.DAY)
+
+    /*
+     A function that takes a date as a parameter and returns one of the following values:
+
+     - undefined to have no effect
+     - An object with the following properties:
+     selectable: A Boolean, indicating whether or not this date is selectable
+     classes: A String representing additional CSS classes to apply to the date’s cell
+     tooltip: A tooltip to apply to this date, via the title HTML attribute
+     */
+    if (this.config.beforeShowDay !== undefined) {
+      before = this.config.beforeShowDay(prevMonth)
+      if (before === undefined) {
+        before = {}
+      }
+      if (before.selectable === false) {
+        classNames.push(ClassName.DISABLED)
+      }
+      if (before.classes) {
+        classNames = classNames.concat(before.classes.split(/\s+/))
+      }
+      if (before.tooltip) {
+        tooltip = before.tooltip ? ` title="${before.tooltip}"` : ''
+      }
+    }
+
+    classNames = $.unique(classNames)
+    html.push(`<td class="${classNames.join(' ')}"${tooltip}>${prevMonth.date()}</td>`)
+    if (prevMonth.day() === this.config.week.end) {
+      html.push('</tr>')
+    }
+  }
+
+  renderMonths(viewDate) {
+    let html = ''
+    for (let i = 0; i < 12; i++) { // 0..11
+      let focused = viewDate && viewDate.month() === i ? ClassName.FOCUSED : ''
+      html += `<span class="${Unit.MONTH} ${focused}">${this.dp.newMoment().month(i).format(`MMM`)}</span>` // Jan
+    }
+    this.$picker.find(`${Selector.MONTHS} td`).html(html)
+  }
+
   fillYearsView(selector, cssClass, factor, step, currentYear, startYear, endYear, callback) {
     //let before
 
@@ -292,47 +345,6 @@ const Renderer = class extends Base {
       thisYear += step
     }
     $view.find('td').html(html)
-  }
-
-  renderDay(viewDate, prevMonth, html) {
-    let before = null
-    let tooltip = null
-    if (prevMonth.day() === this.config.week.start) {
-      html.push('<tr>')
-    }
-    let classNames = this.getClassNames(viewDate, prevMonth)
-    classNames.push(Unit.DAY)
-
-    /*
-     A function that takes a date as a parameter and returns one of the following values:
-
-     - undefined to have no effect
-     - An object with the following properties:
-     selectable: A Boolean, indicating whether or not this date is selectable
-     classes: A String representing additional CSS classes to apply to the date’s cell
-     tooltip: A tooltip to apply to this date, via the title HTML attribute
-     */
-    if (this.config.beforeShowDay !== undefined) {
-      before = this.config.beforeShowDay(prevMonth)
-      if (before === undefined) {
-        before = {}
-      }
-      if (before.selectable === false) {
-        classNames.push(ClassName.DISABLED)
-      }
-      if (before.classes) {
-        classNames = classNames.concat(before.classes.split(/\s+/))
-      }
-      if (before.tooltip) {
-        tooltip = before.tooltip ? ` title="${before.tooltip}"` : ''
-      }
-    }
-
-    classNames = $.unique(classNames)
-    html.push(`<td class="${classNames.join(' ')}"${tooltip}>${prevMonth.date()}</td>`)
-    if (prevMonth.day() === this.config.week.end) {
-      html.push('</tr>')
-    }
   }
 
   getClassNames(viewDate, date) {
