@@ -1,4 +1,4 @@
-import {Preset, Clean, CleanJavascripts, CleanStylesheets, Copy, Jekyll, CssNano, MochaPhantomJs, Prepublish, PublishBuild, PublishGhPages, Sass, RollupUmd, RollupIife, ScssLint, EsLint, Aggregate, Uglify, series, parallel} from 'gulp-pipeline'
+import {Preset, Clean, CleanJavascripts, CleanStylesheets, Copy, Jekyll, CssNano, MochaPhantomJs, Prepublish, PublishBuild, PublishGhPages, Sass, RollupUmd, RollupIife, ScssLint, EsLint, Aggregate, Uglify, series, parallel} from 'gulp-pipeline/src/index'
 import gulp from 'gulp'
 import pkg from './package.json'
 import moment from 'moment'
@@ -8,8 +8,8 @@ const preset = Preset.baseline()
 const rollupConfig = {
   options: {
     banner: `/*!
-  * picker.jsr v${pkg.version} (${pkg.homepage})
-  * Copyright 2016-${moment().format("YYYY")} ${pkg.author}
+  * ${pkg.name} v${pkg.version} (${pkg.homepage})
+  * Copyright ${moment().format("YYYY")} ${pkg.author}
   * Licensed under ${pkg.license}
   */`
   }
@@ -28,10 +28,43 @@ const jsTest = new Aggregate(gulp, 'js:test',
         moduleName: 'pickerTests',
         //external: [
         //  'buffer'
-        //],
+        //]
+        //,
         //globals: {
         //  buffer: 'buffer'
         //}
+
+        //external: [
+        //  'buffer'
+        //],
+        //globals: {
+        //  buffer: 'Buffer'
+        //}
+
+        //globals: {
+        //  Buffer: 'Buffer'
+        //}
+
+        //external: [
+        //  'Buffer'
+        //],
+        //globals: {
+        //  Buffer: 'Buffer'
+        //}
+
+        //external: [
+        //  'buffer'
+        //],
+        //globals: {
+        //  Buffer: 'Buffer'
+        //}
+        //
+        //external: [
+        //  'buffer'
+        //],
+        globals: {
+          buffer: 'Buffer'
+        }
       }
     }, {debug: false}),
     new MochaPhantomJs(gulp, preset)
