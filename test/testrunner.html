@@ -1,31 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <!-- Required meta tags always come first -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Mocha</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Mocha Test picker.js</title>
-  <link rel="stylesheet" href="../node_modules/mocha/mocha.css">
-  <!--<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">-->
-  <!--<link href="../dist/datepicker-bs3.css" rel="stylesheet">-->
 
-  <script src="http://code.jquery.com/jquery-2.2.3.min.js"></script>
+  <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
+
+  <!-- jquery -->
+  <script src="../node_modules/jquery/dist/jquery.min.js"></script>
   <script src="../dist/picker.js.iife.js"></script>
-</head>
 
+</head>
 <body>
 
-
-<!--
-http://www.sitepoint.com/unit-test-javascript-mocha-chai/
-https://github.com/Verba/jquery-readyselector/blob/master/test/jquery.readyselector_spec.js
-http://chaijs.com/plugins/chai-jquery/
-https://gist.github.com/maicki/7781943
--->
-
 <div id="mocha"></div>
+
+<!-- Test input form -->
+<h2>Test input</h2>
+<form>
+  <input type="text" class="form-control">
+</form>
 
 
 <script src="../node_modules/mocha/mocha.js"></script>
@@ -33,29 +29,13 @@ https://gist.github.com/maicki/7781943
 <script src="../node_modules/chai-jquery/chai-jquery.js"></script>
 
 
-<script>
-  mocha.setup({
-    ui: 'bdd',
-    ignoreLeaks: false
-  })
-</script>
-
-
-<!-- Tests:start  -->
+<script>mocha.setup('bdd')</script>
 <script src="testSetup.js"></script>
-<!--<script src="datepicker/publicMethods.js"></script>-->
-<!-- Tests:end -->
 
 <script>
   mocha.checkLeaks();
   mocha.globals(['jQuery']);
-  mocha.run();
+  mocha.run()
 </script>
-
-
-<h2>Test input</h2>
-<form>
-  <input type="text" class="form-control">
-</form>
 </body>
 </html>

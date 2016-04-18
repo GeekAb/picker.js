@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <title>Mocha Test picker.js</title>
+
+
+  <link rel="stylesheet" href="../node_modules/mocha/mocha.css">
+
+  <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+
+
+  <script src="../dist/picker.js.iife.js"></script>
+</head>
+
+<body>
+
+
+<!--
+http://www.sitepoint.com/unit-test-javascript-mocha-chai/
+https://github.com/Verba/jquery-readyselector/blob/master/test/jquery.readyselector_spec.js
+http://chaijs.com/plugins/chai-jquery/
+https://gist.github.com/maicki/7781943
+
+// phantomjs
+https://blog.engineyard.com/2015/client-side-javascript-project-gulp-and-browserify
+-->
+
+<div id="mocha"></div>
+
+
+<script src="../node_modules/mocha/mocha.js"></script>
+<script src="../node_modules/chai/chai.js"></script>
+<script src="../node_modules/chai-jquery/chai-jquery.js"></script>
+
+
+<script>
+  mocha.setup({
+    ui: 'bdd',
+    ignoreLeaks: false
+  })
+</script>
+
+
+<!-- Tests:start  -->
+<script src="testSetup.js"></script>
+<!--<script src="datepicker/publicMethods.js"></script>-->
+<!-- Tests:end -->
+
+<script>
+  mocha.checkLeaks();
+  mocha.globals(['jQuery']);
+
+  if (window.mochaPhantomJS) {
+    mochaPhantomJS.run()
+  }
+  else {
+    mocha.run()
+  }
+</script>
+
+
+<h2>Test input</h2>
+<form>
+  <input type="text" class="form-control">
+</form>
+</body>
+</html>
