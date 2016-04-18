@@ -26,42 +26,6 @@ const jsTest = new Aggregate(gulp, 'js:test',
       options: {
         dest: 'picker-tests.js.iife.js',
         moduleName: 'pickerTests',
-        //external: [
-        //  'buffer'
-        //]
-        //,
-        //globals: {
-        //  buffer: 'buffer'
-        //}
-
-        //external: [
-        //  'buffer'
-        //],
-        //globals: {
-        //  buffer: 'Buffer'
-        //}
-
-        //globals: {
-        //  Buffer: 'Buffer'
-        //}
-
-        //external: [
-        //  'Buffer'
-        //],
-        //globals: {
-        //  Buffer: 'Buffer'
-        //}
-
-        //external: [
-        //  'buffer'
-        //],
-        //globals: {
-        //  Buffer: 'Buffer'
-        //}
-        //
-        //external: [
-        //  'buffer'
-        //],
         globals: {
           buffer: 'Buffer'
         }
