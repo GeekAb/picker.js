@@ -1,7 +1,7 @@
 //var $ = window.jQuery
 
 // non-es6 for quick browser debugging of setup
-describe('Test setup', function () {
+describe('Test setup (pre-ES2015)', function () {
 
   it('should be able to jquery find element', function () {
     var $input = $('input')

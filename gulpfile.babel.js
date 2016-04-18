@@ -1,4 +1,4 @@
-import {Preset, Clean, CleanJavascripts, CleanStylesheets, Copy, Jekyll, CssNano, Mocha, Prepublish, PublishBuild, PublishGhPages, Sass, RollupUmd, RollupIife, ScssLint, EsLint, Aggregate, Uglify, series, parallel} from 'gulp-pipeline'
+import {Preset, Clean, CleanJavascripts, CleanStylesheets, Copy, Jekyll, CssNano, MochaPhantomJs, Prepublish, PublishBuild, PublishGhPages, Sass, RollupUmd, RollupIife, ScssLint, EsLint, Aggregate, Uglify, series, parallel} from 'gulp-pipeline'
 
 import gulp from 'gulp'
 import findup from 'findup-sync'
@@ -9,7 +9,6 @@ const node_modules = findup('node_modules')
 
 const preset = Preset.baseline()
 
-
 // When converting non-modular dependencies into usable ones using rollup-plugin-commonjs, if they don't have properly read exports add them here.
 let namedExports = {}
 //namedExports[`${node_modules}/corejs-typeahead/dist/bloodhound.js`] = ['Bloodhound']
@@ -18,7 +17,7 @@ let namedExports = {}
 const rollupConfig = {
   options: {
     banner: `/*!
-  * Bootstrap Material Design Datepicker v${pkg.version} (${pkg.homepage})
+  * picker.jsr v${pkg.version} (${pkg.homepage})
   * Copyright 2016-${moment().format("YYYY")} ${pkg.author}
   * Licensed under ${pkg.license}
   */`
@@ -45,21 +44,34 @@ const js = new Aggregate(gulp, 'js',
     new CleanJavascripts(gulp, preset),
     parallel(gulp,
       new EsLint(gulp, preset),
-      new Mocha(gulp, preset)
+      series(gulp,
+        // self executing (fully bundled)
+        new RollupIife(gulp, preset, rollupConfig, {
+          task: {name: 'rollup:iife:test'},
+          source: { // rollup all test files - they are ES2015
+            options: {cwd: 'test'}
+          },
+          options: {
+            dest: 'picker-tests.js.iife.js',
+            moduleName: 'pickerTests'
+          }
+        }),
+        new MochaPhantomJs(gulp, preset)
+      )
     ),
     parallel(gulp,
       // umd (non-bundled)
       new RollupUmd(gulp, preset, rollupConfig, {
         options: {
           dest: 'picker.js.umd.js',
-          moduleName: 'bootstrapMaterialDesign'
+          moduleName: 'picker'
         }
       }),
       // self executing (fully bundled)
       new RollupIife(gulp, preset, rollupConfig, {
         options: {
           dest: 'picker.js.iife.js',
-          moduleName: 'bootstrapMaterialDesign'
+          moduleName: 'picker'
         }
       })
     )
