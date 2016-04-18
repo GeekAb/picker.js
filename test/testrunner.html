@@ -11,7 +11,7 @@
   <!--<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">-->
   <!--<link href="../dist/datepicker-bs3.css" rel="stylesheet">-->
 
-  <script src="//code.jquery.com/jquery-2.2.3.min.js"></script>
+  <script src="http://code.jquery.com/jquery-2.2.3.min.js"></script>
   <script src="../dist/picker.js.iife.js"></script>
 </head>
 
@@ -26,38 +26,36 @@ https://gist.github.com/maicki/7781943
 -->
 
 <div id="mocha"></div>
+
+
 <script src="../node_modules/mocha/mocha.js"></script>
 <script src="../node_modules/chai/chai.js"></script>
-<script>mocha.setup('bdd')</script>
+<script src="../node_modules/chai-jquery/chai-jquery.js"></script>
 
 
 <script>
-  mocha.run()
-  //  mocha.reporter('html')
-  // Only tests run in real browser, injected script run if options.run == true
-  //  if (navigator.userAgent.indexOf('PhantomJS') < 0) {
-  //    mocha.run();
-  //  }
+  mocha.setup({
+    ui: 'bdd',
+    ignoreLeaks: false
+  })
 </script>
-
 
 
 <!-- Tests:start  -->
-<script src="datepicker/publicMethods.js"></script>
+<script src="testSetup.js"></script>
+<!--<script src="datepicker/publicMethods.js"></script>-->
 <!-- Tests:end -->
 
+<script>
+  mocha.checkLeaks();
+  mocha.globals(['jQuery']);
+  mocha.run();
+</script>
 
 
-
-<!--
+<h2>Test input</h2>
 <form>
   <input type="text" class="form-control">
 </form>
-<script>
-  var $input = $('input')
-  $input.datepicker({}).datepicker('show')
-</script>
--->
-
 </body>
 </html>
