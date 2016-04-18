@@ -15,10 +15,6 @@
   <script src="../dist/picker.js.iife.js"></script>
   -->
 
-  <script>
-    var Buffer = {}
-    Buffer.isBuffer = function() { return false }
-  </script>
 </head>
 <body>
 
@@ -34,8 +30,16 @@
 
 
 <script src="../node_modules/mocha/mocha.js"></script>
-<!--<script src="../node_modules/chai/chai.js"></script>-->
-<!--<script src="../node_modules/chai-jquery/chai-jquery.js"></script>-->
+
+<!--<script>-->
+  <!--var Buffer = {}-->
+  <!--Buffer.isBuffer = function() { return false }-->
+<!--</script>-->
+<script src="../node_modules/chai/chai.js"></script>
+<script src="../node_modules/chai-jquery/chai-jquery.js"></script>
+<script>
+  var expect = chai.expect
+</script>
 
 
 <script>mocha.setup('bdd')</script>

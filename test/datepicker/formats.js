@@ -3,14 +3,12 @@
 
 const $ = window.jQuery
 const $input = $('input')
-
+//import {expect} from 'chai'
 //import chai from 'chai'
 //const expect = chai.expect
 
-import {expect} from 'chai'
+console.log(JSON.stringify(chai))
 
-//import * as chai from 'chai'
-//
 describe('Datepicker', function () {
   describe('Formats', function () {
 
@@ -40,10 +38,7 @@ describe('Datepicker', function () {
 
 
     it('should be able to jquery find element', () => {
-      if($input.length !== 1){
-        console.error('Expected length to be 1 but found', $input)
-        throw new Error('Expected length to be 1')
-      }
+      expect($input.length).to.equal(1)
     })
   })
 })
