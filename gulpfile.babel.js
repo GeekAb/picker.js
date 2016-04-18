@@ -1,18 +1,9 @@
 import {Preset, Clean, CleanJavascripts, CleanStylesheets, Copy, Jekyll, CssNano, MochaPhantomJs, Prepublish, PublishBuild, PublishGhPages, Sass, RollupUmd, RollupIife, ScssLint, EsLint, Aggregate, Uglify, series, parallel} from 'gulp-pipeline'
-
 import gulp from 'gulp'
-import findup from 'findup-sync'
 import pkg from './package.json'
 import moment from 'moment'
 
-const node_modules = findup('node_modules')
-
 const preset = Preset.baseline()
-
-// When converting non-modular dependencies into usable ones using rollup-plugin-commonjs, if they don't have properly read exports add them here.
-let namedExports = {}
-//namedExports[`${node_modules}/corejs-typeahead/dist/bloodhound.js`] = ['Bloodhound']
-//namedExports[`${node_modules}/anchor-js/anchor.js`] = ['AnchorJS']
 
 const rollupConfig = {
   options: {
@@ -21,23 +12,8 @@ const rollupConfig = {
   * Copyright 2016-${moment().format("YYYY")} ${pkg.author}
   * Licensed under ${pkg.license}
   */`
-  },
-  commonjs: {
-    options: {
-      namedExports: namedExports,
-    }
   }
 }
-
-
-//const sandbox = new Copy(gulp, preset, {
-//  task: {name: 'sandbox'},
-//  source: {
-//    options: {cwd: 'sandbox'},
-//    glob: ['**/*']
-//  },
-//  dest: 'dist/'
-//})
 
 const jsTest = new Aggregate(gulp, 'js:test',
   series(gulp,
@@ -135,4 +111,14 @@ new Aggregate(gulp, 'publish',
     //})
   )
 )
+
+
+//const sandbox = new Copy(gulp, preset, {
+//  task: {name: 'sandbox'},
+//  source: {
+//    options: {cwd: 'sandbox'},
+//    glob: ['**/*']
+//  },
+//  dest: 'dist/'
+//})
 
