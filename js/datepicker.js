@@ -104,7 +104,8 @@ const Datepicker = (($) => {
     // Popper.js options - see https://popper.js.org/
     popper: {
       // any popper.js options are valid here and will be passed to that component
-      placement: 'right'
+      placement: 'right',
+      removeOnDestroy: true
     },
 
     template: main,
@@ -537,7 +538,7 @@ const Datepicker = (($) => {
 
       // popper
       this.popper.destroy()
-      this.popper._popper.parentNode.removeChild(this.popper._popper) // workaround for failure to destroy https://github.com/FezVrasta/popper.js/issues/30
+      //this.popper._popper.parentNode.removeChild(this.popper._popper) // workaround for failure to destroy https://github.com/FezVrasta/popper.js/issues/30
       this.popper = undefined
       this.shown = false
 
