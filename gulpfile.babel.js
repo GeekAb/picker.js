@@ -1,4 +1,4 @@
-import {Preset, Clean, CleanJavascripts, CleanStylesheets, Copy, Jekyll, CssNano, MochaPhantomJs, Prepublish, PublishBuild, PublishGhPages, Sass, RollupUmd, RollupIife, ScssLint, EsLint, Aggregate, Uglify, series, parallel} from 'gulp-pipeline'
+import {Preset, Clean, CleanJavascripts, CleanStylesheets, Copy, Jekyll, CssNano, MochaPhantomJs, Prepublish, PublishBuild, PublishGhPages, Sass, RollupUmd, RollupIife, ScssLint, EsLint, Aggregate, Uglify, series, parallel} from 'gulp-pipeline/src/index'
 
 import gulp from 'gulp'
 import findup from 'findup-sync'
@@ -39,25 +39,29 @@ const rollupConfig = {
 //  dest: 'dist/'
 //})
 
+const jsTest = new Aggregate(gulp, 'js:test',
+  series(gulp,
+    // self executing (fully bundled)
+    new RollupIife(gulp, preset, rollupConfig, {
+      task: {name: 'rollup:iife:test'},
+      source: { // rollup the source code and all test files - they are ES2015
+        options: {cwd: 'test'}
+      },
+      options: {
+        dest: 'picker-tests.js.iife.js',
+        moduleName: 'pickerTests'
+      }
+    }),
+    new MochaPhantomJs(gulp, preset)
+  )
+)
+
 const js = new Aggregate(gulp, 'js',
   series(gulp,
     new CleanJavascripts(gulp, preset),
     parallel(gulp,
       new EsLint(gulp, preset),
-      series(gulp,
-        // self executing (fully bundled)
-        new RollupIife(gulp, preset, rollupConfig, {
-          task: {name: 'rollup:iife:test'},
-          source: { // rollup all test files - they are ES2015
-            options: {cwd: 'test'}
-          },
-          options: {
-            dest: 'picker-tests.js.iife.js',
-            moduleName: 'pickerTests'
-          }
-        }),
-        new MochaPhantomJs(gulp, preset)
-      )
+      jsTest
     ),
     parallel(gulp,
       // umd (non-bundled)

@@ -6,22 +6,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
-  <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
+  <link rel="stylesheet" href="../node_modules/mocha/mocha.css"/>
 
   <!-- jquery -->
   <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+  <!--
+  included in the picker-tests.js.iife.js rollup below - see test/index.js
   <script src="../dist/picker.js.iife.js"></script>
-
+  -->
 </head>
 <body>
 
 <div id="mocha"></div>
 
 <!-- Test input form -->
-<h2>Test input</h2>
-<form>
-  <input type="text" class="form-control">
-</form>
+<div style="margin: auto; text-align: center; margin-top: 50px">
+  <h2>Test input</h2>
+  <form>
+    <input type="text" class="form-control">
+  </form>
+</div>
 
 
 <script src="../node_modules/mocha/mocha.js"></script>
