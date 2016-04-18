@@ -1,4 +1,4 @@
-import {Preset, Clean, CleanJavascripts, CleanStylesheets, Copy, Jekyll, CssNano, MochaPhantomJs, Prepublish, PublishBuild, PublishGhPages, Sass, RollupUmd, RollupIife, ScssLint, EsLint, Aggregate, Uglify, series, parallel} from 'gulp-pipeline/src/index'
+import {Preset, Clean, CleanJavascripts, CleanStylesheets, Copy, Jekyll, CssNano, MochaPhantomJs, Prepublish, PublishBuild, PublishGhPages, Sass, RollupUmd, RollupIife, ScssLint, EsLint, Aggregate, Uglify, series, parallel} from 'gulp-pipeline'
 
 import gulp from 'gulp'
 import findup from 'findup-sync'
