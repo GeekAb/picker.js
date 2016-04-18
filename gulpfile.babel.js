@@ -25,9 +25,15 @@ const jsTest = new Aggregate(gulp, 'js:test',
       },
       options: {
         dest: 'picker-tests.js.iife.js',
-        moduleName: 'pickerTests'
+        moduleName: 'pickerTests',
+        //external: [
+        //  'buffer'
+        //],
+        //globals: {
+        //  buffer: 'buffer'
+        //}
       }
-    }),
+    }, {debug: false}),
     new MochaPhantomJs(gulp, preset)
   )
 )
