@@ -1,4 +1,4 @@
-import {Preset, Clean, Copy, Jekyll, CssNano, Prepublish, PublishBuild, PublishGhPages, Sass, RollupUmd, RollupIife, ScssLint, EsLint, Aggregate, Uglify, series, parallel} from 'gulp-pipeline'
+import {Preset, Clean, CleanJavascripts, CleanStylesheets, Copy, Jekyll, CssNano, Mocha, Prepublish, PublishBuild, PublishGhPages, Sass, RollupUmd, RollupIife, ScssLint, EsLint, Aggregate, Uglify, series, parallel} from 'gulp-pipeline'
 
 import gulp from 'gulp'
 import findup from 'findup-sync'
@@ -42,14 +42,20 @@ const rollupConfig = {
 
 const js = new Aggregate(gulp, 'js',
   series(gulp,
-    new EsLint(gulp, preset, {debug: true}),
+    new CleanJavascripts(gulp, preset),
     parallel(gulp,
+      new EsLint(gulp, preset),
+      new Mocha(gulp, preset)
+    ),
+    parallel(gulp,
+      // umd (non-bundled)
       new RollupUmd(gulp, preset, rollupConfig, {
         options: {
           dest: 'picker.js.umd.js',
           moduleName: 'bootstrapMaterialDesign'
         }
       }),
+      // self executing (fully bundled)
       new RollupIife(gulp, preset, rollupConfig, {
         options: {
           dest: 'picker.js.iife.js',
@@ -62,11 +68,11 @@ const js = new Aggregate(gulp, 'js',
 
 const css = new Aggregate(gulp, 'css',
   series(gulp,
+    new CleanStylesheets(gulp, preset),
     new ScssLint(gulp, preset),
     new Sass(gulp, preset)
   )
 )
-
 
 
 const defaultRecipes = new Aggregate(gulp, 'default', series(gulp,

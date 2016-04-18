@@ -538,7 +538,6 @@ const Datepicker = (($) => {
 
       // popper
       this.popper.destroy()
-      //this.popper._popper.parentNode.removeChild(this.popper._popper) // workaround for failure to destroy https://github.com/FezVrasta/popper.js/issues/30
       this.popper = undefined
       this.shown = false
 

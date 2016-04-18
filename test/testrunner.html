@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <title>Mocha Test picker.js</title>
+  <link rel="stylesheet" href="../node_modules/mocha/mocha.css">
+  <!--<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">-->
+  <!--<link href="../dist/datepicker-bs3.css" rel="stylesheet">-->
+
+  <script src="//code.jquery.com/jquery-2.2.3.min.js"></script>
+  <script src="../dist/picker.js.iife.js"></script>
+</head>
+
+<body>
+
+
+<!--
+http://www.sitepoint.com/unit-test-javascript-mocha-chai/
+https://github.com/Verba/jquery-readyselector/blob/master/test/jquery.readyselector_spec.js
+http://chaijs.com/plugins/chai-jquery/
+https://gist.github.com/maicki/7781943
+-->
+
+<div id="mocha"></div>
+<script src="../node_modules/mocha/mocha.js"></script>
+<script src="../node_modules/chai/chai.js"></script>
+<script>mocha.setup('bdd')</script>
+
+
+<script>
+  mocha.run()
+  //  mocha.reporter('html')
+  // Only tests run in real browser, injected script run if options.run == true
+  //  if (navigator.userAgent.indexOf('PhantomJS') < 0) {
+  //    mocha.run();
+  //  }
+</script>
+
+
+
+<!-- Tests:start  -->
+<script src="datepicker/publicMethods.js"></script>
+<!-- Tests:end -->
+
+
+
+
+<!--
+<form>
+  <input type="text" class="form-control">
+</form>
+<script>
+  var $input = $('input')
+  $input.datepicker({}).datepicker('show')
+</script>
+-->
+
+</body>
+</html>
