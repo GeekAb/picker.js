@@ -1,7 +1,9 @@
-import {$, $input, fromData, assertData, findPopper, assertNotFound, assertVisible, assertHidden} from '../support'
-import {Selector} from '../../js/constants'
+import {$, $input, safeDispose, fromData, assertData, findPopper, assertNotFound, assertVisible, assertHidden, assertDatesEqual} from '../support'
+import {Selector, ClassName} from '../../js/constants'
+import moment from 'moment'
 
 
+const FORMAT = 'DD-MM-YYYY'
 describe('Datepicker', function () {
 
   it('should be able to jquery find element', () => {
@@ -17,12 +19,12 @@ describe('Datepicker', function () {
 
     let dp
     beforeEach(() => {
-      $input.val('31-03-2011').datepicker({format: "DD-MM-YYYY"})
+      $input.val('31-03-2011').datepicker({format: FORMAT})
       dp = assertData()
     })
 
     afterEach(() => {
-      $input.datepicker('dispose')
+      safeDispose()
       dp = null
     })
 
@@ -33,6 +35,19 @@ describe('Datepicker', function () {
       assertVisible(Selector.POPPER)
       expect(dp.hide()).to.equal(dp) // chainable
       assertNotFound(Selector.POPPER)
+    })
+
+    it('should update with a string', () => {
+      const newDate = '13-03-2012'
+      expect(dp.update(newDate)).to.equal(dp) // chainable
+      expect($input.val()).to.equal(newDate) // html value
+      expect(dp.getDateFormatted()).to.equal(newDate) // html value
+
+      assertDatesEqual(dp.getDate(), moment(newDate, FORMAT))
+
+      dp.show() // gotta show it, otherwise it isn't in the dom
+      let $date = $(`${Selector.DAYS} td:contains(13)`)
+      expect($date, 'Date is selected').to.have.class(ClassName.ACTIVE)
     })
   })
 })

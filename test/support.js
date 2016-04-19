@@ -1,12 +1,20 @@
-import {NAME, Selector} from '../js/constants'
+import {DATA_KEY, Selector} from '../js/constants'
 
 export const $ = window.jQuery
 export const $input = $('input')
 
-//export const fromData = 'foo'
+export const safeDispose = () => {
+  try {
+    $input.datepicker('dispose')
+  }
+  catch (error) {
+    console.log(error)
+    $input.data(DATA_KEY, null)
+  }
+}
 
 export const fromData = () => {
-  return $input.data(NAME)
+  return $input.data(DATA_KEY)
 }
 
 export const assertData = (invert = false) => {
@@ -15,7 +23,8 @@ export const assertData = (invert = false) => {
     expect(dp).to.be.null
   }
   else {
-    expect(dp).not.to.be.null
+    expect(dp, 'dp').not.to.be.null
+    expect(dp.config, 'dp.config').not.to.be.null
   }
   return dp
 }
@@ -39,6 +48,11 @@ export const assertHidden = (selector) => {
   expect($element, selector).to.be.hidden
   return $element
 }
+
+export const assertDatesEqual = (actual, expected, message) => {
+  expect(expected.isSame(actual), message).to.be.true
+}
+
 
 // done in the testrunner.html
 //import chai from 'chai'

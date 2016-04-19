@@ -13,10 +13,9 @@
 </div>
 
 
-<!--<script>-->
-<!--var Buffer = {}-->
-<!--Buffer.isBuffer = function() { return false }-->
-<!--</script>-->
+<script src="../node_modules/source-map-support/browser-source-map-support.js"></script>
+<script>sourceMapSupport.install()</script>
+
 <script src="../node_modules/babel-polyfill/dist/polyfill.js"></script>
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
 <script src="../dist/picker.js.iife.js"></script>
@@ -29,7 +28,11 @@
 </script>
 
 
-<script>mocha.setup('bdd')</script>
+<script>mocha.setup({
+  ui: 'bdd',
+  reporter: 'html'
+//  reporter: 'spec'
+})</script>
 <script src="../dist/picker-tests.js.iife.js"></script>
 
 <script>
