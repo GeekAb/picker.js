@@ -1,17 +1,13 @@
 import Base from './base'
 import {Selector, ClassName, Unit, View, Visibility} from './constants'
 
-const Default = {
-  debug: true
-}
-
 /*
  TODO: Wow, this is a lot of converted code.  would be great to break this up even further if it makes sense
  */
 const Renderer = class extends Base {
 
   constructor(datepicker) {
-    super(Default)
+    super()
     this.dp = datepicker
     this.config = this.dp.config // shortcut reference to same config
     this.$picker = $(this.config.template)

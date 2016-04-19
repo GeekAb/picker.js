@@ -29,7 +29,6 @@ const Datepicker = (($) => {
 
     autoclose: false, // Whether or not to close the datepicker immediately when a date is selected
     toggleActive: false, // If true, selecting the currently active date in the datepicker will unset the respective date. This option is always true when the multidate option is being used
-    forceParse: true, // force parsing of the input value when the picker is closed. That is, when an invalid date is left in the input field by the user, the picker will forcibly parse that value, and set the input’s value to the new, valid date, conforming to the given format.
     keyboard: {
       navigation: true, // allow date navigation by arrow keys
       touch: true // false will disable keyboard on mobile devices
@@ -545,9 +544,6 @@ const Datepicker = (($) => {
       this.view = this.config.view.start
       this.showView()
 
-      if (this.config.forceParse && this.$input.val()) {
-        this.setInputValue()
-      }
       return this
     }
 
@@ -740,7 +736,7 @@ const Datepicker = (($) => {
      */
     resolveDates(...dates) {
       let newDatesArray = null
-      if (dates) {
+      if (dates.length > 0) {
         newDatesArray = this.parseDates(...dates)
       }
       else {

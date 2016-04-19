@@ -3,14 +3,10 @@ import {Selector, ClassName, Unit, View, Event} from './constants'
 import Keycodes from './util/keycodes'
 import Key from './util/key'
 
-const Default = {
-  debug: true
-}
-
 const EventManager = class extends Base {
 
   constructor(datepicker) {
-    super(Default)
+    super()
     this.dp = datepicker
     this.renderer = this.dp.renderer
     this.config = this.dp.config // shortcut reference to same config
@@ -230,7 +226,7 @@ const EventManager = class extends Base {
         Keycodes.SPACE,
         Keycodes.ENTER,
         Keycodes.TAB))
-      this.dp.update()()
+      this.dp.update()
   }
 
   onKeydown(ev) {
@@ -387,6 +383,7 @@ const EventManager = class extends Base {
    */
   fire(eventKey, object = {}) {
     let event = $.Event(eventKey, object)
+    this.debugDump(`firing ${eventKey}`, object)
     this.dp.$element.trigger(event)
     if (event.isDefaultPrevented()) {
       this.debug(`default prevented on ${eventKey}`)
