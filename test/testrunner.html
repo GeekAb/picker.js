@@ -1,21 +1,5 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Mocha</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-
-  <link rel="stylesheet" href="../node_modules/mocha/mocha.css"/>
-
-  <!-- jquery -->
-  <script src="../node_modules/jquery/dist/jquery.min.js"></script>
-  <!--
-  included in the picker-tests.js.iife.js rollup below - see test/index.js
-  <script src="../dist/picker.js.iife.js"></script>
-  -->
-
-</head>
 <body>
 
 <div id="mocha"></div>
@@ -29,12 +13,15 @@
 </div>
 
 
-<script src="../node_modules/mocha/mocha.js"></script>
-
 <!--<script>-->
-  <!--var Buffer = {}-->
-  <!--Buffer.isBuffer = function() { return false }-->
+<!--var Buffer = {}-->
+<!--Buffer.isBuffer = function() { return false }-->
 <!--</script>-->
+<script src="../node_modules/babel-polyfill/dist/polyfill.js"></script>
+<script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../dist/picker.js.iife.js"></script>
+
+<script src="../node_modules/mocha/mocha.js"></script>
 <script src="../node_modules/chai/chai.js"></script>
 <script src="../node_modules/chai-jquery/chai-jquery.js"></script>
 <script>
@@ -51,4 +38,10 @@
   mocha.run()
 </script>
 </body>
+<head>
+  <title>Mocha</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../node_modules/mocha/mocha.css"/>
+</head>
 </html>

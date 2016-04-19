@@ -38,10 +38,7 @@ const jsTest = new Aggregate(gulp, 'js:test',
 const js = new Aggregate(gulp, 'js',
   series(gulp,
     new CleanJavascripts(gulp, preset),
-    parallel(gulp,
-      new EsLint(gulp, preset),
-      jsTest
-    ),
+    new EsLint(gulp, preset),
     parallel(gulp,
       // umd (non-bundled)
       new RollupUmd(gulp, preset, rollupConfig, {
@@ -57,7 +54,8 @@ const js = new Aggregate(gulp, 'js',
           moduleName: 'picker'
         }
       })
-    )
+    ),
+    jsTest
   )
 )
 

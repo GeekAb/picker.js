@@ -1,5 +1,3 @@
-//var $ = window.jQuery
-
 // non-es6 for quick browser debugging of setup
 describe('Test setup (pre-ES2015)', function () {
 
