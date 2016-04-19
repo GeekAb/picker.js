@@ -11,7 +11,6 @@ export const JQUERY_NAME = NAME // `bmd${NAME.charAt(0).toUpperCase() + NAME.sli
 
 export const Event = {
 
-  DATE_CLEAR: `date.clear${EVENT_KEY}`,
   DATE_CHANGE: `date.change${EVENT_KEY}`,
 
   MONTH_CHANGE: `month.change${EVENT_KEY}`,

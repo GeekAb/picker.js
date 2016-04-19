@@ -328,14 +328,8 @@ const EventManager = class extends Base {
         break
     }
     if (dateChanged) {
-      if (this.dp.dates.length()) {
-        this.trigger(Event.DATE_CHANGE)
-      }
-      else {
-        this.trigger(Event.DATE_CLEAR)
-      }
-
-      this.dp.$input.change()
+      this.trigger(Event.DATE_CHANGE)
+      this.dp.$element.change()
     }
   }
 

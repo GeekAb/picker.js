@@ -158,14 +158,15 @@ const Datepicker = (($) => {
       this.focusDate = null
 
       // inline datepicker if target is a div
-      this.isInline = this.$element.is('div')
-
+      if (this.$element.is('div')) {
+        this.isInline = true
+      }
       // find the $input right now
-      if (this.$element.is('input')) {
+      else if (this.$element.is('input')) {
         this.$input = this.$element
       }
-      else if (this.component) {
-        this.$input = this.$element.find('input')
+      else {
+        throw new Error(`Target element[${this.$element[0].localName}] is neither a div(inline) nor an input.`)
       }
 
       // FIXME: data-datepicker-toggle='#input-id' or whatever pattern bootstrap uses for toggle - `click: () => this.show()` instead of old `component` or add-on
@@ -294,32 +295,33 @@ const Datepicker = (($) => {
 
     /**
      *
-     * @param date - one or more - String|moment - optional
+     * @param momentsOrStrings - one or more - String|moment - optional
      * @returns {Datepicker}
      */
-    update(...moments) {
+    update(...momentsOrStrings) {
       if (!this.allowUpdate) {
         return this
       }
 
+      // parse dates and get out if there is no diff
       let oldDates = this.dates.copy()
-      this.dates = this.resolveDates(...moments)
+      let newDates = this.resolveDates(...momentsOrStrings)
+      if (!oldDates.isSame(newDates)) {
+        this.debug('no update needed, dates are the same')
+        return
+      }
+
+      // there is a change
+      this.dates = newDates
       this.resolveViewDate()
 
-      if (moments) {
-        // args passed means setting date by clicking?  FIXME: how about making this more explicit?
+      if (newDates.length > 0) {
+        // args passed means setting date by clicking?  FIXME: how about making this more explicit? What/how/why? terrible...
         this.setInputValue()
-      }
-      else if (this.dates.length()) {
-        // setting date by typing
-        if (String(oldDates.array) !== String(this.dates.array))
-          this.eventManager.trigger(Event.DATE_CHANGE)
-      }
-      if (!this.dates.length() && oldDates.length()) {
-        this.eventManager.trigger(Event.DATE_CLEAR)
       }
 
       this.renderer.fill()
+      this.eventManager.trigger(Event.DATE_CHANGE)
       this.$element.change()
       return this
     }
@@ -696,7 +698,7 @@ const Datepicker = (($) => {
       this.$input.val('')
 
       this.update()
-      this.eventManager.trigger(Event.DATE_CHANGE)
+      this.eventManager.trigger(Event.DATE_CHANGE)   // FIXME: why not clear event?  change makes sense, but why have clear?
 
       if (this.config.autoclose) {
         this.hide()
