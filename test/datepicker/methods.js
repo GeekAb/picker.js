@@ -6,6 +6,11 @@ describe('Datepicker', function () {
     expect($input.length).to.equal(1)
   })
 
+  it('should be able to instantiate', () => {
+    expect($input.length).to.equal(1)
+    $input.datepicker({})
+  })
+
   describe('Methods', function () {
 
     //let dp
@@ -26,11 +31,5 @@ describe('Datepicker', function () {
     //  // chainable
     //  expect(dp.show()).to.equal(dp)
     //})
-
-    it('should be able to instantiate', () => {
-      expect($input.length).to.equal(1)
-      $input.datepicker({})
-    })
-
   })
 })
