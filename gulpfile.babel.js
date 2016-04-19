@@ -1,4 +1,4 @@
-import {Preset, Clean, CleanJavascripts, CleanStylesheets, Copy, Jekyll, CssNano, MochaPhantomJs, Prepublish, PublishBuild, PublishGhPages, Sass, RollupUmd, RollupIife, ScssLint, EsLint, Aggregate, Uglify, series, parallel} from 'gulp-pipeline/src/index'
+import {Preset, Clean, CleanJavascripts, CleanStylesheets, Copy, Jekyll, CssNano, MochaPhantomJs, Prepublish, PublishBuild, PublishGhPages, Sass, RollupUmd, RollupIife, ScssLint, EsLint, Aggregate, Uglify, series, parallel} from 'gulp-pipeline'
 import gulp from 'gulp'
 import pkg from './package.json'
 import moment from 'moment'
@@ -30,7 +30,7 @@ const jsTest = new Aggregate(gulp, 'js:test',
           buffer: 'Buffer'
         }
       }
-    }, {debug: false}),
+    }, {debug: true}),
     new MochaPhantomJs(gulp, preset)
   )
 )
