@@ -138,7 +138,7 @@ const EventManager = class extends Base {
         let monthChanged = false
         let yearChanged = false
 
-        // From last month
+        // From last month  FIXME: couldn't this just be saved state instead of trying to figure out from the UI?
         if ($target.hasClass(ClassName.OLD)) {
           if (month === 0) {
             month = 11

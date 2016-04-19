@@ -24,10 +24,15 @@ const DateArray = class {
     return this.array.slice(i)[0]
   }
 
+  /**
+   * Compares at the granularity of date (not specific to hours/minutes/seconds)
+   * @param other
+   * @returns {*}
+   */
   contains(other) {
     for (let i in this.array) {
       let m = this.array[i]
-      if (m.isSame(other)) {
+      if (m.isSame(other, 'date')) {
         return i
       }
     }
