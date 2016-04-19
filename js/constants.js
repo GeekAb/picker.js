@@ -60,6 +60,8 @@ export const ClassName = {
   NEW: `new`,
   OLD: `old`,
 
+  POPPER: `popper`,
+
 
   TITLE: `${NAME}-title`,
   SWITCH: `${NAME}-switch`,
@@ -86,6 +88,7 @@ export const Selector = {
   NEXT: `.${ClassName.NEXT}`,
   TITLE: `.${ClassName.TITLE}`,
   SWITCH: `.${ClassName.SWITCH}`,
+  POPPER: `.${ClassName.POPPER}`,
 
   DAYS: `.${ClassName.DAYS}`,
   MONTHS: `.${ClassName.MONTHS}`,

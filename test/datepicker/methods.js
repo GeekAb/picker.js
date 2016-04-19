@@ -1,4 +1,6 @@
-import {$, $input, fromData} from '../support/fixture'
+import {$, $input, fromData, assertData, findPopper, assertNotFound, assertVisible, assertHidden} from '../support'
+import {Selector} from '../../js/constants'
+
 
 describe('Datepicker', function () {
 
@@ -13,23 +15,24 @@ describe('Datepicker', function () {
 
   describe('Methods', function () {
 
-    //let dp
-    //beforeEach(function () {
-    //
-    //  $input.val('31-03-2011').datepicker({format: "DD-MM-YYYY"})
-    //  dp = fromData()
-    //  console.log('dp', JSON.stringify(dp))
-    //})
+    let dp
+    beforeEach(() => {
+      $input.val('31-03-2011').datepicker({format: "DD-MM-YYYY"})
+      dp = assertData()
+    })
 
-    //afterEach(function () {
-    //  $input.datepicker('destroy')
-    //  dp = null
-    //})
+    afterEach(() => {
+      $input.datepicker('dispose')
+      dp = null
+    })
 
 
-    //it('show', function () {
-    //  // chainable
-    //  expect(dp.show()).to.equal(dp)
-    //})
+    it('should show and hide', () => {
+      assertNotFound(Selector.POPPER)
+      expect(dp.show()).to.equal(dp) // chainable
+      assertVisible(Selector.POPPER)
+      expect(dp.hide()).to.equal(dp) // chainable
+      assertNotFound(Selector.POPPER)
+    })
   })
 })
