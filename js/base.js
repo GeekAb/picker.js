@@ -16,7 +16,7 @@ const Base = class {
 
   dispose(dataKey = null) {
     if(dataKey) {
-      $.removeData(this.$element, dataKey)
+      this.$element.data(dataKey, null)
     }
     this.$element = null
     this.config = null
