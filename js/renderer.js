@@ -1,5 +1,5 @@
 import Base from './base'
-import {Selector, ClassName, Unit, View, Visibility} from './constants'
+import {Selector, ClassName, Unit, View, Visibility, Data} from './constants'
 
 /*
  TODO: Wow, this is a lot of converted code.  would be great to break this up even further if it makes sense
@@ -259,7 +259,7 @@ const Renderer = class extends Base {
     }
 
     classNames = $.unique(classNames)
-    html.push(`<td class="${classNames.join(' ')}"${tooltip}>${prevMonth.date()}</td>`)
+    html.push(`<td class="${classNames.join(' ')}"${tooltip} data-${Data.MOMENT}="${prevMonth}">${prevMonth.date()}</td>`)
     if (prevMonth.day() === this.config.week.end) {
       html.push('</tr>')
     }

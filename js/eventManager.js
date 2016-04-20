@@ -1,5 +1,5 @@
 import Base from './base'
-import {Selector, ClassName, Unit, View, Event} from './constants'
+import {Selector, ClassName, Unit, View, Event, Data} from './constants'
 import Keycodes from './util/keycodes'
 import Key from './util/key'
 
@@ -125,6 +125,8 @@ const EventManager = class extends Base {
           this.trigger(Event.YEAR_CHANGE, this.dp.viewDate)
         }
       }
+
+      // set view date but don't select it using one of the #update methods
       this.renderer.fill()
     }
 
@@ -142,57 +144,29 @@ const EventManager = class extends Base {
     else if (!$target.hasClass(ClassName.DISABLED)) {
       // Clicked on a day
       if ($target.hasClass(Unit.DAY)) {
-        let day = parseInt($target.text(), 10) || 1
         let origViewDate = this.dp.viewDate.clone()
-        let year = this.dp.viewDate.year()
-        let month = this.dp.viewDate.month()
-
-        // From last month  FIXME: couldn't this just be saved state instead of trying to figure out from the UI?
-        if ($target.hasClass(ClassName.OLD)) {
-          if (month === 0) {
-            month = 11
-            year = year - 1
-          }
-          else {
-            month = month - 1
-          }
+        let m = this.dp.newMoment($target.data(Data.MOMENT))
+        this.dp.updateMultidate(m)
+        if (origViewDate.year() != m.year()) {
+          this.trigger(Event.YEAR_CHANGE, m)
         }
-
-        // From next month
-        if ($target.hasClass(ClassName.NEW)) {
-          if (month === 11) {
-            month = 0
-            year = year + 1
-          }
-          else {
-            month = month + 1
-          }
-        }
-        this.dp.updateMultidate(this.dp.newMoment([year, month, day]))
-        if (origViewDate.year() != year) {
-          this.trigger(Event.YEAR_CHANGE, this.dp.viewDate)
-        }
-        if (origViewDate.month() != month) {
-          this.trigger(Event.MONTH_CHANGE, this.dp.viewDate)
+        if (origViewDate.month() != m.month()) {
+          this.trigger(Event.MONTH_CHANGE, m)
         }
       }
 
       // Clicked on a month
       if ($target.hasClass(Unit.MONTH)) {
-        this.dp.viewDate.date(1)
-        let day = 1
         let month = $target.parent().find('span').index($target)
-        let year = this.dp.viewDate.year()
         this.dp.viewDate.month(month)
         this.trigger(Event.MONTH_CHANGE, this.dp.viewDate)
+        this.dp.updateMultidate(this.dp.viewDate)
         if (this.config.view.min === View.MONTHS) {
-          this.dp.updateMultidate(this.dp.newMoment([year, month, day]))
           this.dp.showView()
         }
         else {
           this.dp.showView(View.DAYS)
         }
-        this.renderer.fill()
       }
 
       // Clicked on a year|decade|century
@@ -214,11 +188,8 @@ const EventManager = class extends Base {
           this.trigger(Event.CENTURY_CHANGE, this.dp.viewDate)
         }
 
-        if (this.config.view.min === View.YEARS) {
-          this.dp.updateMultidate(this.dp.viewDate)
-        }
+        this.dp.updateMultidate(this.dp.viewDate)
         this.dp.changeView(-1)
-        this.renderer.fill()
       }
     }
   }
@@ -254,8 +225,7 @@ const EventManager = class extends Base {
         if (this.dp.focusDate) {
           // TODO: is this escaping back from a month/year/decade/century screen? if so comment it!
           this.dp.focusDate = null
-          this.dp.viewDate = this.dp.dates.last() || this.dp.viewDate
-          this.renderer.fill() // FIXME: why not use this.dp.update()()?
+          this.dp.update()
         }
         else {
           this.dp.hide()
@@ -386,14 +356,14 @@ const EventManager = class extends Base {
   }
 
   attachEvents(element, hash) {
-    for(let key of Object.keys(hash)){
+    for (let key of Object.keys(hash)) {
       let value = hash[key]
       element.on(key, value)
     }
   }
 
   detachEvents(element, hash) {
-    for(let key of Object.keys(hash)){
+    for (let key of Object.keys(hash)) {
       let value = hash[key]
       element.off(key, value)
     }

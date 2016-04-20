@@ -3,7 +3,7 @@ import Renderer from './renderer'
 import EventManager from './eventManager'
 import DateArray from './util/dateArray'
 import DateRangePicker from './dateRangePicker'
-import {JQUERY_NAME, DATA_KEY, Event, Selector, ClassName, Unit, View} from './constants'
+import {JQUERY_NAME, Data, Event, Selector, ClassName, Unit, View} from './constants'
 import Popper from 'popper.js'
 import moment from 'moment'
 import {main} from './templates'
@@ -182,7 +182,7 @@ const Datepicker = (($) => {
       }
     }
 
-    dispose(dataKey = DATA_KEY) {
+    dispose(dataKey = Data.KEY) {
       this.hide()
       this.eventManager.dispose()
       this.renderer.dispose()
@@ -276,7 +276,7 @@ const Datepicker = (($) => {
 
       // If nothing passed in, we are clearing all dates
       if (!viewDate) {
-        this.update()
+        this.update(null)
         return
       }
 
@@ -308,8 +308,10 @@ const Datepicker = (($) => {
     }
 
     /**
+     * Any call stack resulting here means that we are selecting a new date (or dates) and re-rendering.
      *
-     * @param momentsOrStrings - one or more - String|moment - optional
+     *
+     * @param momentsOrStrings - one or more - String|moment - optional.  null will clear dates, nothing will resolve dates.
      * @returns {Datepicker}
      */
     update(...momentsOrStrings) {
@@ -687,7 +689,7 @@ const Datepicker = (($) => {
     }
 
     clearDates() {
-      this.update()
+      this.update(null)
 
       if (this.config.autoclose) {
         this.hide()
@@ -745,7 +747,7 @@ const Datepicker = (($) => {
       return this.each(
         function () {
           let $element = $(this)
-          let data = $element.data(DATA_KEY)
+          let data = $element.data(Data.KEY)
           // Options priority: js args, data-attrs, Default const
           let _config = $.extend(
             {},
@@ -765,7 +767,7 @@ const Datepicker = (($) => {
             else {
               data = new Datepicker($element, _config)
             }
-            $element.data(DATA_KEY, data)
+            $element.data(Data.KEY, data)
           }
 
           // call public methods jquery style

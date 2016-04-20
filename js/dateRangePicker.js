@@ -1,7 +1,7 @@
 import Base from './base'
 import Datepicker from './datepicker'
 import Moments from './util/moments'
-import {DATA_KEY, Event} from './constants'
+import {Data, Event} from './constants'
 
 // FIXME: ENCAPSULATION - currently, the Datepicker jquery fn instantiates this, then this instantiates that.  So strange.
 
@@ -27,7 +27,7 @@ const DateRangePicker = class extends Base {
         .on(Event.DATE_CHANGE, (ev) => this.dateUpdated(ev))
 
       // track all datepickers
-      this.datepickers.push($input.data(DATA_KEY))
+      this.datepickers.push($input.data(Data.KEY))
     }
 
     this.updateRange()
@@ -59,7 +59,7 @@ const DateRangePicker = class extends Base {
     this.updating = true
 
     try {
-      let datepicker = $(ev.target).data(DATA_KEY)
+      let datepicker = $(ev.target).data(Data.KEY)
       if (typeof(datepicker) === "undefined") {
         return
       }

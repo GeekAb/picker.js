@@ -1,4 +1,4 @@
-import {DATA_KEY, Selector} from '../js/constants'
+import {Data, Selector} from '../js/constants'
 
 export const $ = window.jQuery
 export const $input = $('input')
@@ -9,21 +9,21 @@ export const safeDispose = () => {
   }
   catch (error) {
     console.log(error)
-    $input.data(DATA_KEY, null)
+    $input.data(Data.KEY, null)
   }
 }
 
 export const fromData = () => {
-  return $input.data(DATA_KEY)
+  return $input.data(Data.KEY)
 }
 
 export const assertData = (invert = false) => {
   let dp = fromData()
   if (invert) {
-    expect(dp).to.be.null
+    expect((dp == null || dp == undefined), 'data').to.be.true
   }
   else {
-    expect(dp, 'dp').not.to.be.null
+    expect(dp, 'data').not.to.be.null
     expect(dp.config, 'dp.config').not.to.be.null
   }
   return dp

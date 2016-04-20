@@ -4,9 +4,15 @@
  * ------------------------------------------------------------------------
  */
 export const NAME = 'datepicker'
-export const DATA_KEY = `${NAME}`
-export const EVENT_KEY = `.${DATA_KEY}`
-export const DATA_API_KEY = '.data-api'
+
+export const Data = {
+  KEY: `${NAME}`,
+  API_KEY: '.data-api',
+  MOMENT: 'moment',
+  PROVIDE: 'provide'
+}
+
+export const EVENT_KEY = `.${Data.KEY}`
 export const JQUERY_NAME = NAME // `bmd${NAME.charAt(0).toUpperCase() + NAME.slice(1)}`
 
 export const Event = {
@@ -19,11 +25,11 @@ export const Event = {
   CENTURY_CHANGE: `century.change${EVENT_KEY}`,
 
 
-    SHOW           : `show${EVENT_KEY}`,
+  SHOW: `show${EVENT_KEY}`,
   //  SHOWN          : `shown${EVENT_KEY}`,
-    HIDE           : `hide${EVENT_KEY}`,
+  HIDE: `hide${EVENT_KEY}`,
   //  HIDDEN         : `hidden${EVENT_KEY}`,
-  CLICK_DATA_API: `click${EVENT_KEY}${DATA_API_KEY}`
+  CLICK_DATA_API: `click${EVENT_KEY}${Data.API_KEY}`
 }
 
 export const View = {
@@ -82,7 +88,7 @@ export const ClassName = {
 }
 
 export const Selector = {
-  DATA_PROVIDE: '[data-provide="datepicker"]',
+  DATA_PROVIDE: `[data-${Data.PROVIDE}="datepicker"]`,
   PREV: `.${ClassName.PREV}`,
   NEXT: `.${ClassName.NEXT}`,
   TITLE: `.${ClassName.TITLE}`,
