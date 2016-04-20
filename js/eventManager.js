@@ -156,8 +156,7 @@ const EventManager = class extends Base {
       // Clicked on a month
       if ($target.hasClass(Unit.MONTH)) {
         let month = $target.parent().find('span').index($target)
-        this.dp.viewDate.month(month)
-        this.dp.updateMultidate(this.dp.viewDate)
+        this.dp.updateMultidate(this.dp.viewDate.clone().month(month))
         this.trigger(Event.MONTH_CHANGE)
         if (this.config.view.min === View.MONTHS) {
           this.dp.showView()
@@ -173,9 +172,7 @@ const EventManager = class extends Base {
         || $target.hasClass(Unit.CENTURY)) {
 
         let year = parseInt($target.text(), 10) || 0
-        let m = this.dp.viewDate.clone().year(year)
         let unit
-
         if ($target.hasClass(Unit.YEAR)) {
           unit = Unit.YEAR
         }
@@ -186,7 +183,7 @@ const EventManager = class extends Base {
           unit = Unit.CENTURY
         }
 
-        this.dp.updateMultidate(m)
+        this.dp.updateMultidate(this.dp.viewDate.clone().year(year))
         if (unit) {
           this.trigger(Event[`${unit.toUpperCase()}_CHANGE`])
         }
