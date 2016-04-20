@@ -1,9 +1,6 @@
 import Base from './base'
 import {Selector, ClassName, Unit, View, Visibility, Data} from './constants'
 
-/*
- TODO: Wow, this is a lot of converted code.  would be great to break this up even further if it makes sense
- */
 const Renderer = class extends Base {
 
   constructor(datepicker) {
@@ -366,10 +363,7 @@ const Renderer = class extends Base {
     if (this.dp.dates.contains(date) !== -1) {
       classes.push(ClassName.ACTIVE)
     }
-    if (!this.dp.dateWithinRange(date)) {
-      classes.push(ClassName.DISABLED)
-    }
-    if (this.dp.dateIsDisabled(date)) {
+    if (!this.dp.dateWithinRange(date) || this.dp.dateIsDisabled(date)) {
       classes.push(ClassName.DISABLED)
     }
     if (this.dp.shouldBeHighlighted(date)) {

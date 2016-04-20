@@ -211,29 +211,6 @@ const Datepicker = (($) => {
     }
 
     /**
-     * @returns the lower date limit on the datepicker.
-     */
-    getDateStart() {
-      return this.config.date.start
-    }
-
-
-    /**
-     * @returns the upper date limit on the datepicker
-     */
-    getDateEnd() {
-      return this.config.date.end
-    }
-
-    /**
-     * For use with multidate pickers.
-     * @returns - array of UTC moments representing the internal date objects of the first datepicker in the selection.
-     */
-    getDates() {
-      return this.dates.clonedArray()
-    }
-
-    /**
      * For multidate pickers, returns the latest date selected.
      * @returns - the latest UTC moment selected of the first datepicker in the selection.
      */
@@ -245,24 +222,6 @@ const Datepicker = (($) => {
       else {
         return null
       }
-    }
-
-    /**
-     * Sets the internal date list. For use with multidate pickers.
-     * @param dates - one or more String|moment - will be converted to UTC
-     * @returns {Datepicker}
-     */
-    setDates(...dates) {
-      this.update(...dates)
-      return this
-    }
-
-    /**
-     * @see #setDates
-     * @param date
-     */
-    setDate(date) {
-      this.setDates(date)
     }
 
     updateMultidate(viewDate) {
