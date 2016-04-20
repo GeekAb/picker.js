@@ -282,7 +282,7 @@ const EventManager = class extends Base {
 
         // now move the available date and render (highlight the moved date)
         if (unit) {
-          this.dp.focusDate = this.viewDate = this.dp.moveAvailableDate(focusDate, direction, unit)
+          this.dp.focusDate = this.dp.viewDate = this.dp.moveAvailableDate(focusDate, direction, unit)
           this.renderer.fill()
 
           this.trigger(Event[`${unit.toUpperCase()}_CHANGE`])
