@@ -1,4 +1,4 @@
-import {$, $input, safeDispose, fromData, assertData, findPopper, assertNotFound, assertVisible, assertHidden, assertDatesEqual} from '../support'
+import {$, $input, safeDispose, fromData, assertData, findPopper, assertNotFound, assertVisible, assertHidden, assertDatesEqual, findDayOfMonth} from '../support'
 import {Selector, ClassName} from '../../js/constants'
 import moment from 'moment'
 
@@ -27,7 +27,7 @@ describe('Datepicker', () => {
       assertDatesEqual(dp.getDate(), moment(dateString, FORMAT))
 
       dp.show() // gotta show it, otherwise it isn't in the dom
-      let $date = $(`${Selector.DAYS} td:contains(${dayOfMonth})`)
+      let $date = findDayOfMonth(dayOfMonth)
       expect($date, `Day ${dayOfMonth} to be active`).to.have.class(ClassName.ACTIVE)
     }
 

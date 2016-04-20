@@ -49,8 +49,25 @@ export const assertHidden = (selector) => {
   return $element
 }
 
-export const assertDatesEqual = (actual, expected, message) => {
-  expect(expected.isSame(actual), message).to.be.true
+export const assertDatesEqual = (actual, expected, message = null) => {
+  let msg = message
+  if (msg === null) {
+    msg = `${actual ? actual.format() : null} should equal ${expected ? expected.format() : null}`
+  }
+  expect(expected.isSame(actual), msg).to.be.true
+}
+
+/**
+ * @param dayOfMonth - string that matches your format i.e. `01`,`31` or `1`,`31`
+ * @returns {*|HTMLElement}
+ */
+export const findDayOfMonth = (dayOfMonth, assertFound = true) => {
+  let selector = `${Selector.DAYS} td:contains(${dayOfMonth})`
+  let $day = $(selector)
+  if (assertFound) {
+    expect($day.length, `Should find one ${selector}`).to.equal(1)
+  }
+  return $day
 }
 
 

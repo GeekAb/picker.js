@@ -233,7 +233,7 @@ const EventManager = class extends Base {
         ev.preventDefault()
         ev.stopPropagation()
 
-        if (Key.is(Keycodes.TAB) || this.config.autoclose) {
+        if (Key.is(Keycodes.TAB)) {
           this.dp.hide()
         }
         break

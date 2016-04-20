@@ -149,7 +149,6 @@ const Datepicker = (($) => {
 
       //
       this.view = this.config.view.start
-      this.viewDate = this.config.date.default
 
       // inline datepicker if target is a div
       if (this.$element.is('div')) {
@@ -211,17 +210,33 @@ const Datepicker = (($) => {
     }
 
     /**
-     * For multidate pickers, returns the latest date selected.
-     * @returns - the latest UTC moment selected of the first datepicker in the selection.
+     * Determine the viewDate and constrain by the configuration - no side effects
+     *
+     * NOTE: this.viewDate is null after hidden, and this methoud is used by #update to redetermine a new value.
+     *        The result of this method is explicitly not cached, if you want the cached value during a normal
+     *        internal operation, you should be using the `this.viewDate` set by #update
+     *
+     * @returns - the latest UTC moment selected
      */
-    getDate() {
-      let m = this.dates.last()
-      if (typeof m !== 'undefined') {
-        return m.clone()
+    getDate(){
+      // Depending on the show/hide state when called, this.dates may or may not be populated.
+      //  Use it if populated (i.e. initial #update before show), not based on #isShowing
+      let dateArray = this.dates || this.parseDateArrayFromInput()
+      let date
+      if (dateArray.length()) {
+        date = dateArray.last().clone()
+      }
+      else if (this.viewDate < this.config.date.start) {
+        date = this.config.date.start.clone()
+      }
+      else if (this.viewDate > this.config.date.end) {
+        date = this.config.date.end.clone()
       }
       else {
-        return null
+        date = this.config.date.default.clone()
       }
+
+      return date
     }
 
     updateMultidate(viewDate) {
@@ -287,25 +302,26 @@ const Datepicker = (($) => {
       // there is a change
       this.dates = newDates
 
-      // constrain viewDate by the configuration
-      if (this.dates.length()) {
-        this.viewDate = this.dates.last().clone()
-      }
-      else if (this.viewDate < this.config.date.start) {
-        this.viewDate = this.config.date.start.clone()
-      }
-      else if (this.viewDate > this.config.date.end) {
-        this.viewDate = this.config.date.end.clone()
-      }
-      else {
-        this.viewDate = this.config.date.default.clone()
-      }
+      // resolve the new viewDate constrained by the configuration
+      this.viewDate = this.getDate()
 
-      this.setInputValue()
+      // set the input value
+      this.$input.val(this.getDateFormatted())
 
+      // re-render the element
       this.renderer.fill()
+
+      // fire the date change
       this.eventManager.trigger(Event.DATE_CHANGE)
-      this.$element.change()
+
+      // fire change on the input to be sure other plugins see it (i.e. validation)
+      this.$input.change()
+
+      // If on the day view && autoclose is enabled - hide
+      if (this.view === View.DAYS && this.config.autoclose) {
+        this.hide()
+      }
+
       return this
     }
 
@@ -472,6 +488,9 @@ const Datepicker = (($) => {
         return
       }
 
+      // re-read the dates to populate internal state
+      this.update()
+
       // popper
       this.popper = new Popper(this.$element, {contentType: 'node', content: this.renderer.$picker}, this.config.popper)
       this.shown = true
@@ -481,13 +500,12 @@ const Datepicker = (($) => {
     }
 
     hide() {
-
-      // on hide, always do the same resets
-      this.viewDate = this.dates = null
-
       if (this.isInline || !this.isShowing()) {
         return this
       }
+
+      // on hide, always do the same resets
+      this.viewDate = this.dates = null
 
       // popper
       this.popper.destroy()
@@ -602,6 +620,12 @@ const Datepicker = (($) => {
       return date.isSameOrAfter(this.config.date.start) && date.isSameOrBefore(this.config.date.end)
     }
 
+    datesWithinRange(...dates) {
+      return $.grep(dates, (date) => {
+        return (!this.dateWithinRange(date) || !date)
+      }, true)
+    }
+
     startOfDay(moment = this.moment) {
       return moment.clone().startOf(Unit.DAY)
     }
@@ -640,16 +664,6 @@ const Datepicker = (($) => {
 
     clearDates() {
       this.update(null)
-
-      if (this.config.autoclose) {
-        this.hide()
-      }
-    }
-
-    setInputValue() {
-      let formatted = this.getDateFormatted()
-      this.$input.val(formatted)
-      return this
     }
 
     getDateFormatted(format = this.config.format) {
@@ -663,32 +677,31 @@ const Datepicker = (($) => {
      * @returns {DateArray}
      */
     configureNewDateArray(...dates) {
-      let newDatesArray = null
       if (dates.length > 0) {
-        newDatesArray = this.parseDates(...dates)
+        let newDatesArray = this.parseDates(...dates)
+        newDatesArray = this.datesWithinRange(...newDatesArray)
+        return new DateArray(...newDatesArray)
       }
       else {
-        newDatesArray = this.$input.val()
-
-        if (newDatesArray && this.config.date.count > 1) {
-          newDatesArray = newDatesArray.split(this.config.date.separator)
-        }
-        else {
-          newDatesArray = [newDatesArray]
-        }
-        //delete this.$element.data().date
-        newDatesArray = this.parseDates(...newDatesArray)
+        return this.parseDateArrayFromInput()
+        // already checks dates inside #parseDatesFromInput
       }
-
-      newDatesArray = $.grep(newDatesArray, (date) => {
-        return (!this.dateWithinRange(date) || !date)
-      }, true)
-
-      let da = new DateArray(...newDatesArray)
-
-      return da
     }
 
+    parseDateArrayFromInput(){
+      let value = this.$input.val()
+      let dates
+
+      if (value && this.config.date.count > 1) {
+        dates = value.split(this.config.date.separator)
+      }
+      else {
+        dates = [value]
+      }
+      dates = this.parseDates(...dates)
+      dates = this.datesWithinRange(...dates)
+      return new DateArray(...dates)
+    }
 
     // ------------------------------------------------------------------------
     // static

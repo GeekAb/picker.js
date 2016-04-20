@@ -15,7 +15,6 @@
   <!--[if lt IE 9]>
   <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
-
   <script src="../dist/picker.js.iife.js"></script>
   <!--
   <script>
@@ -38,17 +37,18 @@
 <div class="container">
   <h2>picker.js test</h2>
   <form>
-    <!--<input type="text" class="form-control" value="01/20/2016">-->
-    <input type="text" class="form-control">
+    <input type="text" class="form-control" value="03/05/2012">
+    <!--<input type="text" class="form-control">-->
     <span></span>
   </form>
 </div>
 <script>
-//  var $input = $('input')
-//  $input.datepicker({
-//    debug: true,
-//    date: { count: 1 }
-//  }).datepicker('show')
+  var $input = $('input')
+  $input.datepicker({
+    debug: true,
+    date: { count: 1 },
+    autoclose: true
+  }).datepicker('show')
 </script>
 </body>
 </html>
