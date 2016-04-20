@@ -141,7 +141,7 @@ const Datepicker = (($) => {
 
       this.$element = $element
       this.shown = false
-      this.dates = new DateArray()
+      this.dates = null //new DateArray() no need to init, #update will init initial round
 
       // get our own utc instance and configure the locale
       this.moment = this.newMoment()
@@ -209,7 +209,7 @@ const Datepicker = (($) => {
         m = moment()
       }
       else {
-        m = moment(args)
+        m = moment(...args)
       }
 
       m.utc()
@@ -272,23 +272,22 @@ const Datepicker = (($) => {
       this.setDates(date)
     }
 
-    // FIXME: this was called _setDate - WHY? different than #setDate, can this use setDate?
-    clickDate(date, which) {
-      if (!which || which === 'date') {
-        this.toggleMultidate(date)
+    clickDate(viewDate, toggleMultiDate = true) {
+      if (toggleMultiDate) {
+        this.toggleMultidate(viewDate)
       }
-      if (!which || which === 'view') {
-        this.viewDate = date
+      if (viewDate) {
+        this.viewDate = viewDate
       }
 
       this.renderer.fill()
       this.setInputValue()
-      if (!which || which !== 'view') {
+      if (viewDate) {
         this.eventManager.trigger(Event.DATE_CHANGE)
       }
 
-      this.$input.change()
-      if (this.config.autoclose && (!which || which === 'date')) {
+      this.$element.change()
+      if (this.config.autoclose && toggleMultiDate) {
         this.hide()
       }
     }
@@ -304,9 +303,8 @@ const Datepicker = (($) => {
       }
 
       // parse dates and get out if there is no diff
-      let oldDates = this.dates.copy()
       let newDates = this.resolveDates(...momentsOrStrings)
-      if (!oldDates.isSame(newDates)) {
+      if (newDates.isSame(this.dates)) {
         this.debug('no update needed, dates are the same')
         return
       }
@@ -483,7 +481,7 @@ const Datepicker = (($) => {
       }
 
       if (index !== -1) {
-        if (this.config.multidate.enabled === true || this.config.multidate.enabled > 1 || this.config.toggleActive) {
+        if (this.config.multidate.enabled === true || this.config.toggleActive) {
           this.dates.remove(index)
         }
       }
@@ -527,11 +525,13 @@ const Datepicker = (($) => {
     //}
 
     hide() {
+
+      // on hide, always do the same resets
+      this.focusDate = null
+
       if (this.isInline || !this.isShowing()) {
         return this
       }
-
-      this.focusDate = null
 
       if (!this.popper) {
         return
@@ -543,8 +543,9 @@ const Datepicker = (($) => {
       this.shown = false
 
       this.eventManager.onHidden()
-      this.view = this.config.view.start
-      this.showView()
+
+      // reset the view
+      this.showView(this.config.view.start)
 
       return this
     }

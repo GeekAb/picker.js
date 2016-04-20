@@ -117,7 +117,9 @@ const EventManager = class extends Base {
     // Clicked on today button
     else if ($target.hasClass(ClassName.TODAY)) {
       this.dp.showView(View.DAYS)
-      this.dp.clickDate(this.dp.newMoment(), this.config.today.button === true ? null : 'view')
+
+      let m = this.dp.newMoment()
+      this.dp.clickDate(m, this.config.today.button)
     }
 
     // Clicked on clear button
@@ -161,7 +163,7 @@ const EventManager = class extends Base {
             monthChanged = true
           }
         }
-        this.dp.clickDate(this.dp.newMoment(year, month, day))
+        this.dp.clickDate(this.dp.newMoment([year, month, day]))
         if (yearChanged) {
           this.trigger(Event.YEAR_CHANGE, this.dp.viewDate)
         }
@@ -179,7 +181,7 @@ const EventManager = class extends Base {
         this.dp.viewDate.month(month)
         this.trigger(Event.MONTH_CHANGE, this.dp.viewDate)
         if (this.config.view.min === View.MONTHS) {
-          this.dp.clickDate(this.dp.newMoment(year, month, day))
+          this.dp.clickDate(this.dp.newMoment([year, month, day]))
           this.dp.showView()
         }
         else {
@@ -237,14 +239,15 @@ const EventManager = class extends Base {
       }
       return
     }
-    let dateChanged = false
     let dir = null
     let newViewDate = null
-    let focusDate = this.dp.focusDate || this.dp.viewDate
+    //let focusDate = this.dp.focusDate || this.dp.viewDate
+    let focusDate = this.dp.focusDate || this.dp.dates.last() || this.dp.viewDate  //taken from enter section, not sure why different
 
     switch (ev.keyCode) {
       case Keycodes.ESC:
         if (this.dp.focusDate) {
+          // TODO: is this escaping back from a month/year/decade/century screen? if so comment it!
           this.dp.focusDate = null
           this.dp.viewDate = this.dp.dates.last() || this.dp.viewDate
           this.renderer.fill() // FIXME: why not use this.dp.update()()?
@@ -278,7 +281,7 @@ const EventManager = class extends Base {
           else if (Key.is(ev, Keycodes.LEFT, Keycodes.RIGHT)) {
             newViewDate = this.dp.moveAvailableDate(focusDate, dir, Unit.DAY)
           }
-          else if (!this.weekOfDateIsDisabled(focusDate)) {
+          else if (!this.dp.weekOfDateIsDisabled(focusDate)) {
             newViewDate = this.dp.moveAvailableDate(focusDate, dir, Unit.WEEK)
           }
         }
@@ -295,41 +298,30 @@ const EventManager = class extends Base {
           newViewDate = this.dp.moveAvailableDate(focusDate, dir, Unit.YEAR)
         }
         if (newViewDate) {
-          this.dp.focusDate = this.dp.viewDate = newViewDate
-          this.dp.setInputValue()
-          this.renderer.fill() // FIXME: why not use this.dp.update()()?
+          this.dp.focusDate = newViewDate
+          this.dp.clickDate(newViewDate, false)
           ev.preventDefault()
         }
         break
       case Keycodes.ENTER:
-        if (!this.config.forceParse)
-          break
-        focusDate = this.dp.focusDate || this.dp.dates.last() || this.dp.viewDate
         if (this.config.keyboard.navigation) {
           this.toggleMultidate(focusDate)
-          dateChanged = true
         }
+
         this.dp.focusDate = null
-        this.dp.viewDate = this.dp.dates.last() || this.dp.viewDate
-        this.dp.setInputValue()
-        this.renderer.fill() // FIXME: why not use this.dp.update()()?
-        if (this.dp.isShowing()) {
-          ev.preventDefault()
-          ev.stopPropagation()
-          if (this.config.autoclose)
-            this.dp.hide()
+        this.dp.clickDate(this.dp.dates.last() || this.dp.viewDate, false)
+
+        ev.preventDefault()
+        ev.stopPropagation()
+
+        if (this.config.autoclose) {
+          this.dp.hide()
         }
         break
       case Keycodes.TAB:
-        this.dp.focusDate = null
-        this.dp.viewDate = this.dp.dates.last() || this.dp.viewDate
-        this.renderer.fill() // FIXME: why not use this.dp.update()()?
+        this.dp.clickDate(this.dp.dates.last() || this.dp.viewDate, false)
         this.dp.hide()
         break
-    }
-    if (dateChanged) {
-      this.trigger(Event.DATE_CHANGE)
-      this.dp.$element.change()
     }
   }
 
