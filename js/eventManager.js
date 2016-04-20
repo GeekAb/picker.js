@@ -10,58 +10,72 @@ const EventManager = class extends Base {
     this.dp = datepicker
     this.renderer = this.dp.renderer
     this.config = this.dp.config // shortcut reference to same config
+    this.$document = $(document)
 
-    // build events
-    let events = {
+    // Element events
+    this.elementEvents = {
       keyup: (ev) => this.onKeyup(ev),
       keydown: (ev) => this.onKeydown(ev),
       paste: (ev) => this.onPaste(ev),
       click: () => this.dp.show()
     }
 
+    // on element focus show
     if (this.config.showOnFocus === true) {
-      events.focus = () => this.dp.show()
+      this.elementEvents.focus = () => this.dp.show()
     }
 
-    // single input
-    this.events = [
-      [this.dp.$input, events]
-    ]
-
+    // Trigger input updates immediately on changed year/month
     if (this.config.immediateUpdates) {
-
-      let immediateUpdateEvents = {}
-      immediateUpdateEvents[`${Event.YEAR_CHANGE} ${Event.MONTH_CHANGE}`] = (ev) => this.dp.update()(ev.date)
-      // Trigger input updates immediately on changed year/month
-      this.events.push(
-        [this.dp.$element, immediateUpdateEvents]
-      )
+      this.elementEvents[`${Event.YEAR_CHANGE} ${Event.MONTH_CHANGE}`] = (ev) => this.dp.update(ev.date)
     }
 
-    // build secondary events
-    this.secondaryEvents = [
-      [this.renderer.$picker, {click: (ev) => this.onClick(ev)}],
-      [$(document), {
-        mousedown: (ev) => this.onMousedown(ev)
-      }]
-    ]
+    // Picker events
+    this.pickerEvents = {
+      //keyup: (ev) => this.onKeyup(ev), // FIXME: these need to be added for keyboard nav after initial click (initial attempt didn't work - needs debugging)
+      //keydown: (ev) => this.onKeydown(ev),
+      click: (ev) => this.onPickerClick(ev)
+    }
 
-    //
-    this.attachEvents()
+    this.pickerDocumntEvents = {
+      mousedown: (ev) => this.onMousedown(ev)
+    }
+
+    // Initial attachment of events on element (input) - only removed on dispose
+    this.attachElementEvents()
   }
 
   dispose() {
-    this.detachEvents()
-    this.detachSecondaryEvents()
+    this.detachElementEvents()
+    this.detachPickerEvents()
     this.dp = undefined
     this.renderer = undefined
-    this.events = undefined
-    this.secondaryEvents = undefined
+    this.elementEvents = undefined
+    this.pickerEvents = undefined
+    this.$document = undefined
     super.dispose()
   }
 
+  attachElementEvents() {
+    this.attachEvents(this.dp.$input, this.elementEvents) // FIXME: should be $element?
+  }
+
+  detachElementEvents() {
+    this.detachEvents(this.dp.$input, this.elementEvents)
+  }
+
+  attachPickerEvents() {
+    this.attachEvents(this.renderer.$picker, this.pickerEvents)
+    this.attachEvents(this.$document, this.pickerDocumntEvents)
+  }
+
+  detachPickerEvents() {
+    this.detachEvents(this.renderer.$picker, this.pickerEvents)
+    this.detachEvents(this.$document, this.pickerDocumntEvents)
+  }
+
   onShown() {
-    this.attachSecondaryEvents()
+    this.attachPickerEvents()
     this.trigger(Event.SHOW)
     if ((window.navigator.msMaxTouchPoints || 'ontouchstart' in document) && !this.config.keyboard.touch) {
       $(this.dp.$element).blur()
@@ -69,7 +83,7 @@ const EventManager = class extends Base {
   }
 
   onHidden() {
-    this.detachSecondaryEvents()
+    this.detachEvents(this.pickerEvents)
     this.trigger(Event.HIDE)
   }
 
@@ -86,7 +100,7 @@ const EventManager = class extends Base {
     }
   }
 
-  onClick(ev) {
+  onPickerClick(ev) {
     ev.preventDefault()
     ev.stopPropagation()
 
@@ -369,7 +383,7 @@ const EventManager = class extends Base {
    */
   fire(eventKey, object = {}) {
     let event = $.Event(eventKey, object)
-    this.debugDump(`firing ${eventKey}`, object)
+    this.debug(`fire: ${eventKey}`, object)
     this.dp.$element.trigger(event)
     if (event.isDefaultPrevented()) {
       this.debug(`default prevented on ${eventKey}`)
@@ -380,51 +394,17 @@ const EventManager = class extends Base {
     }
   }
 
-  attachEvents() {
-    this.detachEvents()
-    this.applyEvents(this.events)
-  }
-
-  detachEvents() {
-    this.unapplyEvents(this.events)
-  }
-
-  attachSecondaryEvents() {
-    this.detachSecondaryEvents()
-    this.applyEvents(this.secondaryEvents)
-  }
-
-  detachSecondaryEvents() {
-    this.unapplyEvents(this.secondaryEvents)
-  }
-
-  applyEvents(evs) {
-    for (let i = 0, el, ch, ev; i < evs.length; i++) {
-      el = evs[i][0]
-      if (evs[i].length === 2) {
-        ch = undefined
-        ev = evs[i][1]
-      }
-      else if (evs[i].length === 3) {
-        ch = evs[i][1]
-        ev = evs[i][2]
-      }
-      el.on(ev, ch)
+  attachEvents(element, hash) {
+    for(let key of Object.keys(hash)){
+      let value = hash[key]
+      element.on(key, value)
     }
   }
 
-  unapplyEvents(evs) {
-    for (let i = 0, el, ev, ch; i < evs.length; i++) {
-      el = evs[i][0]
-      if (evs[i].length === 2) {
-        ch = undefined
-        ev = evs[i][1]
-      }
-      else if (evs[i].length === 3) {
-        ch = evs[i][1]
-        ev = evs[i][2]
-      }
-      el.off(ev, ch)
+  detachEvents(element, hash) {
+    for(let key of Object.keys(hash)){
+      let value = hash[key]
+      element.off(key, value)
     }
   }
 }

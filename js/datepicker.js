@@ -174,7 +174,6 @@ const Datepicker = (($) => {
       // initialize the renderer and create the $picker element
       this.renderer = new Renderer(this)
 
-
       // initialize the EventManager
       this.eventManager = new EventManager(this)
 
