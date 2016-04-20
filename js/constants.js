@@ -12,33 +12,7 @@ export const Data = {
   PROVIDE: 'provide'
 }
 
-export const EVENT_KEY = `.${Data.KEY}`
 export const JQUERY_NAME = NAME // `bmd${NAME.charAt(0).toUpperCase() + NAME.slice(1)}`
-
-export const Event = {
-
-  DATE_CHANGE: `date.change${EVENT_KEY}`,
-
-  MONTH_CHANGE: `month.change${EVENT_KEY}`,
-  YEAR_CHANGE: `year.change${EVENT_KEY}`,
-  DECADE_CHANGE: `decade.change${EVENT_KEY}`,
-  CENTURY_CHANGE: `century.change${EVENT_KEY}`,
-
-
-  SHOW: `show${EVENT_KEY}`,
-  //  SHOWN          : `shown${EVENT_KEY}`,
-  HIDE: `hide${EVENT_KEY}`,
-  //  HIDDEN         : `hidden${EVENT_KEY}`,
-  CLICK_DATA_API: `click${EVENT_KEY}${Data.API_KEY}`
-}
-
-export const View = {
-  DAYS: 0,
-  MONTHS: 1,
-  YEARS: 2,
-  DECADES: 3,
-  CENTURIES: 4
-}
 
 export const Unit = {
   // units
@@ -48,6 +22,34 @@ export const Unit = {
   YEAR: 'year',
   DECADE: 'decade',
   CENTURY: 'century'
+}
+
+export const EVENT_KEY = `.${Data.KEY}`
+export const CHANGE_EVENT_KEY = `.change${EVENT_KEY}`
+
+export const Event = {
+  DATE_CHANGE: `date${CHANGE_EVENT_KEY}`,
+  SHOW: `show${EVENT_KEY}`,
+  //  SHOWN          : `shown${EVENT_KEY}`,
+  HIDE: `hide${EVENT_KEY}`,
+  //  HIDDEN         : `hidden${EVENT_KEY}`,
+  CLICK_DATA_API: `click${EVENT_KEY}${Data.API_KEY}`,
+
+  // units
+  DAY_CHANGE: `${Unit.DAY}${CHANGE_EVENT_KEY}`,
+  WEEK_CHANGE: `${Unit.WEEK}${CHANGE_EVENT_KEY}`,
+  MONTH_CHANGE: `${Unit.MONTH}${CHANGE_EVENT_KEY}`,
+  YEAR_CHANGE: `${Unit.YEAR}${CHANGE_EVENT_KEY}`,
+  DECADE_CHANGE: `${Unit.DECADE}${CHANGE_EVENT_KEY}`,
+  CENTURY_CHANGE: `${Unit.CENTURY}${CHANGE_EVENT_KEY}`
+}
+
+export const View = {
+  DAYS: 0,
+  MONTHS: 1,
+  YEARS: 2,
+  DECADES: 3,
+  CENTURIES: 4
 }
 
 export const ClassName = {

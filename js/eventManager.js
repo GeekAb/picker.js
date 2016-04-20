@@ -32,7 +32,8 @@ const EventManager = class extends Base {
 
     // Picker events
     this.pickerEvents = {
-      //keyup: (ev) => this.onKeyup(ev), // FIXME: these need to be added for keyboard nav after initial click (initial attempt didn't work - needs debugging)
+      // FIXME: these need to be added for keyboard nav after initial click (initial attempt didn't work - needs debugging)
+      //keyup: (ev) => this.onKeyup(ev),
       //keydown: (ev) => this.onKeydown(ev),
       click: (ev) => this.onPickerClick(ev)
     }
@@ -114,33 +115,30 @@ const EventManager = class extends Base {
 
     // Clicked on prev or next
     else if ($navArrow.length > 0) {
-      let dir = this.config.view.modes[this.dp.view].navStep * ($navArrow.hasClass(ClassName.PREV) ? -1 : 1)
+      let direction = this.config.view.modes[this.dp.view].navStep * ($navArrow.hasClass(ClassName.PREV) ? -1 : 1)
+      let unit
       if (this.dp.view === View.DAYS) {
-        this.dp.viewDate.add(dir, Unit.MONTH)
-        this.trigger(Event.MONTH_CHANGE, this.dp.viewDate)
+        unit = Unit.MONTH
       }
       else {
-        this.dp.viewDate.add(dir, Unit.YEAR)
-        if (this.dp.view === View.MONTHS) {
-          this.trigger(Event.YEAR_CHANGE, this.dp.viewDate)
-        }
+        unit = Unit.YEAR
       }
+
+      this.dp.viewDate.add(direction, unit)
+      this.trigger(Event[`${unit.toUpperCase()}_CHANGE`])
 
       // set view date but don't select it using one of the #update methods
       this.renderer.fill()
     }
-
     // Clicked on today button
     else if ($target.hasClass(ClassName.TODAY)) {
       this.dp.showView(View.DAYS)
       this.dp.update(this.dp.newMoment())
     }
-
     // Clicked on clear button
     else if ($target.hasClass(ClassName.CLEAR)) {
       this.dp.clearDates()
     }
-
     else if (!$target.hasClass(ClassName.DISABLED)) {
       // Clicked on a day
       if ($target.hasClass(Unit.DAY)) {
@@ -159,8 +157,8 @@ const EventManager = class extends Base {
       if ($target.hasClass(Unit.MONTH)) {
         let month = $target.parent().find('span').index($target)
         this.dp.viewDate.month(month)
-        this.trigger(Event.MONTH_CHANGE, this.dp.viewDate)
         this.dp.updateMultidate(this.dp.viewDate)
+        this.trigger(Event.MONTH_CHANGE)
         if (this.config.view.min === View.MONTHS) {
           this.dp.showView()
         }
@@ -173,22 +171,25 @@ const EventManager = class extends Base {
       if ($target.hasClass(Unit.YEAR)
         || $target.hasClass(Unit.DECADE)
         || $target.hasClass(Unit.CENTURY)) {
-        //this.dp.viewDate.startOf(Unit.MONTH)
 
         let year = parseInt($target.text(), 10) || 0
-        this.dp.viewDate.year(year)
+        let m = this.dp.viewDate.clone().year(year)
+        let unit
 
         if ($target.hasClass(Unit.YEAR)) {
-          this.trigger(Event.YEAR_CHANGE, this.dp.viewDate)
+          unit = Unit.YEAR
         }
         if ($target.hasClass(Unit.DECADE)) {
-          this.trigger(Event.DECADE_CHANGE, this.dp.viewDate)
+          unit = Unit.DECADE
         }
         if ($target.hasClass(Unit.CENTURY)) {
-          this.trigger(Event.CENTURY_CHANGE, this.dp.viewDate)
+          unit = Unit.CENTURY
         }
 
-        this.dp.updateMultidate(this.dp.viewDate)
+        this.dp.updateMultidate(m)
+        if (unit) {
+          this.trigger(Event[`${unit.toUpperCase()}_CHANGE`])
+        }
         this.dp.changeView(-1)
       }
     }
@@ -215,10 +216,6 @@ const EventManager = class extends Base {
       }
       return
     }
-    let dir = null
-    let newViewDate = null
-    //let focusDate = this.dp.focusDate || this.dp.viewDate
-    let focusDate = this.dp.focusDate || this.dp.dates.last() || this.dp.viewDate  //taken from enter section, not sure why different
 
     switch (ev.keyCode) {
       case Keycodes.ESC:
@@ -233,70 +230,66 @@ const EventManager = class extends Base {
         ev.preventDefault()
         ev.stopPropagation()
         break
-      case Keycodes.LEFT:
-      case Keycodes.UP:
-      case Keycodes.RIGHT:
-      case Keycodes.DOWN:
-        if (!this.config.keyboard.navigation || this.config.daysOfWeek.disabled.length === 7)
-          break
-        dir = Key.is(ev, Keycodes.LEFT, Keycodes.UP) ? -1 : 1
-        if (this.dp.view === View.DAYS) {
-          if (ev.ctrlKey) {
-            newViewDate = this.dp.moveAvailableDate(focusDate, dir, Unit.YEAR)
-
-            if (newViewDate)
-              this.trigger(Event.YEAR_CHANGE, this.dp.viewDate)
-          }
-          else if (ev.shiftKey) {
-            newViewDate = this.dp.moveAvailableDate(focusDate, dir, Unit.MONTH)
-
-            if (newViewDate)
-              this.trigger(Event.MONTH_CHANGE, this.dp.viewDate)
-          }
-          else if (Key.is(ev, Keycodes.LEFT, Keycodes.RIGHT)) {
-            newViewDate = this.dp.moveAvailableDate(focusDate, dir, Unit.DAY)
-          }
-          else if (!this.dp.weekOfDateIsDisabled(focusDate)) {
-            newViewDate = this.dp.moveAvailableDate(focusDate, dir, Unit.WEEK)
-          }
-        }
-        else if (this.dp.view === View.MONTHS) {
-          if (Key.is(ev, Keycodes.UP, Keycodes.DOWN)) {
-            dir = dir * 4
-          }
-          newViewDate = this.dp.moveAvailableDate(focusDate, dir, Unit.MONTH)
-        }
-        else if (this.dp.view === View.YEARS) {
-          if (Key.is(ev, Keycodes.UP, Keycodes.DOWN)) {
-            dir = dir * 4
-          }
-          newViewDate = this.dp.moveAvailableDate(focusDate, dir, Unit.YEAR)
-        }
-        if (newViewDate) {
-          this.dp.focusDate = newViewDate
-          this.dp.update(newViewDate)
-          ev.preventDefault()
-        }
-        break
       case Keycodes.ENTER:
-        //if (this.config.keyboard.navigation) {
-        //  this.dp.toggleMultidate(focusDate)
-        //}
-
+      case Keycodes.TAB:
         this.dp.focusDate = null
-        this.dp.update(this.dp.dates.last() || this.dp.viewDate)
+        this.dp.updateMultidate(this.dp.dates.last() || this.dp.viewDate)
 
         ev.preventDefault()
         ev.stopPropagation()
 
-        if (this.config.autoclose) {
+        if (Key.is(Keycodes.TAB) || this.config.autoclose) {
           this.dp.hide()
         }
         break
-      case Keycodes.TAB:
-        this.dp.update(this.dp.dates.last() || this.dp.viewDate)
-        this.dp.hide()
+      case Keycodes.LEFT:
+      case Keycodes.UP:
+      case Keycodes.RIGHT:
+      case Keycodes.DOWN:
+      {
+        let focusDate = this.dp.focusDate || this.dp.dates.last() || this.dp.viewDate
+        if (!this.config.keyboard.navigation || this.config.daysOfWeek.disabled.length === 7) {
+          break
+        }
+        let direction = Key.is(ev, Keycodes.LEFT, Keycodes.UP) ? -1 : 1
+        let unit
+        if (this.dp.view === View.DAYS) {
+          if (ev.ctrlKey) {
+            unit = Unit.YEAR
+          }
+          else if (ev.shiftKey) {
+            unit = Unit.MONTH
+          }
+          else if (Key.is(ev, Keycodes.LEFT, Keycodes.RIGHT)) {
+            unit = Unit.DAY
+          }
+          else if (!this.dp.weekOfDateIsDisabled(focusDate)) {
+            unit = Unit.WEEK
+          }
+        }
+        else if (this.dp.view === View.MONTHS) {
+          if (Key.is(ev, Keycodes.UP, Keycodes.DOWN)) {
+            direction = direction * 4
+          }
+          unit = Unit.MONTH
+        }
+        else if (this.dp.view === View.YEARS) {
+          if (Key.is(ev, Keycodes.UP, Keycodes.DOWN)) {
+            direction = direction * 4
+          }
+          unit = Unit.YEAR
+        }
+
+        // now move the available date and render (highlight the moved date)
+        if (unit) {
+          this.dp.focusDate = this.viewDate = this.dp.moveAvailableDate(focusDate, direction, unit)
+          this.renderer.fill()
+
+          this.trigger(Event[`${unit.toUpperCase()}_CHANGE`])
+          ev.preventDefault()
+        }
         break
+      }
     }
   }
 
@@ -316,23 +309,17 @@ const EventManager = class extends Base {
     ev.preventDefault()
   }
 
-  trigger(event, altdate) {
-    let date = null
-    if (altdate) {
-      date = altdate.clone()
-    }
-    else {
-      date = this.dp.dates.last()
-      if (date) {
-        //clone it if present
-        date = date.clone()
-      }
+  trigger(event) {
+    let date = this.dp.dates.last()
+    if (date) {
+      //clone it if present
+      date = date.clone()
     }
 
     this.fire(event, {
       type: event,
       date: date,
-      dates: this.dp.dates.clonedArray()
+      datepicker: this.dp
     })
   }
 

@@ -224,13 +224,13 @@ const Renderer = class extends Base {
     this.$picker.find(`${Selector.DAYS} thead`).append(html)
   }
 
-  renderDay(viewDate, prevMonth, html) {
+  renderDay(viewDate, date, html) {
     let before = null
     let tooltip = ''
-    if (prevMonth.day() === this.config.week.start) {
+    if (date.day() === this.config.week.start) {
       html.push('<tr>')
     }
-    let classNames = this.getClassNames(viewDate, prevMonth)
+    let classNames = this.getClassNames(viewDate, date)
     classNames.push(Unit.DAY)
 
     /*
@@ -243,7 +243,7 @@ const Renderer = class extends Base {
      tooltip: A tooltip to apply to this date, via the title HTML attribute
      */
     if (this.config.beforeShowDay !== undefined) {
-      before = this.config.beforeShowDay(prevMonth)
+      before = this.config.beforeShowDay(date)
       if (before === undefined) {
         before = {}
       }
@@ -259,8 +259,8 @@ const Renderer = class extends Base {
     }
 
     classNames = $.unique(classNames)
-    html.push(`<td class="${classNames.join(' ')}"${tooltip} data-${Data.MOMENT}="${prevMonth}">${prevMonth.date()}</td>`)
-    if (prevMonth.day() === this.config.week.end) {
+    html.push(`<td class="${classNames.join(' ')}"${tooltip} data-${Data.MOMENT}="${date}">${date.date()}</td>`)
+    if (date.day() === this.config.week.end) {
       html.push('</tr>')
     }
   }
