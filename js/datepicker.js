@@ -282,6 +282,7 @@ const Datepicker = (($) => {
 
       //------------
       // Multidate enabled
+      //------------
 
       // We need to operate on a temporary date array, passed to update
       let newDates = this.dates.copy()

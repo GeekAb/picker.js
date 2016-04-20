@@ -83,7 +83,7 @@ const EventManager = class extends Base {
   }
 
   onHidden() {
-    this.detachEvents(this.pickerEvents)
+    this.detachPickerEvents()
     this.trigger(Event.HIDE)
   }
 
