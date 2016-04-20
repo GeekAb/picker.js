@@ -272,8 +272,8 @@ const Datepicker = (($) => {
       this.setDates(date)
     }
 
-    clickDate(viewDate, toggleMultiDate = true) {
-      if (toggleMultiDate) {
+    clickDate(viewDate, toggleMultidate = true) {
+      if (toggleMultidate) {
         this.toggleMultidate(viewDate)
       }
       if (viewDate) {
@@ -287,9 +287,33 @@ const Datepicker = (($) => {
       }
 
       this.$element.change()
-      if (this.config.autoclose && toggleMultiDate) {
+      if (this.config.autoclose && toggleMultidate) {
         this.hide()
       }
+    }
+
+    toggleMultidate(date) {
+      var index = this.dates.contains(date)
+      if (!date) {
+        this.dates.clear()
+      }
+
+      if (index !== -1) {
+        if (this.config.multidate.enabled === true || this.config.toggleActive) {
+          this.dates.remove(index)
+        }
+      }
+      else if (this.config.multidate.enabled === false) {
+        this.dates.clear()
+        this.dates.push(date)
+      }
+      else {
+        this.dates.push(date)
+      }
+
+      if (typeof this.config.multidate.enabled === 'number')
+        while (this.dates.length() > this.config.multidate.enabled)
+          this.dates.remove(0)
     }
 
     /**
@@ -471,31 +495,6 @@ const Datepicker = (($) => {
       while (this.dateIsDisabled(m))
 
       return m
-    }
-
-
-    toggleMultidate(date) {
-      var index = this.dates.contains(date)
-      if (!date) {
-        this.dates.clear()
-      }
-
-      if (index !== -1) {
-        if (this.config.multidate.enabled === true || this.config.toggleActive) {
-          this.dates.remove(index)
-        }
-      }
-      else if (this.config.multidate.enabled === false) {
-        this.dates.clear()
-        this.dates.push(date)
-      }
-      else {
-        this.dates.push(date)
-      }
-
-      if (typeof this.config.multidate.enabled === 'number')
-        while (this.dates.length() > this.config.multidate.enabled)
-          this.dates.remove(0)
     }
 
     isShowing() {
