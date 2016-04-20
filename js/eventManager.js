@@ -84,6 +84,7 @@ const EventManager = class extends Base {
   }
 
   onHidden() {
+    this.lastKeyboardFocusDate = null
     this.detachPickerEvents()
     this.trigger(Event.HIDE)
   }
@@ -216,22 +217,19 @@ const EventManager = class extends Base {
 
     switch (ev.keyCode) {
       case Keycodes.ESC:
-        if (this.dp.focusDate) {
-          // TODO: is this escaping back from a month/year/decade/century screen? if so comment it!
-          this.dp.focusDate = null
-          this.dp.update()
-        }
-        else {
+        // escaping from days means hiding the picker
+        if (this.dp.view === View.DAYS) {
           this.dp.hide()
+        }
+        else{
+          this.dp.update()
         }
         ev.preventDefault()
         ev.stopPropagation()
         break
       case Keycodes.ENTER:
       case Keycodes.TAB:
-        this.dp.focusDate = null
         this.dp.updateMultidate(this.dp.dates.last() || this.dp.viewDate)
-
         ev.preventDefault()
         ev.stopPropagation()
 
@@ -244,7 +242,7 @@ const EventManager = class extends Base {
       case Keycodes.RIGHT:
       case Keycodes.DOWN:
       {
-        let focusDate = this.dp.focusDate || this.dp.dates.last() || this.dp.viewDate
+        let focusDate = this.lastKeyboardFocusDate || this.dp.dates.last() || this.dp.viewDate
         if (!this.config.keyboard.navigation || this.config.daysOfWeek.disabled.length === 7) {
           break
         }
@@ -279,7 +277,7 @@ const EventManager = class extends Base {
 
         // now move the available date and render (highlight the moved date)
         if (unit) {
-          this.dp.focusDate = this.dp.viewDate = this.dp.moveAvailableDate(focusDate, direction, unit)
+          this.lastKeyboardFocusDate = this.dp.viewDate = this.dp.moveAvailableDate(focusDate, direction, unit)
           this.renderer.fill()
 
           this.trigger(Event[`${unit.toUpperCase()}_CHANGE`])
@@ -307,15 +305,15 @@ const EventManager = class extends Base {
   }
 
   trigger(event) {
-    let date = this.dp.dates.last()
-    if (date) {
-      //clone it if present
-      date = date.clone()
-    }
+    //let date = this.dp.dates.last()
+    //if (date) {
+    //  //clone it if present
+    //  date = date.clone()
+    //}
 
     this.fire(event, {
       type: event,
-      date: date,
+      //date: date,
       datepicker: this.dp
     })
   }

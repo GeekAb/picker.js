@@ -356,7 +356,7 @@ const Renderer = class extends Base {
     else if (date.year() > year || (date.year() === year && date.month() > month)) {
       classes.push(ClassName.NEW)
     }
-    if (this.dp.focusDate && date.isSame(this.dp.focusDate, 'day')) {
+    if (this.dp.viewDate && date.isSame(this.dp.viewDate, 'day')) {
       classes.push(ClassName.FOCUSED)
     }
     // Compare internal UTC date with local today, not UTC today

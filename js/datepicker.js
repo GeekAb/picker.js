@@ -150,7 +150,6 @@ const Datepicker = (($) => {
       //
       this.view = this.config.view.start
       this.viewDate = this.config.date.default
-      this.focusDate = null
 
       // inline datepicker if target is a div
       if (this.$element.is('div')) {
@@ -522,21 +521,13 @@ const Datepicker = (($) => {
       return this
     }
 
-    //isPickerVisible() {
-    //  return this.renderer.$picker.is(':visible')
-    //}
-
     hide() {
 
       // on hide, always do the same resets
-      this.focusDate = null
+      this.viewDate = this.dates = null
 
       if (this.isInline || !this.isShowing()) {
         return this
-      }
-
-      if (!this.popper) {
-        return
       }
 
       // popper
