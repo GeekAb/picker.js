@@ -1,5 +1,3 @@
-const COMPARE_DATE_FORMAT = 'MM/DD/YYYY' // date granularity
-
 /**
  * Helper converted from legacy code, not sure we need to keep it but for ease of conversion of the entire
  *  codebase, I've kept it.  TODO: Revisit this later to see if we actually need it.

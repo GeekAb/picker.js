@@ -78,7 +78,7 @@ const EventManager = class extends Base {
     this.attachPickerEvents()
     this.trigger(Event.SHOW)
     if ((window.navigator.msMaxTouchPoints || 'ontouchstart' in document) && !this.config.keyboard.touch) {
-      $(this.dp.$element).blur()
+      this.dp.$element.blur()
     }
   }
 
@@ -131,9 +131,7 @@ const EventManager = class extends Base {
     // Clicked on today button
     else if ($target.hasClass(ClassName.TODAY)) {
       this.dp.showView(View.DAYS)
-
-      let m = this.dp.newMoment()
-      this.dp.clickDate(m, this.config.today.button)
+      this.dp.update(this.dp.newMoment())
     }
 
     // Clicked on clear button
@@ -145,22 +143,18 @@ const EventManager = class extends Base {
       // Clicked on a day
       if ($target.hasClass(Unit.DAY)) {
         let day = parseInt($target.text(), 10) || 1
+        let origViewDate = this.dp.viewDate.clone()
         let year = this.dp.viewDate.year()
         let month = this.dp.viewDate.month()
-        let monthChanged = false
-        let yearChanged = false
 
         // From last month  FIXME: couldn't this just be saved state instead of trying to figure out from the UI?
         if ($target.hasClass(ClassName.OLD)) {
           if (month === 0) {
             month = 11
             year = year - 1
-            monthChanged = true
-            yearChanged = true
           }
           else {
             month = month - 1
-            monthChanged = true
           }
         }
 
@@ -169,19 +163,16 @@ const EventManager = class extends Base {
           if (month === 11) {
             month = 0
             year = year + 1
-            monthChanged = true
-            yearChanged = true
           }
           else {
             month = month + 1
-            monthChanged = true
           }
         }
-        this.dp.clickDate(this.dp.newMoment([year, month, day]))
-        if (yearChanged) {
+        this.dp.updateMultidate(this.dp.newMoment([year, month, day]))
+        if (origViewDate.year() != year) {
           this.trigger(Event.YEAR_CHANGE, this.dp.viewDate)
         }
-        if (monthChanged) {
+        if (origViewDate.month() != month) {
           this.trigger(Event.MONTH_CHANGE, this.dp.viewDate)
         }
       }
@@ -195,7 +186,7 @@ const EventManager = class extends Base {
         this.dp.viewDate.month(month)
         this.trigger(Event.MONTH_CHANGE, this.dp.viewDate)
         if (this.config.view.min === View.MONTHS) {
-          this.dp.clickDate(this.dp.newMoment([year, month, day]))
+          this.dp.updateMultidate(this.dp.newMoment([year, month, day]))
           this.dp.showView()
         }
         else {
@@ -224,7 +215,7 @@ const EventManager = class extends Base {
         }
 
         if (this.config.view.min === View.YEARS) {
-          this.dp.clickDate(this.dp.viewDate)
+          this.dp.updateMultidate(this.dp.viewDate)
         }
         this.dp.changeView(-1)
         this.renderer.fill()
@@ -313,17 +304,17 @@ const EventManager = class extends Base {
         }
         if (newViewDate) {
           this.dp.focusDate = newViewDate
-          this.dp.clickDate(newViewDate, false)
+          this.dp.update(newViewDate)
           ev.preventDefault()
         }
         break
       case Keycodes.ENTER:
-        if (this.config.keyboard.navigation) {
-          this.toggleMultidate(focusDate)
-        }
+        //if (this.config.keyboard.navigation) {
+        //  this.dp.toggleMultidate(focusDate)
+        //}
 
         this.dp.focusDate = null
-        this.dp.clickDate(this.dp.dates.last() || this.dp.viewDate, false)
+        this.dp.update(this.dp.dates.last() || this.dp.viewDate)
 
         ev.preventDefault()
         ev.stopPropagation()
@@ -333,7 +324,7 @@ const EventManager = class extends Base {
         }
         break
       case Keycodes.TAB:
-        this.dp.clickDate(this.dp.dates.last() || this.dp.viewDate, false)
+        this.dp.update(this.dp.dates.last() || this.dp.viewDate)
         this.dp.hide()
         break
     }
