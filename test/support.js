@@ -1,5 +1,7 @@
 import {Data, Selector} from '../js/constants'
 
+export const YYYY_MM_DD = 'YYYY-MM-DD'
+
 export const $ = window.jQuery
 export const $input = $('input')
 
@@ -34,7 +36,7 @@ export const findPopper = () => {
 }
 
 export const assertNotFound = (selector) => {
-  expect($(selector).length).to.equal(0)
+  expect($(selector).length, selector).to.equal(0)
 }
 
 export const assertVisible = (selector) => {

@@ -46,9 +46,9 @@ const Datepicker = (($) => {
 
     //-----------------
     // view types:
-    //    days(0) | months(1) | years(2) | decades(3) | centuries(4)
+    //    days | months | years | decades | centuries
     view: {
-      start: 'days', // The view that the datepicker should show when it is opened - string or digit
+      start: 'days', // The view that the datepicker should show when it is opened
       min: 'days', // Set a minimum limit for the view mode
       max: 'centuries', // Set a maximum limit for the view mode
       modes: [
@@ -528,7 +528,7 @@ const Datepicker = (($) => {
       // Normalize views as view-type integers
       this.config.view.start = this.resolveViewType(this.config.view.start)
       this.config.view.min = this.resolveViewType(this.config.view.min)
-      this.config.view.max = this.resolveViewType(this.config.view.max, View.YEARS) // default to years (slightly different than other view resolution)
+      this.config.view.max = this.resolveViewType(this.config.view.max) // default to years (slightly different than other view resolution)
 
       // Check that the start view is between min and max
       this.config.view.start = Math.min(this.config.view.start, this.config.view.max)
@@ -638,7 +638,7 @@ const Datepicker = (($) => {
       return moment.clone().endOf(Unit.YEAR).year(2200) // ?? better value to set for this?
     }
 
-    resolveViewType(view, defaultValue = View.DAYS) {
+    resolveViewType(view) {
       if (typeof view === 'string') {
         let value = null
         switch (view) {
@@ -651,8 +651,14 @@ const Datepicker = (($) => {
           case 'years':
             value = View.YEARS
             break
+          case 'decades':
+            value = View.DECADES
+            break
+          case 'centuries':
+            value = View.CENTURIES
+            break
           default:
-            value = defaultValue
+            throw new Error(`Unknown view type '${view}'. Try one of: days | months | years | decades | centuries`)
             break
         }
         return value

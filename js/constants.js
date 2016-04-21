@@ -4,7 +4,6 @@
  * ------------------------------------------------------------------------
  */
 export const NAME = 'datepicker'
-
 export const Data = {
   KEY: `${NAME}`,
   API_KEY: '.data-api',
@@ -13,6 +12,14 @@ export const Data = {
 }
 
 export const JQUERY_NAME = NAME // `bmd${NAME.charAt(0).toUpperCase() + NAME.slice(1)}`
+
+export const View = {
+  DAYS: 0,
+  MONTHS: 1,
+  YEARS: 2,
+  DECADES: 3,
+  CENTURIES: 4
+}
 
 export const Unit = {
   // units
@@ -42,14 +49,6 @@ export const Event = {
   YEAR_CHANGE: `${Unit.YEAR}${CHANGE_EVENT_KEY}`,
   DECADE_CHANGE: `${Unit.DECADE}${CHANGE_EVENT_KEY}`,
   CENTURY_CHANGE: `${Unit.CENTURY}${CHANGE_EVENT_KEY}`
-}
-
-export const View = {
-  DAYS: 0,
-  MONTHS: 1,
-  YEARS: 2,
-  DECADES: 3,
-  CENTURIES: 4
 }
 
 export const ClassName = {
@@ -93,6 +92,10 @@ export const Selector = {
   DATA_PROVIDE: `[data-${Data.PROVIDE}="datepicker"]`,
 
   ACTIVE: `.${ClassName.ACTIVE}`,
+
+  TODAY: `.${ClassName.TODAY}`,
+  CLEAR: `.${ClassName.CLEAR}`,
+
 
   PREV: `.${ClassName.PREV}`,
   NEXT: `.${ClassName.NEXT}`,
