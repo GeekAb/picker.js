@@ -155,17 +155,36 @@ describe('Datepicker', () => {
         })
       })
 
-      describe('className', () => {
-        it(`should be marked`, () => {
+      describe('classes', () => {
+        it(`no date specified should have 'today focused'`, () => {
           $input.datepicker()
 
           assertData().show()
           assertVisible(Selector.DAYS)
-          expect(findToday()).to.have.class(ClassName.TODAY)
+
+          let $today = findToday()
+          expect($today).to.have.class(ClassName.TODAY)
+          expect($today).to.have.class(ClassName.FOCUSED)
+          expect($today).not.to.have.class(ClassName.ACTIVE)
 
           // use any other two digit day (just to avoid multi-matches with contains)
-          let notToday = moment().date() == 10 ? 11 : 10
-          expect(findDayOfMonth(new String(notToday))).not.to.have.class(ClassName.TODAY)
+          let $notToday = findDayOfMonth(new String(moment().date() == 10 ? 11 : 10))
+          expect($notToday).not.to.have.class(ClassName.TODAY)
+          expect($notToday).not.to.have.class(ClassName.FOCUSED)
+          expect($notToday).not.to.have.class(ClassName.ACTIVE)
+        })
+
+        it(`today clicked should have 'today focused active'`, () => {
+          $input.datepicker()
+
+          assertData().show()
+          assertVisible(Selector.DAYS)
+
+          findToday().click() // click re-renders, so we have to re-find it after
+          let $today = findToday()
+          expect($today).to.have.class(ClassName.TODAY)
+          expect($today).to.have.class(ClassName.FOCUSED)
+          expect($today).to.have.class(ClassName.ACTIVE)
         })
       })
     })
