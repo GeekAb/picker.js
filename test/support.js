@@ -13,6 +13,7 @@ export const safeDispose = () => {
     console.log(error)
     $input.data(Data.KEY, null)
   }
+  $input.val('')
 }
 
 export const fromData = () => {
@@ -51,12 +52,18 @@ export const assertHidden = (selector) => {
   return $element
 }
 
-export const assertDatesEqual = (actual, expected, message = null) => {
-  let msg = message
-  if (msg === null) {
-    msg = `${actual ? actual.format() : null} should equal ${expected ? expected.format() : null}`
-  }
-  expect(expected.isSame(actual), msg).to.be.true
+export const assertText = (selector, text) => {
+  let $element = $(selector)
+  expect($element, selector).to.contain(text)
+  return $element
+}
+
+
+
+export const assertDatesEqual = (actual, expected, granularity = 'millisecond') => {
+  let msg = `${actual ? actual.format() : null} should equal ${expected ? expected.format() : null}`
+
+  expect(expected.isSame(actual, granularity), msg).to.be.true
 }
 
 /**
@@ -72,6 +79,14 @@ export const findDayOfMonth = (dayOfMonth, assertFound = true) => {
   return $day
 }
 
+export const findToday = (assertFound = true) => {
+  let selector = `${Selector.DAYS} td${Selector.TODAY}`
+  let $today = $(selector)
+  if (assertFound) {
+    expect($today.length, `Should find one ${selector}`).to.equal(1)
+  }
+  return $today
+}
 
 // done in the testrunner.html
 //import chai from 'chai'

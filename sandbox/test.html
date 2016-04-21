@@ -37,8 +37,8 @@
 <div class="container">
   <h2>picker.js test</h2>
   <form>
-    <input type="text" class="form-control" value="03/05/2012">
-    <!--<input type="text" class="form-control">-->
+    <!--<input type="text" class="form-control" value="03/05/2012">-->
+    <input type="text" class="form-control">
     <span></span>
   </form>
 </div>
@@ -48,7 +48,11 @@
     debug: true,
 //    date: { count: 1 },
 //    autoclose: true
-    view: {start: `years`}
+//    view: {start: `years`},
+    today: {
+      button: true
+      , highlight: false
+    }
   }).datepicker('show')
 </script>
 </body>

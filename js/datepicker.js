@@ -40,8 +40,7 @@ const Datepicker = (($) => {
     immediateUpdates: false, // if true, selecting a year or month in the datepicker will update the input value immediately. Otherwise, only selecting a day of the month will update the input value immediately.
     title: '', // string that will appear on top of the datepicker. If empty the title will be hidden.
     today: {
-      button: true, // If true, displays a “Today” button at the bottom of the datepicker to select the current date
-      highlight: true // If true, highlights the current date.
+      button: false // If true, displays a “Today” button at the bottom of the datepicker to select the current date
     },
 
     //-----------------

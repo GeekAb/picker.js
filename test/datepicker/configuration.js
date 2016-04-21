@@ -1,4 +1,4 @@
-import {$, $input, safeDispose, fromData, assertData, findPopper, assertNotFound, assertVisible, assertHidden, assertDatesEqual, findDayOfMonth, YYYY_MM_DD} from '../support'
+import {$, $input, safeDispose, fromData, assertData, assertText, findPopper, findToday, assertNotFound, assertVisible, assertHidden, assertDatesEqual, findDayOfMonth, YYYY_MM_DD} from '../support'
 import {Selector, ClassName} from '../../js/constants'
 import moment from 'moment'
 
@@ -94,8 +94,8 @@ describe('Datepicker', () => {
 
         it(`should show centuries`, () => {
           $input.datepicker({
-              view: {start: `centuries`}
-            })
+            view: {start: `centuries`}
+          })
 
           assertData().show()
           assertHidden(Selector.DAYS)
@@ -106,5 +106,69 @@ describe('Datepicker', () => {
         })
       })
     })
+
+    describe('today', () => {
+      describe('button', () => {
+
+        it(`should not show by default`, () => {
+          $input.datepicker()
+          assertData().show()
+          assertVisible(Selector.DAYS)
+          assertHidden(`${Selector.DAYS} tfoot ${Selector.TODAY}`)
+        })
+
+
+        it(`should show when enabled`, () => {
+          $input.datepicker({
+            today: {button: true}
+          })
+          assertData().show()
+          assertVisible(Selector.DAYS)
+          assertVisible(`${Selector.DAYS} tfoot ${Selector.TODAY}`)
+
+          $(`${Selector.DAYS} thead th${Selector.SWITCH}`).click()
+          assertVisible(Selector.MONTHS)
+          assertVisible(`${Selector.MONTHS} tfoot ${Selector.TODAY}`)
+
+          $(`${Selector.MONTHS} thead th${Selector.SWITCH}`).click()
+          assertVisible(Selector.YEARS)
+          assertVisible(`${Selector.YEARS} tfoot ${Selector.TODAY}`)
+        })
+
+        it(`should move to today's date`, () => {
+          $input.val(`2012-03-05`)
+            .datepicker({
+              format: YYYY_MM_DD,
+              today: {button: true}
+            })
+
+          let dp = assertData()
+          dp.show()
+          assertVisible(Selector.DAYS)
+          let $button = assertVisible(`${Selector.DAYS} tfoot ${Selector.TODAY}`)
+
+          $button.click()
+
+          let today = moment()
+          assertDatesEqual(dp.viewDate, today, 'day')
+          assertDatesEqual(dp.getDate(), today, 'day')
+        })
+      })
+
+      describe('className', () => {
+        it(`should be marked`, () => {
+          $input.datepicker()
+
+          assertData().show()
+          assertVisible(Selector.DAYS)
+          expect(findToday()).to.have.class(ClassName.TODAY)
+
+          // use any other two digit day (just to avoid multi-matches with contains)
+          let notToday = moment().date() == 10 ? 11 : 10
+          expect(findDayOfMonth(new String(notToday))).not.to.have.class(ClassName.TODAY)
+        })
+      })
+    })
   })
 })
+

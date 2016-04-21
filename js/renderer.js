@@ -357,7 +357,7 @@ const Renderer = class extends Base {
       classes.push(ClassName.FOCUSED)
     }
     // Compare internal UTC date with local today, not UTC today
-    if (this.config.today.highlight && date.isSame(today, 'day')) {
+    if (date.isSame(today, 'date')) {
       classes.push(ClassName.TODAY)
     }
     if (this.dp.dates.contains(date) !== -1) {
