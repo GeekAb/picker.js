@@ -5,6 +5,11 @@ export const YYYY_MM_DD = 'YYYY-MM-DD'
 export const $ = window.jQuery
 export const $input = $('input')
 
+export const prepare = () => {
+  expect($input.length).to.equal(1)
+  assertData(true)
+}
+
 export const safeDispose = () => {
   try {
     $input.datepicker('dispose')

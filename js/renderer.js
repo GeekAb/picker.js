@@ -344,7 +344,6 @@ const Renderer = class extends Base {
     let classes = []
     let year = viewDate.year()
     let month = viewDate.month()
-
     let today = this.dp.newMoment().local()
 
     if (date.year() < year || (date.year() === year && date.month() < month)) {

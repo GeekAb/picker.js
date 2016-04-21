@@ -1,4 +1,4 @@
-import {$, $input, safeDispose, fromData, assertData, findPopper, assertNotFound, assertVisible, assertHidden, assertDatesEqual, findDayOfMonth} from '../support'
+import {$, $input, safeDispose, fromData, assertData, findPopper, assertNotFound, assertVisible, assertHidden, assertDatesEqual, findDayOfMonth, prepare} from '../support'
 import {Selector, ClassName} from '../../js/constants'
 import moment from 'moment'
 
@@ -7,16 +7,12 @@ describe('Datepicker', () => {
 
   let dp
   beforeEach(() => {
-    expect($input.length).to.equal(1)
-    assertData(true)
+    prepare()
     $input.val('31-03-2011').datepicker({format: FORMAT})
     dp = assertData()
   })
 
-  afterEach(() => {
-    safeDispose()
-    dp = null
-  })
+  afterEach(() => safeDispose())
 
   describe('#update', () => {
 
