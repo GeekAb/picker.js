@@ -50,7 +50,6 @@ describe('Datepicker', () => {
         $button.click()
 
         let today = moment()
-        assertDatesEqual(dp.viewDate, today, 'day')
         assertDatesEqual(dp.getDate(), today, 'day')
       })
     })

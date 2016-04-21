@@ -52,7 +52,7 @@ const Renderer = class extends Base {
     // FIXME: remove option?
     this.$picker.find('tfoot .today').text(todayText).toggle(this.config.today.button !== false)
     // FIXME: remove option?
-    this.$picker.find('tfoot .clear').text(clearText).toggle(this.config.clearBtn !== false)
+    this.$picker.find('tfoot .clear').text(clearText).toggle(this.config.clear.button !== false)
     // FIXME: remove option? title text?
     this.$picker.find(`thead ${Selector.TITLE}`).text(this.config.title).toggle(this.config.title !== '')
     this.updateNavArrows(viewDate)

@@ -42,6 +42,9 @@ const Datepicker = (($) => {
     today: {
       button: false // If true, displays a “Today” button at the bottom of the datepicker to select the current date
     },
+    clear: {
+      button: false
+    },
 
     //-----------------
     // view types:
@@ -217,25 +220,29 @@ const Datepicker = (($) => {
      *
      * @returns - the latest UTC moment selected
      */
-    getDate(){
+    getDate(resolveDefault = false){
       // Depending on the show/hide state when called, this.dates may or may not be populated.
       //  Use it if populated (i.e. initial #update before show), not based on #isShowing
       let dateArray = this.dates || this.parseDateArrayFromInput()
-      let date
       if (dateArray.length()) {
-        date = dateArray.last().clone()
-      }
-      else if (this.viewDate < this.config.date.start) {
-        date = this.config.date.start.clone()
-      }
-      else if (this.viewDate > this.config.date.end) {
-        date = this.config.date.end.clone()
-      }
-      else {
-        date = this.config.date.default.clone()
+        return dateArray.last().clone()
       }
 
-      return date
+      // if not found above and not to be resolved by defaults, null
+      if(!resolveDefault){
+        return null
+      }
+
+      // resolve based on the defaults
+      if (this.viewDate < this.config.date.start) {
+        return this.config.date.start.clone()
+      }
+      else if (this.viewDate > this.config.date.end) {
+        return this.config.date.end.clone()
+      }
+      else {
+        return this.config.date.default.clone()
+      }
     }
 
     updateMultidate(viewDate) {
@@ -302,7 +309,7 @@ const Datepicker = (($) => {
       this.dates = newDates
 
       // resolve the new viewDate constrained by the configuration
-      this.viewDate = this.getDate()
+      this.viewDate = this.getDate(true)
 
       // set the input value
       this.$input.val(this.getDateFormatted())

@@ -5,4 +5,6 @@ import './datepicker/configuration'
 import './datepicker/visibility'
 import './datepicker/update'
 import './datepicker/today'
+import './datepicker/view'
+import './datepicker/clear'
 
