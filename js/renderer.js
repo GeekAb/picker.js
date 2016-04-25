@@ -286,7 +286,6 @@ const Renderer = class extends Base {
     let thisYear = year - step
     for (let i = -1; i < 11; i += 1) {
       let classes = [cssClass]
-      let tooltip = null
 
       if (i === -1) {
         classes.push(ClassName.OLD)
@@ -313,6 +312,7 @@ const Renderer = class extends Base {
        classes: A String representing additional CSS classes to apply to the date’s cell
        tooltip: A tooltip to apply to this date, via the title HTML attribute
        */
+      let tooltip = ``
       if (callback !== undefined) {
         //before = callback(new Date(thisYear, 0, 1))
         let m = this.dp.newMoment().year(thisYear).month(0).startOf(Unit.MONTH)

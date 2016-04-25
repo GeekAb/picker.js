@@ -126,6 +126,15 @@ export const findMonth = (month, assertFound = true) => {
   return $month
 }
 
+export const findYear = (year, assertFound = true) => {
+  let selector = `${Selector.YEARS} tbody td span:textEquals(${year})`
+  let $year = $(selector)
+  if (assertFound) {
+    expect($year.length, `Should find one ${selector}`).to.equal(1)
+  }
+  return $year
+}
+
 
 // done in the testrunner.html
 //import chai from 'chai'
