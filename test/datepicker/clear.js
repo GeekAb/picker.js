@@ -17,7 +17,6 @@ describe('Datepicker', () => {
         assertHidden(`${Selector.DAYS} tfoot ${Selector.CLEAR}`)
       })
 
-
       it(`should show when enabled`, () => {
         $input.datepicker({
           clear: {button: true}
@@ -45,13 +44,29 @@ describe('Datepicker', () => {
         let dp = assertData()
         dp.show()
         assertVisible(Selector.DAYS)
-        let $button = assertVisible(`${Selector.DAYS} tfoot ${Selector.CLEAR}`)
-        $button.click()
-
+        // click clear
+        assertVisible(`${Selector.DAYS} tfoot ${Selector.CLEAR}`).click()
         assertText('input', '')
-        //let today = moment()
-        //assertDatesEqual(dp.getDate(), today, 'day')
         expect(dp.getDate()).to.be.null
+        assertVisible(Selector.POPPER)
+      })
+
+      it(`should hide with autoclose true`, () => {
+        $input.val(`2012-03-05`)
+          .datepicker({
+            format: YYYY_MM_DD,
+            clear: {button: true},
+            autoclose: true
+          })
+
+        let dp = assertData()
+        dp.show()
+        assertVisible(Selector.DAYS)
+        // click clear
+        assertVisible(`${Selector.DAYS} tfoot ${Selector.CLEAR}`).click()
+        assertText('input', '')
+        expect(dp.getDate()).to.be.null
+        assertNotFound(Selector.POPPER)
       })
     })
   })

@@ -109,11 +109,12 @@ const EventManager = class extends Base {
     let $target = $(ev.target)
     let $navArrow = $target.closest(`${Selector.PREV}, ${Selector.NEXT}`)
 
+    // --------------------------
     // Clicked on the switch
     if ($target.hasClass(ClassName.SWITCH)) {
       this.dp.changeView(1)
     }
-
+    // --------------------------
     // Clicked on prev or next
     else if ($navArrow.length > 0) {
       let direction = this.config.view.modes[this.dp.view].navStep * ($navArrow.hasClass(ClassName.PREV) ? -1 : 1)
@@ -131,21 +132,24 @@ const EventManager = class extends Base {
       // set view date but don't select it using one of the #update methods
       this.renderer.fill()
     }
+    // --------------------------
     // Clicked on today button
     else if ($target.hasClass(ClassName.TODAY)) {
       this.dp.showView(View.DAYS)
       this.dp.update(this.dp.newMoment())
     }
+    // --------------------------
     // Clicked on clear button
     else if ($target.hasClass(ClassName.CLEAR)) {
       this.dp.clearDates()
     }
     else if (!$target.hasClass(ClassName.DISABLED)) {
+      // --------------------------
       // Clicked on a day
       if ($target.hasClass(Unit.DAY)) {
         let origViewDate = this.dp.viewDate.clone()
         let m = this.dp.newMoment($target.data(Data.MOMENT))
-        this.dp.updateMultidate(m)
+        this.dp.updateMultidateOrToggle(m)
         if (origViewDate.year() != m.year()) {
           this.trigger(Event.YEAR_CHANGE, m)
         }
@@ -153,11 +157,11 @@ const EventManager = class extends Base {
           this.trigger(Event.MONTH_CHANGE, m)
         }
       }
-
+      // --------------------------
       // Clicked on a month
       if ($target.hasClass(Unit.MONTH)) {
         let month = $target.parent().find('span').index($target)
-        this.dp.updateMultidate(this.dp.viewDate.clone().month(month))
+        this.dp.updateMultidateOrToggle(this.dp.viewDate.clone().month(month))
         this.trigger(Event.MONTH_CHANGE)
         if (this.config.view.min === View.MONTHS) {
           this.dp.showView()
@@ -166,7 +170,7 @@ const EventManager = class extends Base {
           this.dp.showView(View.DAYS)
         }
       }
-
+      // --------------------------
       // Clicked on a year|decade|century
       if ($target.hasClass(Unit.YEAR)
         || $target.hasClass(Unit.DECADE)
@@ -184,7 +188,7 @@ const EventManager = class extends Base {
           unit = Unit.CENTURY
         }
 
-        this.dp.updateMultidate(this.dp.viewDate.clone().year(year))
+        this.dp.updateMultidateOrToggle(this.dp.viewDate.clone().year(year))
         if (unit) {
           this.trigger(Event[`${unit.toUpperCase()}_CHANGE`])
         }
@@ -222,6 +226,7 @@ const EventManager = class extends Base {
           this.dp.hide()
         }
         else{
+          // FIXME: it would seem we need to change the view -1 if it is not days...then renderer.fill()?
           this.dp.update()
         }
         ev.preventDefault()
@@ -229,7 +234,7 @@ const EventManager = class extends Base {
         break
       case Keycodes.ENTER:
       case Keycodes.TAB:
-        this.dp.updateMultidate(this.dp.dates.last() || this.dp.viewDate)
+        this.dp.updateMultidateOrToggle(this.dp.dates.last() || this.dp.viewDate)
         ev.preventDefault()
         ev.stopPropagation()
 
@@ -300,7 +305,7 @@ const EventManager = class extends Base {
     else {
       return
     }
-    this.setDate(dateString)
+    this.dp.setDate(dateString)
     ev.preventDefault()
   }
 
