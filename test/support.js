@@ -20,6 +20,7 @@ export const safeDispose = () => {
     $input.data(Data.KEY, null)
   }
   $input.val('')
+  $input.removeAttr('readonly')
 }
 
 export const fromData = () => {

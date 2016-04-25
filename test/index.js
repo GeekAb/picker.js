@@ -11,5 +11,6 @@ import './datepicker/clear'
 import './datepicker/callbacks'
 import './datepicker/date'
 import './datepicker/showOnFocus'
+import './datepicker/enableOnReadonly'
 
 

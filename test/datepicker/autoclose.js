@@ -20,7 +20,7 @@ describe('Datepicker', () => {
       $day.click()
 
       assertNotFound(Selector.POPPER)
-      assertDatesEqual(dp.getDate(), moment('03/21/2012', MM_DD_YYYY))
+      assertDatesEqual(dp.getDate(), moment('03/21/2012'))
     })
   })
 })
