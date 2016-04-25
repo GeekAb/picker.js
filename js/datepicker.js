@@ -117,7 +117,7 @@ const Datepicker = (($) => {
 
      - undefined to have no effect
      - An object with the following properties:
-     selectable: A Boolean, indicating whether or not this date is selectable
+     disabled: A Boolean, indicating whether or not this date is disabled
      classes: A String representing additional CSS classes to apply to the date’s cell
      tooltip: A tooltip to apply to this date, via the title HTML attribute
      */
@@ -661,7 +661,7 @@ const Datepicker = (($) => {
     }
 
     endOfAllTime(moment = this.moment) {
-      return moment.clone().endOf(Unit.YEAR).year(2200) // ?? better value to set for this?
+      return moment.clone().endOf(Unit.YEAR).year(9999) // ?? better value to set for this?
     }
 
     resolveViewType(view) {

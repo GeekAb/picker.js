@@ -135,6 +135,23 @@ export const findYear = (year, assertFound = true) => {
   return $year
 }
 
+export const findDecade = (decade, assertFound = true) => {
+  let selector = `${Selector.DECADES} tbody td span:textEquals(${decade})`
+  let $year = $(selector)
+  if (assertFound) {
+    expect($year.length, `Should find one ${selector}`).to.equal(1)
+  }
+  return $year
+}
+
+export const findCentury = (century, assertFound = true) => {
+  let selector = `${Selector.CENTURIES} tbody td span:textEquals(${century})`
+  let $year = $(selector)
+  if (assertFound) {
+    expect($year.length, `Should find one ${selector}`).to.equal(1)
+  }
+  return $year
+}
 
 // done in the testrunner.html
 //import chai from 'chai'

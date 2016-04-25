@@ -1,4 +1,4 @@
-import {$, $input, safeDispose, fromData, assertData, assertText, findPopper, findToday, findMonth, findYear, assertNotFound, assertVisible, assertHidden, assertDatesEqual, findDayOfMonth, prepare, YYYY_MM_DD, MM_DD_YYYY} from '../support'
+import {$, $input, safeDispose, fromData, assertData, assertText, findPopper, findToday, findMonth, findYear, findDecade, findCentury, assertNotFound, assertVisible, assertHidden, assertDatesEqual, findDayOfMonth, prepare, YYYY_MM_DD, MM_DD_YYYY} from '../support'
 import {Selector, ClassName} from '../../js/constants'
 import moment from 'moment'
 
@@ -20,9 +20,9 @@ describe('Datepicker', () => {
             case 26:
               return {classes: `test26`}
             case 27:
-              return {selectable: false, classes: `test27`}
+              return {disabled: true, classes: `test27`}
             case 28:
-              return {selectable: false}
+              return {disabled: true}
           }
         }
 
@@ -67,9 +67,9 @@ describe('Datepicker', () => {
             case 2:
               return {classes: `testMarch`}
             case 4:
-              return {selectable: false, classes: `testMay`}
+              return {disabled: true, classes: `testMay`}
             case 5:
-              return {selectable: false}
+              return {disabled: true}
           }
         }
 
@@ -111,9 +111,9 @@ describe('Datepicker', () => {
             case 2014:
               return {classes: `test2014`}
             case 2015:
-              return {selectable: false, classes: `test2015`}
+              return {disabled: true, classes: `test2015`}
             case 2016:
-              return {selectable: false}
+              return {disabled: true}
           }
         }
 
@@ -125,7 +125,6 @@ describe('Datepicker', () => {
         expect(dp.config.beforeShowYear).to.equal(beforeShowYear)
 
         dp.show()
-
 
         expect(findYear(2013)).to.have.attr(`title`, `Example tooltip`)
         expect(findYear(2013)).not.to.have.class(ClassName.DISABLED)
@@ -141,5 +140,90 @@ describe('Datepicker', () => {
         expect(findYear(2017)).not.to.have.class(ClassName.DISABLED)
       })
     })
+
+    describe('beforeShowDecade', () => {
+      it(`should use`, () => {
+        let beforeShowDecade = (mom) => {
+          switch (mom.year()) {
+            case 2030:
+              return {
+                tooltip: `Example tooltip`,
+                classes: `active`
+              }
+            case 2040:
+              return {classes: `test2040`}
+            case 2050:
+              return {disabled: true, classes: `test2050`}
+            case 2060:
+              return {disabled: true}
+          }
+        }
+
+        $input.val('03/05/2012').datepicker({
+          beforeShowDecade: beforeShowDecade
+        })
+
+        let dp = assertData()
+        expect(dp.config.beforeShowDecade).to.equal(beforeShowDecade)
+
+        dp.show()
+
+        expect(findDecade(2030)).to.have.attr(`title`, `Example tooltip`)
+        expect(findDecade(2030)).not.to.have.class(ClassName.DISABLED)
+
+        expect(findDecade(2040)).to.have.class(`test2040`)
+        expect(findDecade(2040)).not.to.have.class(ClassName.DISABLED)
+
+        expect(findDecade(2050)).to.have.class(`test2050`)
+        expect(findDecade(2050)).to.have.class(ClassName.DISABLED)
+
+        expect(findDecade(2060)).to.have.class(ClassName.DISABLED)
+
+        expect(findDecade(2070)).not.to.have.class(ClassName.DISABLED)
+      })
+    })
+
+    describe('beforeShowCentury', () => {
+      it(`should use`, () => {
+        let beforeShowCentury = (mom) => {
+          switch (mom.year()) {
+            case 2300:
+              return {
+                tooltip: `Example tooltip`,
+                classes: `active`
+              }
+            case 2400:
+              return {classes: `test2400`}
+            case 2500:
+              return {disabled: true, classes: `test2500`}
+            case 2600:
+              return {disabled: true}
+          }
+        }
+
+        $input.val('03/05/2012').datepicker({
+          beforeShowCentury: beforeShowCentury
+        })
+
+        let dp = assertData()
+        expect(dp.config.beforeShowCentury).to.equal(beforeShowCentury)
+
+        dp.show()
+
+        expect(findCentury(2300)).to.have.attr(`title`, `Example tooltip`)
+        expect(findCentury(2300)).not.to.have.class(ClassName.DISABLED)
+
+        expect(findCentury(2400)).to.have.class(`test2400`)
+        expect(findCentury(2400)).not.to.have.class(ClassName.DISABLED)
+
+        expect(findCentury(2500)).to.have.class(`test2500`)
+        expect(findCentury(2500)).to.have.class(ClassName.DISABLED)
+
+        expect(findCentury(2600)).to.have.class(ClassName.DISABLED)
+
+        expect(findCentury(2700)).not.to.have.class(ClassName.DISABLED)
+      })
+    })
   })
 })
+

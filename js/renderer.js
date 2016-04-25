@@ -100,7 +100,7 @@ const Renderer = class extends Base {
 
      - undefined to have no effect
      - An object with the following properties:
-     selectable: A Boolean, indicating whether or not this date is selectable
+     disabled: A Boolean, indicating whether or not this date is disabled
      classes: A String representing additional CSS classes to apply to the date’s cell
      tooltip: A tooltip to apply to this date, via the title HTML attribute
      */
@@ -112,7 +112,7 @@ const Renderer = class extends Base {
         if (before === undefined) {
           before = {}
         }
-        if (before.selectable === false && !$month.hasClass(ClassName.DISABLED)) {
+        if (before.disabled === true) {
           $month.addClass(ClassName.DISABLED)
         }
         if (before.classes) {
@@ -232,7 +232,7 @@ const Renderer = class extends Base {
 
      - undefined to have no effect
      - An object with the following properties:
-     selectable: A Boolean, indicating whether or not this date is selectable
+     disabled: A Boolean, indicating whether or not this date is disabled
      classes: A String representing additional CSS classes to apply to the date’s cell
      tooltip: A tooltip to apply to this date, via the title HTML attribute
      */
@@ -241,7 +241,7 @@ const Renderer = class extends Base {
       if (before === undefined) {
         before = {}
       }
-      if (before.selectable === false) {
+      if (before.disabled === true) {
         classNames.push(ClassName.DISABLED)
       }
       if (before.classes) {
@@ -270,20 +270,18 @@ const Renderer = class extends Base {
   }
 
   fillYearsView(selector, cssClass, factor, step, currentYear, startYear, endYear, callback) {
-    //let before
-
     let html = ''
     let $view = this.$picker.find(selector)
-    let year = parseInt(currentYear / factor, 10) * factor
+    let currentYearFactored = parseInt(currentYear / factor, 10) * factor
     let startStep = parseInt(startYear / step, 10) * step
     let endStep = parseInt(endYear / step, 10) * step
     let steps = $.map(this.dp.dates.array, function (d) {
       return parseInt(d.year() / step, 10) * step
     })
 
-    $view.find(Selector.SWITCH).text(`${year}-${year + step * 9}`)
+    $view.find(Selector.SWITCH).text(`${currentYearFactored}-${currentYearFactored + step * 9}`)
 
-    let thisYear = year - step
+    let year = currentYearFactored - step
     for (let i = -1; i < 11; i += 1) {
       let classes = [cssClass]
 
@@ -293,13 +291,13 @@ const Renderer = class extends Base {
       else if (i === 10) {
         classes.push(ClassName.NEW)
       }
-      if ($.inArray(thisYear, steps) !== -1) {
+      if ($.inArray(year, steps) !== -1) {
         classes.push(ClassName.ACTIVE)
       }
-      if (thisYear < startStep || thisYear > endStep) {
+      if (year < startStep || year > endStep) {
         classes.push(ClassName.DISABLED)
       }
-      if (thisYear === this.dp.viewDate.year()) {
+      if (year === this.dp.viewDate.year()) {
         classes.push(ClassName.FOCUSED)
       }
 
@@ -308,20 +306,19 @@ const Renderer = class extends Base {
 
        - undefined to have no effect
        - An object with the following properties:
-       selectable: A Boolean, indicating whether or not this date is selectable
+       disabled: A Boolean, indicating whether or not this date is disabled
        classes: A String representing additional CSS classes to apply to the date’s cell
        tooltip: A tooltip to apply to this date, via the title HTML attribute
        */
       let tooltip = ``
+      let m = this.dp.newMoment().year(year).startOf(Unit.YEAR)
       if (callback !== undefined) {
-        //before = callback(new Date(thisYear, 0, 1))
-        let m = this.dp.newMoment().year(thisYear).month(0).startOf(Unit.MONTH)
         let before = callback(m)
 
         if (before === undefined) {
           before = {}
         }
-        if (before.selectable === false) {
+        if (before.disabled === true) {
           classes.push(ClassName.DISABLED)
         }
         if (before.classes) {
@@ -332,8 +329,8 @@ const Renderer = class extends Base {
         }
       }
 
-      html += `<span class="${classes.join(' ')}"${tooltip}>${thisYear}</span>`
-      thisYear += step
+      html += `<span class="${classes.join(' ')}"${tooltip} data-${Data.MOMENT}="${m}">${year}</span>`
+      year += step
     }
     $view.find('td').html(html)
   }
