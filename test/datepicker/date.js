@@ -60,9 +60,14 @@ describe('Datepicker', () => {
     })
 
     describe('count', () => {
+      const expectedValue = `03/05/2012`
+      const expected = moment(expectedValue, MM_DD_YYYY)
+      const expectedValue14 = `03/14/2012`
+      const expected14 = moment(expectedValue14, MM_DD_YYYY)
+      const expectedValue21 = `03/21/2012`
+      const expected21 = moment(expectedValue21, MM_DD_YYYY)
+
       it(`clicking twice on date should unselect it`, () => {
-        const expectedValue = `03/05/2012`
-        const expected = moment(expectedValue, MM_DD_YYYY)
 
         const assertInitial = () => {
           expect(dp.getDates().length).to.equal(1)
@@ -104,6 +109,56 @@ describe('Datepicker', () => {
         // Unselect the additional date `14`, should be same as initial (must re-find it to trigger click again)
         findDayOfMonth('14').click()
         assertInitial()
+      })
+
+      it(`should limit the count using FIFO`, () => {
+
+        $input.val(expected.format(MM_DD_YYYY)).datepicker({date: {count: 2}})
+
+        let dp = assertData()
+        expect(dp.config.date.count, `config.date.count`).to.equal(2)
+
+        dp.show()
+
+        // Select the 2nd date - 14
+        findDayOfMonth('14').click()
+
+        // Select the 3rd date - 21
+        findDayOfMonth('21').click()
+
+        // input value using separator
+        expect($input.val()).to.equal(`${expectedValue14},${expectedValue21}`)
+        // getDate returns the last date selected
+        assertDatesEqual(dp.getDate(), expected21)
+        // getDates returns array in order selected
+        assertDatesEqual(dp.getDates()[0], expected14)
+        assertDatesEqual(dp.getDates()[1], expected21)
+        expect(dp.getDates().length).to.equal(2)
+      })
+
+      describe('separator', () => {
+        it(`should use given separator`, () => {
+
+          const SEPARATOR = `-foozled-`
+          $input.val(expected.format(MM_DD_YYYY)).datepicker({date: {count: 2, separator: SEPARATOR}})
+
+          let dp = assertData()
+          expect(dp.config.date.separator, `config.date.separator`).to.equal(SEPARATOR)
+
+          dp.show()
+
+          // Select additional date - 14
+          findDayOfMonth('14').click()
+
+          // input value using separator
+          expect($input.val()).to.equal(`${expectedValue}${SEPARATOR}${expectedValue14}`)
+          // getDate returns the last date selected
+          assertDatesEqual(dp.getDate(), expected14)
+          // getDates returns array in order selected
+          assertDatesEqual(dp.getDates()[0], expected)
+          assertDatesEqual(dp.getDates()[1], expected14)
+          expect(dp.getDates().length).to.equal(2)
+        })
       })
     })
 
