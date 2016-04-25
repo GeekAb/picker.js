@@ -1,5 +1,5 @@
 import {$, $input, safeDispose, fromData, assertData, assertText, findPopper, findToday, findActiveDay, assertNotFound, assertVisible, assertHidden, assertDatesEqual, findDayOfMonth, prepare, YYYY_MM_DD, MM_DD_YYYY} from '../support'
-import {Selector, ClassName} from '../../js/constants'
+import {Selector, ClassName, Data} from '../../js/constants'
 import moment from 'moment'
 
 describe('Datepicker', () => {
@@ -215,10 +215,10 @@ describe('Datepicker', () => {
     describe('start', () => {
       it(`should accept moment`, () => {
 
-        const  expected = moment('10/26/2012')
+        const expected = moment('10/26/2012')
         $input.val(`10/26/2012`).datepicker({
-            date: {start: expected}
-          })
+          date: {start: expected}
+        })
 
         let dp = assertData()
         assertDatesEqual(dp.config.date.start, expected)
@@ -233,7 +233,7 @@ describe('Datepicker', () => {
     describe('end', () => {
       it(`should accept moment`, () => {
 
-        const  expected = moment('10/26/2012')
+        const expected = moment('10/26/2012')
         $input.val(`10/26/2012`).datepicker({
           date: {end: expected}
         })
@@ -245,6 +245,26 @@ describe('Datepicker', () => {
         expect(findDayOfMonth('25')).not.to.have.class(ClassName.DISABLED) // `Previous day is disabled`
         expect(findDayOfMonth('26')).not.to.have.class(ClassName.DISABLED) // `Specified date is enabled`
         expect(findDayOfMonth('27')).to.have.class(ClassName.DISABLED) // `Next day is enabled`
+      })
+    })
+
+    describe('default', () => {
+      it(`should accept moment`, () => {
+
+        const expected = moment('10/26/2012')
+        $input.datepicker({
+          date: {default: expected}
+        })
+
+        let dp = assertData()
+        assertDatesEqual(dp.config.date.default, expected)
+
+        dp.show()
+        expect(findDayOfMonth('25')).not.to.have.class(ClassName.FOCUSED)
+        expect(findDayOfMonth('26')).to.have.class(ClassName.FOCUSED)
+        expect(findDayOfMonth('27')).not.to.have.class(ClassName.FOCUSED)
+
+        assertDatesEqual(moment(findDayOfMonth('26').data(Data.MOMENT)), expected)
       })
     })
   })

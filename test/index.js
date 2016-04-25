@@ -10,4 +10,6 @@ import './datepicker/view'
 import './datepicker/clear'
 import './datepicker/callbacks'
 import './datepicker/date'
+import './datepicker/showOnFocus'
+
 

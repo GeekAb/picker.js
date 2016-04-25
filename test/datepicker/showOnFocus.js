@@ -7,20 +7,25 @@ describe('Datepicker', () => {
   beforeEach(() => prepare())
   afterEach(() => safeDispose())
 
-  describe('autoclose', () => {
-    it('should autoclose after day click', () => {
-      $input.val('03/05/2012').datepicker({
-        autoclose: true
-      })
+  describe('showOnFocus', () => {
+    it('default should show', () => {
+      $input.datepicker({})
       let dp = assertData()
-      expect(dp.config.autoclose, `config.autoclose`).to.equal(true)
+      expect(dp.config.showOnFocus, `config.showOnFocus`).to.equal(true)
 
-      dp.show()
-      let $day = findDayOfMonth('21')
-      $day.click()
+      $input.focus()
+
+      assertVisible(Selector.POPPER)
+    })
+
+    it('false should remain hidden', () => {
+      $input.datepicker({showOnFocus: false})
+      let dp = assertData()
+      expect(dp.config.showOnFocus, `config.showOnFocus`).to.equal(false)
+
+      $input.focus()
 
       assertNotFound(Selector.POPPER)
-      assertDatesEqual(dp.getDate(), moment('03/21/2012', MM_DD_YYYY))
     })
   })
 })

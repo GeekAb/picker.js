@@ -37,8 +37,8 @@
 <div class="container">
   <h2>picker.js test</h2>
   <form>
-    <input type="text" class="form-control" value="2012-10-26">
-    <!--<input type="text" class="form-control">-->
+    <!--<input type="text" class="form-control" value="2012-10-26">-->
+    <input type="text" class="form-control">
     <span></span>
   </form>
 </div>
@@ -46,8 +46,11 @@
   var $input = $('input')
   $input.datepicker({
     debug: true,
-    format: 'YYYY-MM-DD',
-    date: {disabled: [`2012-10-01`, `2012-10-10`, `2012-10-20`]},
+//    format: 'YYYY-MM-DD',
+    date: {
+      default: '10/26/2012'
+//      disabled: [`2012-10-01`, `2012-10-10`, `2012-10-20`]
+    },
 //    daysOfWeek: {highlighted: [1,5]},
 //    date: {
 //      count: 2
