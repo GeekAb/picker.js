@@ -36,7 +36,6 @@ const Datepicker = (($) => {
     enableOnReadonly: true, // If false the datepicker will not show on a readonly datepicker field
     showOnFocus: true, // If false, the datepicker will be prevented from showing when the input field associated with it receives focus
     zIndexOffset: 10, // z-index of the open datepicker is the maximum z-index of the input and all of its DOM ancestors plus the zIndexOffset.
-    immediateUpdates: false, // if true, selecting a year or month in the datepicker will update the input value immediately. Otherwise, only selecting a day of the month will update the input value immediately.
     title: '', // string that will appear on top of the datepicker. If empty the title will be hidden.
     today: {
       button: false // If true, displays a “Today” button at the bottom of the datepicker to select the current date

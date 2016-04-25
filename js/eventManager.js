@@ -25,11 +25,6 @@ const EventManager = class extends Base {
       this.elementEvents.focus = () => this.dp.show()
     }
 
-    // Trigger input updates immediately on changed year/month
-    if (this.config.immediateUpdates) {
-      this.elementEvents[`${Event.YEAR_CHANGE} ${Event.MONTH_CHANGE}`] = (ev) => this.dp.update(ev.date)
-    }
-
     // Picker events
     this.pickerEvents = {
       // FIXME: these need to be added for keyboard nav after initial click (initial attempt didn't work - needs debugging)
