@@ -1,5 +1,5 @@
-import {$, $input, safeDispose, fromData, assertData, assertText, findPopper, findToday, findMonth, findYear, findDecade, findCentury, assertNotFound, assertVisible, assertHidden, assertDatesEqual, findDayOfMonth, prepare, YYYY_MM_DD, MM_DD_YYYY} from '../support'
-import {Selector, ClassName} from '../../js/constants'
+import {$, $input, safeDispose, fromData, assertData, assertText, findPopper, findToday, findMonth, findYear, findDecade, findCentury, assertNotFound, assertVisible, assertHidden, assertDatesEqual, findDayOfMonth, prepare, YYYY_MM_DD, MM_DD_YYYY} from '../../support'
+import {Selector, ClassName} from '../../../js/constants'
 import moment from 'moment'
 
 describe('Datepicker', () => {
