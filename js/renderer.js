@@ -337,14 +337,16 @@ const Renderer = class extends Base {
 
   getClassNames(viewDate, date) {
     let classes = []
-    let year = viewDate.year()
-    let month = viewDate.month()
+    let viewYear = viewDate.year()
+    let viewMonth = viewDate.month()
+    let year = date.year()
+    let month = date.month()
     let today = this.dp.newMoment().local()
 
-    if (date.year() < year || (date.year() === year && date.month() < month)) {
+    if (year < viewYear || (year === viewYear && month < viewMonth)) {
       classes.push(ClassName.OLD)
     }
-    else if (date.year() > year || (date.year() === year && date.month() > month)) {
+    else if (year > viewYear || (year === viewYear && month > viewMonth)) {
       classes.push(ClassName.NEW)
     }
     if (this.dp.viewDate && date.isSame(this.dp.viewDate, 'day')) {

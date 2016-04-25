@@ -156,5 +156,41 @@ describe('Datepicker', () => {
         expect(findDayOfMonth('21')).not.to.have.class(ClassName.DISABLED)
       })
     })
+
+    describe('start', () => {
+      it(`should accept moment`, () => {
+
+        const  expected = moment('10/26/2012')
+        $input.val(`10/26/2012`).datepicker({
+            date: {start: expected}
+          })
+
+        let dp = assertData()
+        assertDatesEqual(dp.config.date.start, expected)
+
+        dp.show()
+        expect(findDayOfMonth('25')).to.have.class(ClassName.DISABLED) // `Previous day is disabled`
+        expect(findDayOfMonth('26')).not.to.have.class(ClassName.DISABLED) // `Specified date is enabled`
+        expect(findDayOfMonth('27')).not.to.have.class(ClassName.DISABLED) // `Next day is enabled`
+      })
+    })
+
+    describe('end', () => {
+      it(`should accept moment`, () => {
+
+        const  expected = moment('10/26/2012')
+        $input.val(`10/26/2012`).datepicker({
+          date: {end: expected}
+        })
+
+        let dp = assertData()
+        assertDatesEqual(dp.config.date.end, expected)
+
+        dp.show()
+        expect(findDayOfMonth('25')).not.to.have.class(ClassName.DISABLED) // `Previous day is disabled`
+        expect(findDayOfMonth('26')).not.to.have.class(ClassName.DISABLED) // `Specified date is enabled`
+        expect(findDayOfMonth('27')).to.have.class(ClassName.DISABLED) // `Next day is enabled`
+      })
+    })
   })
 })

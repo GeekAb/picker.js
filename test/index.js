@@ -8,6 +8,6 @@ import './datepicker/update'
 import './datepicker/today'
 import './datepicker/view'
 import './datepicker/clear'
-import './datepicker/date'
 import './datepicker/callbacks'
+import './datepicker/date'
 
