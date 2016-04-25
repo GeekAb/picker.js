@@ -106,6 +106,8 @@ export const Selector = {
   POPPER: `.${ClassName.POPPER}`,
 
   DAY: `.${Unit.DAY}`,
+  MONTH: `.${Unit.MONTH}`,
+  YEAR: `.${Unit.YEAR}`,
 
   DAYS: `.${ClassName.DAYS}`,
   MONTHS: `.${ClassName.MONTHS}`,

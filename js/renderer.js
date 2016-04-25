@@ -74,12 +74,9 @@ const Renderer = class extends Base {
     this.$picker.find(`${Selector.DAYS} tbody`).empty().append(html.join(''))
 
     let monthsTitle = `use year here?`//dates[this.config.language].monthsTitle || dates['en'].monthsTitle || 'Months'
-    let $months = this.$picker.find(Selector.MONTHS)
-      .find(Selector.SWITCH)
-      .text(this.config.view.max < View.YEARS ? monthsTitle : year)
-      .end()
-      .find('span').removeClass(ClassName.ACTIVE)
-
+    let $monthsView = this.$picker.find(Selector.MONTHS)
+    $monthsView.find(Selector.SWITCH).text(this.config.view.max < View.YEARS ? monthsTitle : year)
+    let $months = $monthsView.find(Selector.MONTH).removeClass(ClassName.ACTIVE)
 
     for (let d of this.dp.dates.array) {
       if (d.year() === year) {
@@ -97,6 +94,7 @@ const Renderer = class extends Base {
       $months.slice(endMonth + 1).addClass(ClassName.DISABLED)
     }
 
+
     /*
      A function that takes a date as a parameter and returns one of the following values:
 
@@ -107,11 +105,10 @@ const Renderer = class extends Base {
      tooltip: A tooltip to apply to this date, via the title HTML attribute
      */
     if (this.config.beforeShowMonth !== undefined) {
-      for (let i in $months) {
-        //$.each($months, function (i, month) {
-        let $month = $($months[i])
-        let moDate = this.dp.newMoment().year(year).month(i).startOf(Unit.MONTH)
-        let before = this.config.beforeShowMonth(moDate)
+      for (let month of $months) {
+        let $month = $(month)
+        let m = this.dp.newMoment($month.data(Data.MOMENT))
+        let before = this.config.beforeShowMonth(m)
         if (before === undefined) {
           before = {}
         }
@@ -266,7 +263,8 @@ const Renderer = class extends Base {
     let html = ''
     for (let i = 0; i < 12; i++) { // 0..11
       let focused = viewDate && viewDate.month() === i ? ClassName.FOCUSED : ''
-      html += `<span class="${Unit.MONTH} ${focused}">${this.dp.newMoment().month(i).format(`MMM`)}</span>` // Jan
+      let date = this.dp.newMoment().month(i).startOf('month')
+      html += `<span class="${Unit.MONTH} ${focused}" data-${Data.MOMENT}="${date}">${date.format(`MMM`)}</span>` // Jan
     }
     this.$picker.find(`${Selector.MONTHS} td`).html(html)
   }

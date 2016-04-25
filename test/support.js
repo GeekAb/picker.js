@@ -117,6 +117,16 @@ export const findActiveDay = (assertFound = true) => {
   return $activeDay
 }
 
+export const findMonth = (month, assertFound = true) => {
+  let selector = `${Selector.MONTHS} tbody td span:textEquals(${month})`
+  let $month = $(selector)
+  if (assertFound) {
+    expect($month.length, `Should find one ${selector}`).to.equal(1)
+  }
+  return $month
+}
+
+
 // done in the testrunner.html
 //import chai from 'chai'
 //export const expect = chai.expect
