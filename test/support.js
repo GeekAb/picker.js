@@ -1,5 +1,6 @@
 import {Data, Selector} from '../js/constants'
 
+export const MM_DD_YYYY = 'MM/DD/YYYY'
 export const YYYY_MM_DD = 'YYYY-MM-DD'
 
 export const $ = window.jQuery
@@ -68,7 +69,12 @@ export const assertText = (selector, text) => {
 export const assertDatesEqual = (actual, expected, granularity = 'millisecond') => {
   let msg = `${actual ? actual.format() : null} should equal ${expected ? expected.format() : null}`
 
-  expect(expected.isSame(actual, granularity), msg).to.be.true
+  if(expected == null){
+    expect(actual, msg).to.be.null
+  }
+  else {
+    expect(expected.isSame(actual, granularity), msg).to.be.true
+  }
 }
 
 /**
@@ -91,6 +97,15 @@ export const findToday = (assertFound = true) => {
     expect($today.length, `Should find one ${selector}`).to.equal(1)
   }
   return $today
+}
+
+export const findActiveDay = (assertFound = true) => {
+  let selector = `${Selector.DAYS} ${Selector.DAY}${Selector.ACTIVE}`
+  let $activeDay = $(selector)
+  if (assertFound) {
+    expect($activeDay.length, `Should find one ${selector}`).to.equal(1)
+  }
+  return $activeDay
 }
 
 // done in the testrunner.html

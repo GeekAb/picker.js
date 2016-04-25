@@ -9,6 +9,7 @@ const DateArray = class {
   }
 
   last() {
+    // return the last date in the array (go backwards 1 index)
     return this.get(-1)
   }
 

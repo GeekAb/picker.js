@@ -103,6 +103,8 @@ export const Selector = {
   SWITCH: `.${ClassName.SWITCH}`,
   POPPER: `.${ClassName.POPPER}`,
 
+  DAY: `.${Unit.DAY}`,
+
   DAYS: `.${ClassName.DAYS}`,
   MONTHS: `.${ClassName.MONTHS}`,
   YEARS: `.${ClassName.YEARS}`,

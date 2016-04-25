@@ -215,6 +215,16 @@ const Datepicker = (($) => {
     }
 
     /**
+     * @returns - array of UTC moments selected
+     */
+    getDates(){
+
+      // Depending on the show/hide state when called, this.dates may or may not be populated.
+      //  Use it if populated (i.e. initial #update before show), not based on #isShowing
+      return (this.dates ? this.dates.array : undefined) || this.parseDateArrayFromInput()
+    }
+
+    /**
      * Determine the viewDate and constrain by the configuration - no side effects
      *
      * NOTE: this.viewDate is null after hidden, and this methoud is used by #update to redetermine a new value.
@@ -226,9 +236,10 @@ const Datepicker = (($) => {
     getDate(fallbackToDefaults = false){
       // Depending on the show/hide state when called, this.dates may or may not be populated.
       //  Use it if populated (i.e. initial #update before show), not based on #isShowing
-      let dateArray = this.dates || this.parseDateArrayFromInput()
-      if (dateArray.length()) {
-        return dateArray.last().clone()
+      let dateArray = this.getDates()
+      if (dateArray.length) {
+        // return the last date in the array (go backwards 1 index)
+        return dateArray.slice(-1)[0].clone()
       }
 
       // if not found above and not to be resolved by defaults, null
@@ -250,7 +261,7 @@ const Datepicker = (($) => {
 
     updateMultidateOrToggle(viewDate) {
 
-      // if multidate is not enabled, just update and get out.
+      // if multidate is not enabled && and toggle is not true, just update and get out.
       if (this.config.date.count < 2 && this.config.date.toggle !== true) {
         this.update(viewDate)
         return
@@ -704,11 +715,14 @@ const Datepicker = (($) => {
         return new DateArray(...newDatesArray)
       }
       else {
-        return this.parseDateArrayFromInput()
+        return new DateArray(...this.parseDateArrayFromInput())
         // already checks dates inside #parseDatesFromInput
       }
     }
 
+    /**
+     * @returns - array of UTC moments
+     */
     parseDateArrayFromInput(){
       let value = this.$input.val()
       let dates
@@ -721,7 +735,7 @@ const Datepicker = (($) => {
       }
       dates = this.parseDates(...dates)
       dates = this.datesWithinRange(...dates)
-      return new DateArray(...dates)
+      return dates
     }
 
     // ------------------------------------------------------------------------
