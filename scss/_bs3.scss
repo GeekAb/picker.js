@@ -137,20 +137,20 @@ $dropdown-border: rgba(0, 0, 0, .15) !default;
         background: $highlighted-bg;
       }
     }
-    //&.today {
-    //  $today-bg: lighten(#ffa500, 30%); //orange
-    //  @include button-variant(#000, $today-bg, darken($today-bg, 20%));
-    //
-    //  &.focused {
-    //    background: darken($today-bg, 10%);
-    //  }
-    //
-    //  &.disabled,
-    //  &.disabled:active {
-    //    color: $btn-link-disabled-color;
-    //    background: $today-bg;
-    //  }
-    //}
+    &.today {
+      $today-bg: lighten(#ffa500, 30%); //orange
+      @include button-variant(#000, $today-bg, darken($today-bg, 20%));
+
+      &.focused {
+        background: darken($today-bg, 10%);
+      }
+
+      &.disabled,
+      &.disabled:active {
+        color: $btn-link-disabled-color;
+        background: $today-bg;
+      }
+    }
     &.range {
       $range-bg: $gray-lighter;
       @include button-variant(#000, $range-bg, darken($range-bg, 20%));

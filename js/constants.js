@@ -92,6 +92,8 @@ export const Selector = {
   DATA_PROVIDE: `[data-${Data.PROVIDE}="datepicker"]`,
 
   ACTIVE: `.${ClassName.ACTIVE}`,
+  OLD: `.${ClassName.OLD}`,
+  NEW: `.${ClassName.NEW}`,
 
   TODAY: `.${ClassName.TODAY}`,
   CLEAR: `.${ClassName.CLEAR}`,

@@ -77,12 +77,21 @@ export const assertDatesEqual = (actual, expected, granularity = 'millisecond') 
   }
 }
 
+// add exact match textEquals filter to jquery (contains will get multiple days)
+$.expr[':'].textEquals = function(el, i, m) {
+  var searchText = m[3]
+  var match = $(el).text().trim().match(`^${searchText}$`)
+  return match && match.length > 0
+}
+
 /**
- * @param dayOfMonth - string that matches your format i.e. `01`,`31` or `1`,`31`
+ * Day of month that is not `old` or `new`, but this month
+ *
+ * @param dayOfMonth - string that exact matches your format i.e. `01`,`31` or `1`,`31`
  * @returns {*|HTMLElement}
  */
 export const findDayOfMonth = (dayOfMonth, assertFound = true) => {
-  let selector = `${Selector.DAYS} td:contains(${dayOfMonth})`
+  let selector = `${Selector.DAYS} td:not(${Selector.OLD}):not(${Selector.NEW}):textEquals(${dayOfMonth})`
   let $day = $(selector)
   if (assertFound) {
     expect($day.length, `Should find one ${selector}`).to.equal(1)

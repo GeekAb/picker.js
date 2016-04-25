@@ -25,8 +25,7 @@ describe('Datepicker', () => {
           assertDatesEqual(dp.getDate(), expected)
 
           // click on our active date
-          let $activeDay = findActiveDay()
-          $activeDay.click()
+          findActiveDay().click()
 
           // make sure it`s still set
           expect($input.val()).to.equal(expectedValue)
@@ -51,8 +50,7 @@ describe('Datepicker', () => {
           expect($input.val()).to.equal(expectedValue)
 
           // click on our active date
-          let $activeDay = findActiveDay()
-          $activeDay.click()
+          findActiveDay().click()
 
           // make sure it`s still set
           expect($input.val()).to.equal('')
@@ -106,6 +104,56 @@ describe('Datepicker', () => {
         // Unselect the additional date `14`, should be same as initial (must re-find it to trigger click again)
         findDayOfMonth('14').click()
         assertInitial()
+      })
+    })
+
+    describe('daysOfWeek', () => {
+
+      describe('disabled', () => {
+        it(`should be marked with a class`, () => {
+          $input.val(`10/26/2012`).datepicker({
+            daysOfWeek: {disabled: [1, 5]}
+          })
+
+          assertData().show()
+          expect(findDayOfMonth('22')).to.have.class(ClassName.DISABLED)
+          expect(findDayOfMonth('24')).not.to.have.class(ClassName.DISABLED)
+          expect(findDayOfMonth('26')).to.have.class(ClassName.DISABLED)
+        })
+      })
+
+
+      it(`highlighted`, () => {
+        it(`should be marked with a class`, () => {
+          $input.val(`10/26/2012`).datepicker({
+            daysOfWeek: {highlighted: [1, 5]}
+          })
+
+          assertData().show()
+          expect(findDayOfMonth('22')).to.have.class(ClassName.HIGHLIGHTED)
+          expect(findDayOfMonth('24')).not.to.have.class(ClassName.HIGHLIGHTED)
+          expect(findDayOfMonth('26')).to.have.class(ClassName.HIGHLIGHTED)
+        })
+      })
+    })
+
+    describe('disabled', () => {
+
+      it(`should be marked with a class`, () => {
+        $input.val(`2012-10-26`).datepicker({
+          format: YYYY_MM_DD,
+          date: {disabled: [`2012-10-01`, `2012-10-10`, `2012-10-20`]}
+        })
+
+
+        assertData().show()
+
+        expect(findDayOfMonth('1')).to.have.class(ClassName.DISABLED)
+        expect(findDayOfMonth('2')).not.to.have.class(ClassName.DISABLED)
+        expect(findDayOfMonth('10')).to.have.class(ClassName.DISABLED)
+        expect(findDayOfMonth('11')).not.to.have.class(ClassName.DISABLED)
+        expect(findDayOfMonth('20')).to.have.class(ClassName.DISABLED)
+        expect(findDayOfMonth('21')).not.to.have.class(ClassName.DISABLED)
       })
     })
   })
