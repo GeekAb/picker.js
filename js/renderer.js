@@ -7,7 +7,7 @@ const Renderer = class extends Base {
     super()
     this.dp = datepicker
     this.config = this.dp.config // shortcut reference to same config
-    this.$picker = $(this.config.template)
+    this.$picker = $(this.config.template.interpolate())
 
     if (this.dp.isInline) {
       this.$picker.addClass(ClassName.INLINE).appendTo(this.dp.$element)
@@ -221,7 +221,7 @@ const Renderer = class extends Base {
     if (date.day() === this.config.week.start) {
       html.push('<tr>')
     }
-    let classNames = this.getClassNames(viewDate, date)
+    let classNames = this.getDayClassNames(viewDate, date)
     classNames.push(Unit.DAY)
 
     /*
@@ -332,7 +332,7 @@ const Renderer = class extends Base {
     $view.find('td').html(html)
   }
 
-  getClassNames(viewDate, date) {
+  getDayClassNames(viewDate, date) {
     let classes = []
     let viewYear = viewDate.year()
     let viewMonth = viewDate.month()

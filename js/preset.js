@@ -1,5 +1,6 @@
 import BaseTemplate from './templates/baseTemplate'
 import BMD4Template from './templates/bmd4Template'
+import BS4Template from './templates/bs4Template'
 import extend from 'extend'
 
 /**
@@ -7,34 +8,41 @@ import extend from 'extend'
  * is any conflict in the deep merge.
  */
 const Preset = class {
-  static resolveByKey(preset){
-    let p = preset.toLowerCase()
+  static resolveByKey(config) {
+    let p = config.preset.toLowerCase()
     let value
     switch (p) {
       case 'bs3':
       {
         value = {
-          template: new BaseTemplate().createTemplate()
+          template: new BS4Template()
         }
         break
       }
       case 'bs4':
       {
         value = {
-          template: new BaseTemplate().createTemplate()
+          template: new BS4Template()
         }
         break
       }
       case 'bmd4':
       {
         value = {
-          template: new BMD4Template().createTemplate()
+          template: new BMD4Template()
         }
         break
       }
       case 'custom':
-      {
-        value = {}
+      { // custom can pass a class or a string
+        if (typeof config.template === 'string') {
+          value = {
+            template: new StringTemplate(config.template)
+          }
+        }
+        else {
+          value = {} // nothing, assume they passed a class (no change necessary) and know what they are doing
+        }
         break
       }
       default:
@@ -54,10 +62,14 @@ const Preset = class {
     // default preset is bs4
     let config = extend(true, {preset: `bs4`}, ...configs)
 
-    let presetConfig = this.resolveByKey(config.preset)
+    let presetConfig = this.resolveByKey(config)
 
-    // now that we've determined the presetConfig, overlay the overrides
-    let resolved = extend(true, {}, presetConfig, config)
+    // presetConfig overrides user config because it converts a potential string template into a StringTemplate class
+    let resolved = extend(true, {}, config, presetConfig)
+
+    if (!resolved.template) {
+      throw new Error(`'template' must be either a Template class or a String`)
+    }
 
     //console.log(`resolved config with preset: \n${stringify(resolved)}`)
     return resolved

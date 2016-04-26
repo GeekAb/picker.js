@@ -1,4 +1,4 @@
-import BaseTemplate from './baseTemplate'
+import BS4Template from './bs4Template'
 //import {ClassName} from './../constants'
 
 const Default = {
@@ -8,7 +8,7 @@ const Default = {
   }
 }
 
-const BMD4Template = class extends BaseTemplate {
+const BMD4Template = class extends BS4Template {
   constructor(...configs) {
     super(Default, ...configs)
   }
