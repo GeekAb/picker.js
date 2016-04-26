@@ -223,6 +223,7 @@ const Renderer = class extends Base {
     }
     let classNames = this.getDayClassNames(viewDate, date)
     classNames.push(Unit.DAY)
+    // this.config.template.addDayClasses(date, classNames)
 
     /*
      A function that takes a date as a parameter and returns one of the following values:
@@ -250,7 +251,7 @@ const Renderer = class extends Base {
     }
 
     classNames = $.unique(classNames)
-    html.push(`<td class="${classNames.join(' ')}"${tooltip} data-${Data.MOMENT}="${date}">${date.date()}</td>`)
+    html.push(this.config.template.renderDay(date, classNames, tooltip))
     if (date.day() === this.config.week.end) {
       html.push('</tr>')
     }
@@ -259,9 +260,11 @@ const Renderer = class extends Base {
   renderMonths(viewDate) {
     let html = ''
     for (let i = 0; i < 12; i++) { // 0..11
-      let focused = viewDate && viewDate.month() === i ? ClassName.FOCUSED : ''
+      let classNames = [Unit.MONTH]
+      if(viewDate && viewDate.month() === i) classNames.push(ClassName.FOCUSED)
+      
       let date = this.dp.newMoment().month(i).startOf('month')
-      html += `<span class="${Unit.MONTH} ${focused}" data-${Data.MOMENT}="${date}">${date.format(`MMM`)}</span>` // Jan
+      html += this.config.template.renderMonth(date, classNames)
     }
     this.$picker.find(`${Selector.MONTHS} td`).html(html)
   }

@@ -12,6 +12,22 @@ const BMD4Template = class extends BS4Template {
   constructor(...configs) {
     super(Default, ...configs)
   }
+
+  // addDayClasses(date, classNames){
+  //   classNames.push('btn bmd-btn-icon')
+  // }
+
+  /**
+   *
+   * @param date
+   * @param classNames - array - passed to be used as markers only, not to be rendered.  These are rendered in the container
+   * @returns {string}
+   */
+  renderDayContent(date, classNames){
+    // return `<span>${date.date()}</span>`
+    // return date.date()
+    return `<button class="btn bmd-btn-icon bmd-btn-icon-sm">${date.date()}</button>`
+  }
 }
 
 export default BMD4Template
