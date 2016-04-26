@@ -229,11 +229,11 @@ const EventManager = class extends Base {
         break
       case Keycodes.ENTER:
       case Keycodes.TAB:
-        this.dp.updateMultidateOrToggle(this.dp.dates.last() || this.dp.viewDate)
+        this.dp.updateMultidateOrToggle(this.lastKeyboardFocusDate || this.dp.dates.last() || this.dp.viewDate)
         ev.preventDefault()
         ev.stopPropagation()
 
-        if (Key.is(Keycodes.TAB)) {
+        if (Key.is(ev, Keycodes.TAB)) {
           this.dp.hide()
         }
         break

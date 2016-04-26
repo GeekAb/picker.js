@@ -163,3 +163,10 @@ export const assertFound = (selector, count = 1) => {
   }
   return $element
 }
+
+export const fireKey = (keycode) => {
+  $input.trigger({
+    type: `keydown`,
+    keyCode: keycode
+  })
+}
