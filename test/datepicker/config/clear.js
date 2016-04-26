@@ -1,4 +1,4 @@
-import {$, $input, safeDispose, fromData, assertData, assertText, findPopper, findToday, assertNotFound, assertVisible, assertHidden, assertDatesEqual, findDayOfMonth, prepare, YYYY_MM_DD} from '../../support'
+import {$, $input, safeDispose, fromData, assertData, assertText, findPopper, findToday, assertNotFound, assertVisible, assertHidden, assertDatesEqual, findDayOfMonth, prepare, YYYY_MM_DD, findMonthsSwitch, findYearsSwitch, findDecadesSwitch, findCenturiesSwitch} from '../../support'
 import {Selector, ClassName} from '../../../js/constants'
 import moment from 'moment'
 
@@ -25,11 +25,11 @@ describe('Datepicker', () => {
         assertVisible(Selector.DAYS)
         assertVisible(`${Selector.DAYS} tfoot ${Selector.CLEAR}`)
 
-        $(`${Selector.DAYS} thead th${Selector.SWITCH}`).click()
+        findMonthsSwitch().click()
         assertVisible(Selector.MONTHS)
         assertVisible(`${Selector.MONTHS} tfoot ${Selector.CLEAR}`)
 
-        $(`${Selector.MONTHS} thead th${Selector.SWITCH}`).click()
+        findYearsSwitch().click()
         assertVisible(Selector.YEARS)
         assertVisible(`${Selector.YEARS} tfoot ${Selector.CLEAR}`)
       })

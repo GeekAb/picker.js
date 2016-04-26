@@ -92,6 +92,7 @@ export const Selector = {
   DATA_PROVIDE: `[data-${Data.PROVIDE}="datepicker"]`,
 
   ACTIVE: `.${ClassName.ACTIVE}`,
+  FOCUSED: `.${ClassName.FOCUSED}`,
   OLD: `.${ClassName.OLD}`,
   NEW: `.${ClassName.NEW}`,
 
@@ -101,6 +102,7 @@ export const Selector = {
 
   PREV: `.${ClassName.PREV}`,
   NEXT: `.${ClassName.NEXT}`,
+
   TITLE: `.${ClassName.TITLE}`,
   SWITCH: `.${ClassName.SWITCH}`,
   POPPER: `.${ClassName.POPPER}`,

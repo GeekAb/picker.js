@@ -7,18 +7,18 @@ export const $ = window.jQuery
 export const $input = $('input')
 
 export const prepare = () => {
+  safeDispose() // paranoia - try to make sure each test is clear to run
   expect($input.length).to.equal(1)
   assertData(true)
 }
 
 export const safeDispose = () => {
-  try {
-    $input.datepicker('dispose')
-  }
-  catch (error) {
-    console.log(error)
-    $input.data(Data.KEY, null)
-  }
+  // regardless of the state of the test, try to clean up every artifact so each test is isolated
+  try {$input.datepicker('dispose')}
+  catch (error) {}
+
+  findPopper().remove()
+  $input.data(Data.KEY, null)
   $input.val('')
   $input.removeAttr('readonly')
 }
@@ -91,69 +91,75 @@ $.expr[':'].textEquals = function(el, i, m) {
  * @param dayOfMonth - string that exact matches your format i.e. `01`,`31` or `1`,`31`
  * @returns {*|HTMLElement}
  */
-export const findDayOfMonth = (dayOfMonth, assertFound = true) => {
+export const findDayOfMonth = (dayOfMonth) => {
   let selector = `${Selector.DAYS} td:not(${Selector.OLD}):not(${Selector.NEW}):textEquals(${dayOfMonth})`
-  let $day = $(selector)
-  if (assertFound) {
-    expect($day.length, `Should find one ${selector}`).to.equal(1)
-  }
-  return $day
+  return assertFound(selector)
 }
 
-export const findToday = (assertFound = true) => {
+export const findToday = () => {
   let selector = `${Selector.DAYS} td${Selector.TODAY}`
-  let $today = $(selector)
-  if (assertFound) {
-    expect($today.length, `Should find one ${selector}`).to.equal(1)
-  }
-  return $today
+  return assertFound(selector)
 }
 
-export const findActiveDay = (assertFound = true) => {
+export const findActiveDay = () => {
   let selector = `${Selector.DAYS} ${Selector.DAY}${Selector.ACTIVE}`
-  let $activeDay = $(selector)
-  if (assertFound) {
-    expect($activeDay.length, `Should find one ${selector}`).to.equal(1)
-  }
-  return $activeDay
+  return assertFound(selector)
 }
 
-export const findMonth = (month, assertFound = true) => {
+export const findFocusedDay = () => {
+  let selector = `${Selector.DAYS} ${Selector.DAY}${Selector.FOCUSED}`
+  return assertFound(selector)
+}
+
+export const findMonth = (month) => {
   let selector = `${Selector.MONTHS} tbody td span:textEquals(${month})`
-  let $month = $(selector)
-  if (assertFound) {
-    expect($month.length, `Should find one ${selector}`).to.equal(1)
-  }
-  return $month
+  return assertFound(selector)
 }
 
-export const findYear = (year, assertFound = true) => {
+export const findYear = (year) => {
   let selector = `${Selector.YEARS} tbody td span:textEquals(${year})`
-  let $year = $(selector)
-  if (assertFound) {
-    expect($year.length, `Should find one ${selector}`).to.equal(1)
-  }
-  return $year
+  return assertFound(selector)
 }
 
-export const findDecade = (decade, assertFound = true) => {
+export const findDecade = (decade) => {
   let selector = `${Selector.DECADES} tbody td span:textEquals(${decade})`
-  let $year = $(selector)
-  if (assertFound) {
-    expect($year.length, `Should find one ${selector}`).to.equal(1)
-  }
-  return $year
+  return assertFound(selector)
 }
 
-export const findCentury = (century, assertFound = true) => {
+export const findCentury = (century) => {
   let selector = `${Selector.CENTURIES} tbody td span:textEquals(${century})`
-  let $year = $(selector)
-  if (assertFound) {
-    expect($year.length, `Should find one ${selector}`).to.equal(1)
-  }
-  return $year
+  return assertFound(selector)
 }
 
-// done in the testrunner.html
-//import chai from 'chai'
-//export const expect = chai.expect
+export const findPrev = () => {
+  let selector = `${Selector.DAYS} th${Selector.PREV}`
+  return assertFound(selector)
+}
+export const findNext = () => {
+  let selector = `${Selector.DAYS} th${Selector.NEXT}`
+  return assertFound(selector)
+}
+
+export const findMonthsSwitch = () => {
+  return assertFound(`${Selector.DAYS} thead th${Selector.SWITCH}`)
+}
+
+export const findYearsSwitch = () => {
+  return assertFound(`${Selector.YEARS} thead th${Selector.SWITCH}`)
+}
+
+export const findDecadesSwitch = () => {
+  return assertFound(`${Selector.DECADES} thead th${Selector.SWITCH}`)
+}
+
+export const findCenturiesSwitch = () => {
+  return assertFound(`${Selector.DECADES} thead th${Selector.SWITCH}`)
+}
+
+export const assertFound = (selector, count = 1) => {
+  let $element = $(selector)
+  if (assertFound) {
+    expect($element.length, `Should find one ${selector}`).to.equal(count)
+  }
+  return $element
+}

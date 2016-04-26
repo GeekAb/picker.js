@@ -1,5 +1,5 @@
-import {$, $input, safeDispose, fromData, assertData, findPopper, assertNotFound, assertVisible, assertHidden, assertDatesEqual, findDayOfMonth, prepare} from '../../support'
-import {Selector, ClassName} from '../../../js/constants'
+import {$, $input, safeDispose, fromData, assertData, findPopper, assertNotFound, assertVisible, assertHidden, assertDatesEqual, findDayOfMonth, prepare} from '../support'
+import {Selector, ClassName} from '../../js/constants'
 import moment from 'moment'
 
 const FORMAT = 'DD-MM-YYYY'
