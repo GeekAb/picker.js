@@ -1,5 +1,5 @@
-import Base from './base'
-import {ClassName} from './constants'
+import Base from './../base'
+import {ClassName} from './../constants'
 
 /**
  * This class registers overridable partials in the {Default} hash constant.  Subclasses can override this
@@ -79,7 +79,7 @@ const Default = {
   </div>`
 }
 
-const Template = class extends Base {
+const BaseTemplate = class extends Base {
 
   constructor(...configs) {
     super(Default, ...configs)
@@ -95,4 +95,4 @@ const Template = class extends Base {
   }
 }
 
-export default Template
+export default BaseTemplate
