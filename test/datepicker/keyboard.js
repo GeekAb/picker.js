@@ -54,7 +54,7 @@ describe('Datepicker', () => {
       })
     })
 
-    describe('enter', () => {
+    describe('nav + enter', () => {
       let dp
       beforeEach(() => {
         prepare()
@@ -81,10 +81,34 @@ describe('Datepicker', () => {
         assertDatesEqual(dp.getDate(), moment().subtract(1, 'days'), 'date')
       })
 
+      it(`left + shift then enter should select -1 month`, () => {
+        fireKey(Keycodes.LEFT, true)
+        fireKey(Keycodes.ENTER)
+        assertDatesEqual(dp.getDate(), moment().subtract(1, 'months'), 'date')
+      })
+
+      it(`ctrl + left + shift then enter should select -1 year`, () => {
+        fireKey(Keycodes.LEFT, false, true)
+        fireKey(Keycodes.ENTER)
+        assertDatesEqual(dp.getDate(), moment().subtract(1, 'years'), 'date')
+      })
+
       it(`right then enter should select tomorrow`, () => {
         fireKey(Keycodes.RIGHT)
         fireKey(Keycodes.ENTER)
         assertDatesEqual(dp.getDate(), moment().add(1, 'days'), 'date')
+      })
+
+      it(`right + shift then enter should select +1 month`, () => {
+        fireKey(Keycodes.RIGHT, true)
+        fireKey(Keycodes.ENTER)
+        assertDatesEqual(dp.getDate(), moment().add(1, 'months'), 'date')
+      })
+
+      it(`ctrl + right + shift then enter should select +1 year`, () => {
+        fireKey(Keycodes.RIGHT, false, true)
+        fireKey(Keycodes.ENTER)
+        assertDatesEqual(dp.getDate(), moment().add(1, 'years'), 'date')
       })
 
       it(`up then enter should select -7 days`, () => {
@@ -93,10 +117,34 @@ describe('Datepicker', () => {
         assertDatesEqual(dp.getDate(), moment().subtract(7, 'days'), 'date')
       })
 
+      it(`up + shift then enter should select -1 month`, () => {
+        fireKey(Keycodes.UP, true)
+        fireKey(Keycodes.ENTER)
+        assertDatesEqual(dp.getDate(), moment().subtract(1, 'months'), 'date')
+      })
+
+      it(`ctrl + up + shift then enter should select -1 year`, () => {
+        fireKey(Keycodes.UP, false, true)
+        fireKey(Keycodes.ENTER)
+        assertDatesEqual(dp.getDate(), moment().subtract(1, 'years'), 'date')
+      })
+
       it(`down then enter should select +7 days`, () => {
         fireKey(Keycodes.DOWN)
         fireKey(Keycodes.ENTER)
         assertDatesEqual(dp.getDate(), moment().add(7, 'days'), 'date')
+      })
+
+      it(`down + shift then enter should select +1 month`, () => {
+        fireKey(Keycodes.DOWN, true)
+        fireKey(Keycodes.ENTER)
+        assertDatesEqual(dp.getDate(), moment().add(1, 'months'), 'date')
+      })
+
+      it(`ctrl + down + shift then enter should select +1 year`, () => {
+        fireKey(Keycodes.DOWN, false, true)
+        fireKey(Keycodes.ENTER)
+        assertDatesEqual(dp.getDate(), moment().add(1, 'years'), 'date')
       })
     })
 
@@ -157,6 +205,49 @@ describe('Datepicker', () => {
           fireKey(Keycodes.ENTER)
           assertDatesEqual(dp.getDate(), moment('03/18/2013'))
         })
+      })
+    })
+
+    describe('autoclose', () => {
+      beforeEach(() => prepare() )
+
+      it(`enter should select today and hide`, () => {
+        $input.datepicker({autoclose: true})
+        let dp = assertData()
+        $input.focus()
+
+        assertVisible(Selector.POPPER)
+        fireKey(Keycodes.ENTER)
+        assertDatesEqual(dp.getDate(), moment(), 'date')
+        assertNotFound(Selector.POPPER)
+      })
+    })
+
+    describe('escape', () => {
+      let dp
+      beforeEach(() => {
+        prepare()
+        $input.datepicker()
+        dp = assertData()
+        $input.focus()
+      })
+
+      beforeEach(() => {
+        assertVisible(Selector.POPPER)
+      })
+      afterEach(() => {
+        assertNotFound(Selector.POPPER)
+      })
+
+      it(`esc should select nothing`, () => {
+        fireKey(Keycodes.ESC)
+        assertDatesEqual(dp.getDate(), null, 'date')
+      })
+
+      it(`enter then esc should select today`, () => {
+        fireKey(Keycodes.ENTER)
+        fireKey(Keycodes.ESC)
+        assertDatesEqual(dp.getDate(), moment(), 'date')
       })
     })
   })

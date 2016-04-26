@@ -164,9 +164,11 @@ export const assertFound = (selector, count = 1) => {
   return $element
 }
 
-export const fireKey = (keycode) => {
+export const fireKey = (keycode, shiftKey = false, ctrlKey = false) => {
   $input.trigger({
     type: `keydown`,
-    keyCode: keycode
+    keyCode: keycode,
+    shiftKey: shiftKey,
+    ctrlKey: ctrlKey
   })
 }
