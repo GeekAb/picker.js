@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Test Datepicker for Bootstrap Material Design 4</title>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <!-- Material Design fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+  <!-- Material Design for Bootstrap -->
+  <link rel="stylesheet" href="../node_modules/bootstrap-material-design/dist/bootstrap-material-design.min.css">
+
+  <link href="../dist/datepicker-bmd4.css" rel="stylesheet">
+
+  <script src="//code.jquery.com/jquery-2.2.3.min.js"></script>
+  <script src="../node_modules/bootstrap-material-design/dist/dist/bootstrap-material-design.iife.min.js"></script>
+
+  <script src="../dist/picker.js.iife.js"></script>
+</head>
+
+<body>
+
+
+<div class="container">
+  <h2>Bootstrap 4 picker.js test</h2>
+  <form>
+    <!--<input type="text" class="form-control" value="03/06/2011">-->
+    <input type="text" class="form-control">
+    <span></span>
+  </form>
+</div>
+<script>
+  var $input = $('input')
+  $input.datepicker({
+    debug: true,
+//    format: 'YYYY-MM-DD',
+    date: {
+//      default: '03/04/2013'
+//      disabled: [`2012-10-01`, `2012-10-10`, `2012-10-20`]
+    },
+//    daysOfWeek: {highlighted: [1,5]},
+//    daysOfWeek: {disabled: [0, 6]},
+//    date: {
+//      count: 2
+//      toggle: true
+//    },
+//    autoclose: true
+//    view: {start: `years`},
+    today: {
+      button: true
+//      , highlight: false
+    }
+  }).datepicker('show')
+  $input.focus()
+</script>
+</body>
+</html>

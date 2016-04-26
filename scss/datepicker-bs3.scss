@@ -1,9 +1,7 @@
 // Used to create the default css datepicker-bs3.css.
 //    For full customization, obtain the package via npm and @import "popper" and "bs3" directly with your own variables.
 
-$popper-bg: #fff !default;
-$popper-border-color: rgba(0, 0, 0, 0.14902) !default;
-
+// ---------- start copy of bootstrap 3 variables ---------
 $gray: lighten(#000, 33.5%) !default; // #555
 $gray-light: lighten(#000, 46.7%) !default; // #777
 $gray-lighter: lighten(#000, 93.5%) !default; // #eee
@@ -18,10 +16,14 @@ $btn-link-disabled-color: $gray-light !default;
 
 $state-info-bg: #d9edf7 !default;
 $line-height-base: 1.428571429 !default; // 20/14
-$border-radius-base: 4px !default;
+$border-radius: 4px !default;
 
 $dropdown-bg: #fff !default;
-$dropdown-border: rgba(0, 0, 0, .15) !default;
+$dropdown-border-color: rgba(0, 0, 0, .15) !default;
+// ---------- end copy of bootstrap 3 variables ---------
+
+$popper-bg: $dropdown-bg !default;
+$popper-border-color: $dropdown-border-color !default;
 
 @import "popper";
 @import "bs3";
