@@ -22,6 +22,48 @@ $dropdown-bg: #fff !default;
 $dropdown-border-color: rgba(0, 0, 0, .15) !default;
 // ---------- end copy of bootstrap 3 variables ---------
 
+// ---------- start copy of bootstrap 3 mixins ---------
+// Button variants
+@mixin button-variant($color, $background, $border) {
+  &:focus,
+  &.focus {
+    color: $color;
+    background-color: darken($background, 10%);
+    border-color: darken($border, 25%);
+  }
+  &:hover {
+    color: $color;
+    background-color: darken($background, 10%);
+    border-color: darken($border, 12%);
+  }
+  &:active,
+  &.active {
+    color: $color;
+    background-color: darken($background, 10%);
+    border-color: darken($border, 12%);
+
+    &:hover,
+    &:focus,
+    &.focus {
+      color: $color;
+      background-color: darken($background, 17%);
+      border-color: darken($border, 25%);
+    }
+  }
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    &:hover,
+    &:focus,
+    &.focus {
+      background-color: $background;
+      border-color: $border;
+    }
+  }
+}
+// ---------- end copy of bootstrap 3 mixins ---------
+
+
 $popper-bg: $dropdown-bg !default;
 $popper-border-color: $dropdown-border-color !default;
 
