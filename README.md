@@ -21,8 +21,8 @@ Maintaining that project may be too much, and we want to _expand_ it!
 - [x] Port the bootstrap-datepicker code to ES2015 classes
 - [x] Remove all date parsing code/locales and substitute [moment.js](http://momentjs.com/)
 - [x] Remove all the UI placement code, and substitute with [popper.js](http://popper.js.org/)
-- [ ] Refactor large codebase into maintainable/encapsulated classes
-- [ ] Port the tests
+- [x] Refactor large codebase into maintainable/encapsulated classes
+- [x] Port the tests
 - [ ] Create `presets` for rendering on different frameworks       
   
 
