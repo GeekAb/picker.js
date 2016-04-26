@@ -1,3 +1,5 @@
+// NOTE: as-is, this is unchanged from bs3 - I expect there will be modifications so this is broken out.
+
 // Used to create the default css datepicker-bs3.css.
 //    For full customization, obtain the package via npm and @import "popper" and "bs3" directly with your own variables.
 
@@ -24,4 +26,4 @@ $dropdown-bg: #fff !default;
 $dropdown-border: rgba(0, 0, 0, .15) !default;
 
 @import "popper";
-@import "bs3";
+@import "bs4";
