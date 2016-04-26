@@ -162,36 +162,6 @@ describe('Datepicker', () => {
       })
     })
 
-    describe('daysOfWeek', () => {
-
-      describe('disabled', () => {
-        it(`should be marked with a class`, () => {
-          $input.val(`10/26/2012`).datepicker({
-            daysOfWeek: {disabled: [1, 5]}
-          })
-
-          assertData().show()
-          expect(findDayOfMonth('22')).to.have.class(ClassName.DISABLED)
-          expect(findDayOfMonth('24')).not.to.have.class(ClassName.DISABLED)
-          expect(findDayOfMonth('26')).to.have.class(ClassName.DISABLED)
-        })
-      })
-
-
-      it(`highlighted`, () => {
-        it(`should be marked with a class`, () => {
-          $input.val(`10/26/2012`).datepicker({
-            daysOfWeek: {highlighted: [1, 5]}
-          })
-
-          assertData().show()
-          expect(findDayOfMonth('22')).to.have.class(ClassName.HIGHLIGHTED)
-          expect(findDayOfMonth('24')).not.to.have.class(ClassName.HIGHLIGHTED)
-          expect(findDayOfMonth('26')).to.have.class(ClassName.HIGHLIGHTED)
-        })
-      })
-    })
-
     describe('disabled', () => {
 
       it(`should be marked with a class`, () => {

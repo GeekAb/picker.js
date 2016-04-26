@@ -8,15 +8,15 @@ describe('Datepicker', () => {
   afterEach(() => safeDispose())
 
   describe('keyboard', () => {
-    let dp
-    beforeEach(() => {
-      prepare()
-      $input.datepicker()
-      dp = assertData()
-      $input.focus()
-    })
-
     describe('tab', () => {
+      let dp
+      beforeEach(() => {
+        prepare()
+        $input.datepicker()
+        dp = assertData()
+        $input.focus()
+      })
+
       beforeEach(() => {
         assertVisible(Selector.POPPER)
       })
@@ -55,6 +55,14 @@ describe('Datepicker', () => {
     })
 
     describe('enter', () => {
+      let dp
+      beforeEach(() => {
+        prepare()
+        $input.datepicker()
+        dp = assertData()
+        $input.focus()
+      })
+
       beforeEach(() => {
         assertVisible(Selector.POPPER)
       })
@@ -89,6 +97,66 @@ describe('Datepicker', () => {
         fireKey(Keycodes.DOWN)
         fireKey(Keycodes.ENTER)
         assertDatesEqual(dp.getDate(), moment().add(7, 'days'), 'date')
+      })
+    })
+
+    describe('disabled', () => {
+      beforeEach(() => prepare())
+
+      describe('daysOfWeek', () => {
+        it(`left should skip disabled days`, () => {
+          $input.val(`03/04/2013`).datepicker({
+            daysOfWeek: {disabled: [0, 6]}
+          })
+
+          let dp = assertData()
+          $input.focus()
+
+          fireKey(Keycodes.LEFT)
+          fireKey(Keycodes.ENTER)
+          assertDatesEqual(dp.getDate(), moment('03/01/2013'))
+        })
+
+        it(`right should skip disabled days`, () => {
+          $input.val(`03/15/2013`).datepicker({
+            daysOfWeek: {disabled: [0, 6]}
+          })
+
+          let dp = assertData()
+          $input.focus()
+
+          fireKey(Keycodes.RIGHT)
+          fireKey(Keycodes.ENTER)
+          assertDatesEqual(dp.getDate(), moment('03/18/2013'))
+        })
+      })
+
+      describe('dates', () => {
+        it(`left should skip disabled days`, () => {
+          $input.val(`03/04/2013`).datepicker({
+            date: {disabled: ['03/03/2013', '03/02/2013']}
+          })
+
+          let dp = assertData()
+          $input.focus()
+
+          fireKey(Keycodes.LEFT)
+          fireKey(Keycodes.ENTER)
+          assertDatesEqual(dp.getDate(), moment('03/01/2013'))
+        })
+
+        it(`right should skip disabled days`, () => {
+          $input.val(`03/15/2013`).datepicker({
+            date: {disabled: ['03/16/2013', '03/17/2013']}
+          })
+
+          let dp = assertData()
+          $input.focus()
+
+          fireKey(Keycodes.RIGHT)
+          fireKey(Keycodes.ENTER)
+          assertDatesEqual(dp.getDate(), moment('03/18/2013'))
+        })
       })
     })
   })
