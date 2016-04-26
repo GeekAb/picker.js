@@ -519,6 +519,7 @@ const Datepicker = (($) => {
       this.shown = true
 
       this.eventManager.onShown()
+      //this.popper._popper.focus()
       return this
     }
 

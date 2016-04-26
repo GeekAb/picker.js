@@ -27,7 +27,7 @@ const EventManager = class extends Base {
 
     // Picker events
     this.pickerEvents = {
-      // FIXME: these need to be added for keyboard nav after initial click (initial attempt didn't work - needs debugging)
+      // FIXME: these need to be added for keyboard nav after initial click (initial attempt didn't work - needs debugging).  It seems like these need to be on the document to catch the event such as esc after a mouse click
       //keyup: (ev) => this.onKeyup(ev),
       //keydown: (ev) => this.onKeydown(ev),
       click: (ev) => this.onPickerClick(ev)
@@ -202,7 +202,13 @@ const EventManager = class extends Base {
         Keycodes.SPACE,
         Keycodes.ENTER,
         Keycodes.TAB))
+
+    // This is called when someone is typing into the field, therefore try to send the value to update
+    //  but do so without erroring in case parse is bad.
+    try {
       this.dp.update()
+    }
+    catch(error){}
   }
 
   onKeydown(ev) {
@@ -221,8 +227,7 @@ const EventManager = class extends Base {
           this.dp.hide()
         }
         else{
-          // FIXME: it would seem we need to change the view -1 if it is not days...then renderer.fill()?
-          this.dp.update()
+          this.dp.changeView(-1)
         }
         ev.preventDefault()
         ev.stopPropagation()
