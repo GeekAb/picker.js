@@ -1,44 +1,4 @@
 // Separate this file to allow for direct integration by applications with their own variables
-
-// Button variants
-@mixin button-variant($color, $background, $border) {
-  &:focus,
-  &.focus {
-    color: $color;
-    background-color: darken($background, 10%);
-    border-color: darken($border, 25%);
-  }
-  &:hover {
-    color: $color;
-    background-color: darken($background, 10%);
-    border-color: darken($border, 12%);
-  }
-  &:active,
-  &.active {
-    color: $color;
-    background-color: darken($background, 10%);
-    border-color: darken($border, 12%);
-
-    &:hover,
-    &:focus,
-    &.focus {
-      color: $color;
-      background-color: darken($background, 17%);
-      border-color: darken($border, 25%);
-    }
-  }
-  &.disabled,
-  &[disabled],
-  fieldset[disabled] & {
-    &:hover,
-    &:focus,
-    &.focus {
-      background-color: $background;
-      border-color: $border;
-    }
-  }
-}
-
 .datepicker {
   top: 0;
   left: 0;
