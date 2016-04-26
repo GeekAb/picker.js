@@ -102,6 +102,12 @@ const EventManager = class extends Base {
     ev.stopPropagation()
 
     let $target = $(ev.target)
+
+    // target may be markup inside the td, find the one with the data-moment
+    while ($target != null && !$target.data(Data.MOMENT)) {
+      $target = $target.parent()
+    }
+
     let $navArrow = $target.closest(`${Selector.PREV}, ${Selector.NEXT}`)
 
     // --------------------------
@@ -205,10 +211,11 @@ const EventManager = class extends Base {
 
     // This is called when someone is typing into the field, therefore try to send the value to update
     //  but do so without erroring in case parse is bad.
-    try {
-      this.dp.update()
-    }
-    catch(error){}
+      try {
+        this.dp.update()
+      }
+      catch (error) {
+      }
   }
 
   onKeydown(ev) {
@@ -226,7 +233,7 @@ const EventManager = class extends Base {
         if (this.dp.view === View.DAYS) {
           this.dp.hide()
         }
-        else{
+        else {
           this.dp.changeView(-1)
         }
         ev.preventDefault()
