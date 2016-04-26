@@ -6,7 +6,7 @@ import DateRangePicker from './dateRangePicker'
 import {JQUERY_NAME, Data, Event, Selector, ClassName, Unit, View} from './constants'
 import Popper from 'popper.js'
 import moment from 'moment'
-import {main} from './templates'
+import Template from './template'
 
 /**
  * Datepicker for fields using momentjs for all date-based functionality.
@@ -104,7 +104,7 @@ const Datepicker = (($) => {
       removeOnDestroy: true
     },
 
-    template: main,
+    //template: undefined, // if undefined - will use new Template().createTemplate()
 
     // -------------------
     // callbacks  FIXME: better way to do this?
@@ -145,6 +145,11 @@ const Datepicker = (($) => {
 
       // disallow updates during setup, call after
       this.allowUpdate = false
+
+      // setup the template
+      if(!this.config.template){
+        this.config.template = new Template().createTemplate()
+      }
 
       // normalize options that are flexible
       this.normalizeConfig()
