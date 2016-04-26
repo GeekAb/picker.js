@@ -67,21 +67,20 @@ $dropdown-border: rgba(0, 0, 0, .15) !default;
 }
 
 .datepicker {
+  top: 0;
+  left: 0;
+  padding: 4px;
   border-radius: $border-radius-base;
-  &-inline {
+
+  &.inline {
     width: 220px;
   }
   direction: ltr;
-  &-rtl {
+  &.rtl {
     direction: rtl;
     table tr td span {
       float: right;
     }
-  }
-  &-dropdown {
-    top: 0;
-    left: 0;
-    padding: 4px;
   }
   > div {
     display: none;
@@ -233,11 +232,11 @@ $dropdown-border: rgba(0, 0, 0, .15) !default;
     }
   }
 
-  .datepicker-switch {
+  .switch {
     width: 145px;
   }
 
-  .datepicker-switch,
+  .switch,
   .prev,
   .next,
   tfoot tr th {

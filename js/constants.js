@@ -69,18 +69,17 @@ export const ClassName = {
   POPPER: `popper`,
 
 
-  TITLE: `${NAME}-title`,
-  SWITCH: `${NAME}-switch`,
+  TITLE: `title`,
+  SWITCH: `switch`,
 
-  INLINE: `${NAME}-inline`,
-  DROPDOWN: `${NAME}-dropdown`, // used to also have dropdown-menu
-  RTL: `${NAME}-rtl`,
+  INLINE: `inline`,
+  RTL: `rtl`,
 
-  DAYS: `${NAME}-days`,
-  MONTHS: `${NAME}-months`,
-  YEARS: `${NAME}-years`,
-  DECADES: `${NAME}-decades`,
-  CENTURIES: `${NAME}-centuries`,
+  DAYS: `days`,
+  MONTHS: `months`,
+  YEARS: `years`,
+  DECADES: `decades`,
+  CENTURIES: `centuries`,
 
   // range
   RANGE: 'range',
@@ -89,7 +88,9 @@ export const ClassName = {
 }
 
 export const Selector = {
-  DATA_PROVIDE: `[data-${Data.PROVIDE}="datepicker"]`,
+  DATA_PROVIDE: `[data-${Data.PROVIDE}="${NAME}"]`,
+
+  DATEPICKER: `.${NAME}`,
 
   ACTIVE: `.${ClassName.ACTIVE}`,
   FOCUSED: `.${ClassName.FOCUSED}`,

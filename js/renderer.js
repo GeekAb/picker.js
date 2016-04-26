@@ -12,9 +12,6 @@ const Renderer = class extends Base {
     if (this.dp.isInline) {
       this.$picker.addClass(ClassName.INLINE).appendTo(this.dp.$element)
     }
-    else {
-      this.$picker.addClass(ClassName.DROPDOWN)
-    }
 
     if (this.config.rtl) {
       this.$picker.addClass(ClassName.RTL)
