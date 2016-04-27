@@ -1,5 +1,6 @@
 import Base from './../base'
 import {Data} from './../constants'
+import {ClassName} from './../constants'
 
 /**
  * This class registers overridable partials in the {Default} hash constant.  Subclasses can override this
@@ -22,16 +23,26 @@ const BaseTemplate = class extends Base {
    * @returns non-interpolated template
    */
   getTemplate() {
-    return this.config.main
+    return `<div class="${ClassName.NAME}">
+      ${this.generateView(ClassName.DAYS)}
+      ${this.generateView(ClassName.MONTHS)}
+      ${this.generateView(ClassName.YEARS)}
+      ${this.generateView(ClassName.DECADES)}
+      ${this.generateView(ClassName.CENTURIES)}
+    </div>`
+  }
+
+  generateView(className) { // eslint-disable-line no-unused-vars
+    throw new Error('subclass must implement or override #getTemplate so this is not called.')
   }
 
   interpolate() {
     return this.getTemplate()
-      .replace(/%header%/g, this.config.header)
-      .replace(/%body%/g, this.config.body)
-      .replace(/%footer%/g, this.config.footer)
-      .replace(/%arrow\.left%/g, this.config.arrow.left)
-      .replace(/%arrow\.right%/g, this.config.arrow.right)
+      // .replace(/%header%/g, this.config.header)
+      // .replace(/%body%/g, this.config.body)
+      // .replace(/%footer%/g, this.config.footer)
+      .replace(/%arrow\.left%/g, this.config.arrow.left || '')
+      .replace(/%arrow\.right%/g, this.config.arrow.right || '')
   }
 
   /**
@@ -42,7 +53,7 @@ const BaseTemplate = class extends Base {
    * @returns {string}
    */
   renderDay(date, classNames, tooltip = '') {
-    return `<td class="${classNames.join(' ')}"${tooltip} data-${Data.MOMENT}="${date}">${this.renderDayContent(date, classNames)}</td>`
+    return `<td class="${classNames.join(' ')}" ${tooltip} data-${Data.MOMENT}="${date}">${this.renderDayContent(date, classNames)}</td>`
   }
 
   /**
@@ -51,7 +62,7 @@ const BaseTemplate = class extends Base {
    * @param classNames - array - passed to be used as markers only, not to be rendered.  These are rendered in the container
    * @returns {string}
    */
-  renderDayContent(date, classNames) {
+  renderDayContent(date, classNames) { // eslint-disable-line no-unused-vars
     return date.date()
   }
 
@@ -63,7 +74,7 @@ const BaseTemplate = class extends Base {
    * @returns {string}
    */
   renderMonth(date, classNames, tooltip = '') {
-    return `<span class="${classNames.join(' ')}" data-${Data.MOMENT}="${date}">${this.renderMonthContent(date, classNames)}</span>`
+    return `<span class="${classNames.join(' ')}" ${tooltip} data-${Data.MOMENT}="${date}">${this.renderMonthContent(date, classNames)}</span>`
   }
 
   /**
@@ -72,7 +83,7 @@ const BaseTemplate = class extends Base {
    * @param classNames
    * @returns {*}
    */
-  renderMonthContent(date, classNames) {
+  renderMonthContent(date, classNames) {  // eslint-disable-line no-unused-vars
     return date.format(`MMM`) // Jan
   }
 }

@@ -1,6 +1,7 @@
 import BS3Template from './templates/bs4Template'
 import BS4Template from './templates/bs4Template'
 import BMD4Template from './templates/bmd4Template'
+import StringTemplate from './templates/stringTemplate'
 import extend from 'extend'
 
 /**
@@ -46,7 +47,7 @@ const Preset = class {
         break
       }
       default:
-        throw new Error(`Unknown 'preset' '${preset}'. Try one of: bs3 | bs4 | bmd4 | custom`)
+        throw new Error(`Unknown 'preset' '${config.preset}'. Try one of: bs3 | bs4 | bmd4 | custom`)
     }
     return value
   }

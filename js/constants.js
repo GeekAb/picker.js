@@ -65,6 +65,7 @@ export const ClassName = {
   FOCUSED: `focused`,
   NEW: `new`,
   OLD: `old`,
+  VIEW: `view`,
 
   POPPER: `popper`,
 

@@ -30,7 +30,7 @@ const Renderer = class extends Base {
   fill() {
     let viewDate = this.dp.viewDate.clone().local()
     let year = viewDate.year()
-    let month = viewDate.month()
+    // let month = viewDate.month()
 
     let startYear = this.config.date.start.year()
     let startMonth = this.config.date.start.month()
@@ -43,8 +43,6 @@ const Renderer = class extends Base {
     //let titleFormat = dates[this.config.language].titleFormat || dates['en'].titleFormat
     let titleFormat = `ddd, MMM D` // Thu, Apr 13
 
-    if (isNaN(year) || isNaN(month))
-      return
     this.$picker.find(`${Selector.DAYS} ${Selector.SWITCH}`).text(this.dp.formatDate(viewDate, titleFormat))
     // FIXME: remove option?
     this.$picker.find('tfoot .today').text(todayText).toggle(this.config.today.button !== false)
@@ -63,12 +61,7 @@ const Renderer = class extends Base {
     let nextMonth = prevMonth.clone().add(42, 'days')
 
     // render days
-    let html = []
-    while (prevMonth.isBefore(nextMonth)) {
-      this.renderDay(viewDate, prevMonth, html)
-      prevMonth.add(1, 'days')
-    }
-    this.$picker.find(`${Selector.DAYS} tbody`).empty().append(html.join(''))
+    this.renderDays(prevMonth, nextMonth, viewDate)
 
     let monthsTitle = `use year here?`//dates[this.config.language].monthsTitle || dates['en'].monthsTitle || 'Months'
     let $monthsView = this.$picker.find(Selector.MONTHS)
@@ -156,6 +149,15 @@ const Renderer = class extends Base {
       endYear,
       this.config.beforeShowCentury
     )
+  }
+
+  renderDays(prevMonth, nextMonth, viewDate) {
+    let html = []
+    while (prevMonth.isBefore(nextMonth)) {
+      this.renderDay(viewDate, prevMonth, html)
+      prevMonth.add(1, 'days')
+    }
+    this.$picker.find(`${Selector.DAYS} tbody`).empty().append(html.join(''))
   }
 
   // called publicly from dp#changeView
@@ -262,7 +264,7 @@ const Renderer = class extends Base {
     for (let i = 0; i < 12; i++) { // 0..11
       let classNames = [Unit.MONTH]
       if(viewDate && viewDate.month() === i) classNames.push(ClassName.FOCUSED)
-      
+
       let date = this.dp.newMoment().month(i).startOf('month')
       html += this.config.template.renderMonth(date, classNames)
     }

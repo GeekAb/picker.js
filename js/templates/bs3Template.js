@@ -9,60 +9,54 @@ import {ClassName} from './../constants'
  * superclasses' partials.  Tokens are denoted by %% e.g. %header% will be replaced by config.header.
  *
  */
-const generateView = (className) => {
-  return `<div class="${className}">
-          <table>
-              %header%
-              <tbody></tbody>
-              %footer%
-          </table>
-      </div>`
-}
-
 const Default = {
   arrow: {
     left: `&laquo;`,
     right: `&raquo;`
-  },
-  header: `<thead>
-      <tr>
-          <th colspan="7" class="${ClassName.TITLE}"></th>
-      </tr>
-      <tr>
-          <th class="${ClassName.PREV}">%arrow.left%</th>
-          <th colspan="5" class="${ClassName.SWITCH}"></th>
-          <th class="${ClassName.NEXT}">%arrow.right%</th>
-      </tr>
-  </thead>`,
-
-  body: `<tbody>
-      <tr>
-          <td colspan="7"></td>
-      </tr>
-  </tbody>`,
-
-  footer: `<tfoot>
-      <tr>
-          <th colspan="7" class="${ClassName.TODAY}"></th>
-      </tr>
-      <tr>
-          <th colspan="7" class="${ClassName.CLEAR}"></th>
-      </tr>
-  </tfoot>`,
-
-  main: `<div class="${ClassName.NAME}">
-      ${generateView(ClassName.DAYS)}
-      ${generateView(ClassName.MONTHS)}
-      ${generateView(ClassName.YEARS)}
-      ${generateView(ClassName.DECADES)}
-      ${generateView(ClassName.CENTURIES)}
-  </div>`
+  }
 }
 
 const BS3Template = class extends BaseTemplate {
 
   constructor(...configs) {
     super(Default, ...configs)
+  }
+
+  generateView(className) {
+    let html = `<div class="${className} ${ClassName.VIEW}">
+    <table>
+      <thead>
+        <tr>
+          <th colspan="7" class="${ClassName.TITLE}"></th>
+        </tr>
+        <tr>
+          <th class="${ClassName.PREV}">%arrow.left%</th>
+          <th colspan="5" class="${ClassName.SWITCH}"></th>
+          <th class="${ClassName.NEXT}">%arrow.right%</th>
+        </tr>
+      </thead>
+      <tbody>`
+
+    if (className !== ClassName.DAYS) {
+      html += `<tr>
+          <td colspan="7"></td>
+        </tr>`
+    }
+
+    html += `
+      </tbody>
+      <tfoot>
+        <tr>
+          <th colspan="7" class="${ClassName.TODAY}"></th>
+        </tr>
+        <tr>
+          <th colspan="7" class="${ClassName.CLEAR}"></th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>`
+
+    return html
   }
 }
 

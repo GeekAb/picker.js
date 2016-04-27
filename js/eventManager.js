@@ -221,7 +221,7 @@ const EventManager = class extends Base {
       try {
         this.dp.update()
       }
-      catch (error) {
+      catch (error) { // eslint-disable-line no-empty
       }
   }
 
