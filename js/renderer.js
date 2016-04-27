@@ -17,7 +17,7 @@ const Renderer = class extends Base {
       this.$picker.addClass(ClassName.RTL)
     }
 
-    this.renderDaysOfWeekHeader()
+    this.renderDaysViewOfWeekHeader()
   }
 
   dispose() {
@@ -27,95 +27,27 @@ const Renderer = class extends Base {
     super.dispose()
   }
 
-  fill() {
+  render() {
     let viewDate = this.dp.viewDate.clone().local()
-    let year = viewDate.year()
-    // let month = viewDate.month()
 
-    let startYear = this.config.date.start.year()
-    let startMonth = this.config.date.start.month()
-    let endYear = this.config.date.end.year()
-    let endMonth = this.config.date.end.month()
+    // today button text
+    this.$picker.find(Selector.TODAY).text(this.i18n('today')).toggle(this.config.today.button !== false)
+    // clear button text
+    this.$picker.find(Selector.CLEAR).text(this.i18n('clear')).toggle(this.config.clear.button !== false)
+    // title text
+    this.$picker.find(`${Selector.TITLE}`).text(this.config.title).toggle(this.config.title !== '')
 
-    //FIXME: remove these????
-    let todayText = this.i18n('today')
-    let clearText = this.i18n('clear')
-    //let titleFormat = dates[this.config.language].titleFormat || dates['en'].titleFormat
-    let titleFormat = `ddd, MMM D` // Thu, Apr 13
-
-    this.$picker.find(`${Selector.DAYS} ${Selector.SWITCH}`).text(this.dp.formatDate(viewDate, titleFormat))
-    // FIXME: remove option?
-    this.$picker.find('tfoot .today').text(todayText).toggle(this.config.today.button !== false)
-    // FIXME: remove option?
-    this.$picker.find('tfoot .clear').text(clearText).toggle(this.config.clear.button !== false)
-    // FIXME: remove option? title text?
-    this.$picker.find(`thead ${Selector.TITLE}`).text(this.config.title).toggle(this.config.title !== '')
     this.updateNavArrows(viewDate)
-    this.renderMonths(viewDate)
+    this.renderMonthsView(viewDate)
+    this.renderDaysView(viewDate)
 
-    // get prevMonth moment set to same day of the week
-    let prevMonth = viewDate.clone().startOf(Unit.MONTH).subtract(1, 'day') // end of last month
-    prevMonth.day(prevMonth.day() - (prevMonth.day() - this.config.week.start + 7) % 7) // set day of week
+    // Generate the years/decades/centuries
+    let year = viewDate.year()
+    let startYear = this.config.date.start.year()
+    let endYear = this.config.date.end.year()
 
-    // TODO: not sure why 42 days is added (yet)...
-    let nextMonth = prevMonth.clone().add(42, 'days')
-
-    // render days
-    this.renderDays(prevMonth, nextMonth, viewDate)
-
-    let monthsTitle = `use year here?`//dates[this.config.language].monthsTitle || dates['en'].monthsTitle || 'Months'
-    let $monthsView = this.$picker.find(Selector.MONTHS)
-    $monthsView.find(Selector.SWITCH).text(this.config.view.max < View.YEARS ? monthsTitle : year)
-    let $months = $monthsView.find(Selector.MONTH).removeClass(ClassName.ACTIVE)
-
-    for (let d of this.dp.dates.array) {
-      if (d.year() === year) {
-        $months.eq(d.month()).addClass(ClassName.ACTIVE)
-      }
-    }
-
-    if (year < startYear || year > endYear) {
-      $months.addClass(ClassName.DISABLED)
-    }
-    if (year === startYear) {
-      $months.slice(0, startMonth).addClass(ClassName.DISABLED)
-    }
-    if (year === endYear) {
-      $months.slice(endMonth + 1).addClass(ClassName.DISABLED)
-    }
-
-
-    /*
-     A function that takes a date as a parameter and returns one of the following values:
-
-     - undefined to have no effect
-     - An object with the following properties:
-     disabled: A Boolean, indicating whether or not this date is disabled
-     classes: A String representing additional CSS classes to apply to the date’s cell
-     tooltip: A tooltip to apply to this date, via the title HTML attribute
-     */
-    if (this.config.beforeShowMonth !== undefined) {
-      for (let month of $months) {
-        let $month = $(month)
-        let m = this.dp.newMoment($month.data(Data.MOMENT))
-        let before = this.config.beforeShowMonth(m)
-        if (before === undefined) {
-          before = {}
-        }
-        if (before.disabled === true) {
-          $month.addClass(ClassName.DISABLED)
-        }
-        if (before.classes) {
-          $month.addClass(before.classes)
-        }
-        if (before.tooltip) {
-          $month.prop('title', before.tooltip)
-        }
-      }
-    }
-
-    // Generating decade/years picker
-    this.fillYearsView(
+    // Generating years picker
+    this.renderYearsView(
       Selector.YEARS,
       Unit.YEAR,
       10,
@@ -126,8 +58,8 @@ const Renderer = class extends Base {
       this.config.beforeShowYear
     )
 
-    // Generating century/decades picker
-    this.fillYearsView(
+    // Generating decades picker
+    this.renderYearsView(
       Selector.DECADES,
       Unit.DECADE,
       100,
@@ -138,8 +70,8 @@ const Renderer = class extends Base {
       this.config.beforeShowDecade
     )
 
-    // Generating millennium/centuries picker
-    this.fillYearsView(
+    // Generating centuries picker
+    this.renderYearsView(
       Selector.CENTURIES,
       Unit.CENTURY,
       1000,
@@ -151,13 +83,27 @@ const Renderer = class extends Base {
     )
   }
 
-  renderDays(prevMonth, nextMonth, viewDate) {
+  renderDaysView(viewDate) {
+    // get prevMonth moment set to same day of the week
+    let prevMonth = viewDate.clone().startOf(Unit.MONTH).subtract(1, 'day') // end of last month
+    prevMonth.day(prevMonth.day() - (prevMonth.day() - this.config.week.start + 7) % 7) // set day of week
+
+    // TODO: not sure why 42 days is added (yet)...
+    let nextMonth = prevMonth.clone().add(42, 'days')
+
     let html = []
     while (prevMonth.isBefore(nextMonth)) {
       this.renderDay(viewDate, prevMonth, html)
       prevMonth.add(1, 'days')
     }
-    this.$picker.find(`${Selector.DAYS} tbody`).empty().append(html.join(''))
+
+    let $view = this.$picker.find(`${Selector.DAYS}`)
+
+    // attach new days content
+    $view.find(`tbody`).empty().append(html.join(''))
+
+    // render switch text e.g. Thu, Apr 13
+    $view.find(`${Selector.SWITCH}`).text(this.dp.formatDate(viewDate, this.config.template.getDaySwitchFormat()))
   }
 
   // called publicly from dp#changeView
@@ -167,20 +113,22 @@ const Renderer = class extends Base {
 
     let year = viewDate.year()
     let month = viewDate.month()
+    let $prev = this.$picker.find(Selector.PREV)
+    let $next = this.$picker.find(Selector.NEXT)
 
     switch (this.dp.viewMode) {
       case View.DAYS:
         if (year <= this.config.date.start.year() && month <= this.config.date.start.month()) {
-          this.$picker.find(Selector.PREV).css(Visibility.HIDDEN)
+          $prev.css(Visibility.HIDDEN)
         }
         else {
-          this.$picker.find(Selector.PREV).css(Visibility.VISIBLE)
+          $prev.css(Visibility.VISIBLE)
         }
         if (year >= this.config.date.end.year() && month >= this.config.date.end.month()) {
-          this.$picker.find(Selector.NEXT).css(Visibility.HIDDEN)
+          $next.css(Visibility.HIDDEN)
         }
         else {
-          this.$picker.find(Selector.NEXT).css(Visibility.VISIBLE)
+          $next.css(Visibility.VISIBLE)
         }
         break
       case View.MONTHS:
@@ -188,16 +136,16 @@ const Renderer = class extends Base {
       case View.DECADES:
       case View.CENTURIES:
         if (year <= this.config.date.start.year() || this.config.view.max < View.YEARS) {
-          this.$picker.find(Selector.PREV).css(Visibility.HIDDEN)
+          $prev.css(Visibility.HIDDEN)
         }
         else {
-          this.$picker.find(Selector.PREV).css(Visibility.VISIBLE)
+          $prev.css(Visibility.VISIBLE)
         }
         if (year >= this.config.date.end.year() || this.config.view.max < View.YEARS) {
-          this.$picker.find(Selector.NEXT).css(Visibility.HIDDEN)
+          $next.css(Visibility.HIDDEN)
         }
         else {
-          this.$picker.find(Selector.NEXT).css(Visibility.VISIBLE)
+          $next.css(Visibility.VISIBLE)
         }
         break
     }
@@ -206,7 +154,7 @@ const Renderer = class extends Base {
   // ------------------------------------------------------------------------
   // private
 
-  renderDaysOfWeekHeader() {
+  renderDaysViewOfWeekHeader() {
     let dowCnt = this.config.week.start
     let html = '<tr>'
     while (dowCnt < this.config.week.start + 7) {
@@ -259,8 +207,15 @@ const Renderer = class extends Base {
     }
   }
 
-  renderMonths(viewDate) {
+  renderMonthsView(viewDate) {
+    let $view = this.$picker.find(Selector.MONTHS)
+    let year = viewDate.year()
+    let startYear = this.config.date.start.year()
+    let startMonth = this.config.date.start.month()
+    let endYear = this.config.date.end.year()
+    let endMonth = this.config.date.end.month()
     let html = ''
+
     for (let i = 0; i < 12; i++) { // 0..11
       let classNames = [Unit.MONTH]
       if(viewDate && viewDate.month() === i) classNames.push(ClassName.FOCUSED)
@@ -268,10 +223,59 @@ const Renderer = class extends Base {
       let date = this.dp.newMoment().month(i).startOf('month')
       html += this.config.template.renderMonth(date, classNames)
     }
-    this.$picker.find(`${Selector.MONTHS} td`).html(html)
+
+    $view.find(`td`).html(html)
+    $view.find(Selector.SWITCH).text(year)
+    let $months = $view.find(Selector.MONTH)
+
+    for (let d of this.dp.dates.array) {
+      if (d.year() === year) {
+        $months.eq(d.month()).addClass(ClassName.ACTIVE)
+      }
+    }
+
+    if (year < startYear || year > endYear) {
+      $months.addClass(ClassName.DISABLED)
+    }
+    if (year === startYear) {
+      $months.slice(0, startMonth).addClass(ClassName.DISABLED)
+    }
+    if (year === endYear) {
+      $months.slice(endMonth + 1).addClass(ClassName.DISABLED)
+    }
+
+
+    /*
+     A function that takes a date as a parameter and returns one of the following values:
+
+     - undefined to have no effect
+     - An object with the following properties:
+     disabled: A Boolean, indicating whether or not this date is disabled
+     classes: A String representing additional CSS classes to apply to the date’s cell
+     tooltip: A tooltip to apply to this date, via the title HTML attribute
+     */
+    if (this.config.beforeShowMonth !== undefined) {
+      for (let month of $months) {
+        let $month = $(month)
+        let m = this.dp.newMoment($month.data(Data.MOMENT))
+        let before = this.config.beforeShowMonth(m)
+        if (before === undefined) {
+          before = {}
+        }
+        if (before.disabled === true) {
+          $month.addClass(ClassName.DISABLED)
+        }
+        if (before.classes) {
+          $month.addClass(before.classes)
+        }
+        if (before.tooltip) {
+          $month.prop('title', before.tooltip)
+        }
+      }
+    }
   }
 
-  fillYearsView(selector, cssClass, factor, step, currentYear, startYear, endYear, callback) {
+  renderYearsView(selector, cssClass, factor, step, currentYear, startYear, endYear, callback) {
     let html = ''
     let $view = this.$picker.find(selector)
     let currentYearFactored = parseInt(currentYear / factor, 10) * factor

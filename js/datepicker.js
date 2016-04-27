@@ -332,7 +332,7 @@ const Datepicker = (($) => {
       this.$input.val(this.getDateFormatted())
 
       // re-render the element
-      this.renderer.fill()
+      this.renderer.render()
 
       // fire the date change
       this.eventManager.trigger(Event.DATE_CHANGE)
@@ -447,7 +447,7 @@ const Datepicker = (($) => {
      */
     setRange(range) {
       this.range = range
-      this.renderer.fill();
+      this.renderer.render();
     }
 
     // ------------------------------------------------------------------------

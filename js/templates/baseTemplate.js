@@ -45,6 +45,10 @@ const BaseTemplate = class extends Base {
       .replace(/%arrow\.right%/g, this.config.arrow.right || '')
   }
 
+  getDaySwitchFormat() {
+    return `ddd, MMM D` // Thu, Apr 13
+  }
+
   /**
    *
    * @param date

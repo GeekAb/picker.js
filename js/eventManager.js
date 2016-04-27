@@ -128,7 +128,7 @@ const EventManager = class extends Base {
       this.trigger(Event[`${unit.toUpperCase()}_CHANGE`])
 
       // set view date but don't select it using one of the #update methods
-      this.renderer.fill()
+      this.renderer.render()
     }
     // --------------------------
     // Clicked on today button
@@ -297,7 +297,7 @@ const EventManager = class extends Base {
         // now move the available date and render (highlight the moved date)
         if (unit) {
           this.lastKeyboardFocusDate = this.dp.viewDate = this.dp.moveAvailableDate(focusDate, direction, unit)
-          this.renderer.fill()
+          this.renderer.render()
 
           this.trigger(Event[`${unit.toUpperCase()}_CHANGE`])
           ev.preventDefault()

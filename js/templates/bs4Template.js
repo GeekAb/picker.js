@@ -1,5 +1,5 @@
 import BS3Template from './bs3Template'
-import {ClassName} from './../constants'
+// import {ClassName} from './../constants'
 
 /**
  * Eventually we will probably be rendering different markup...
