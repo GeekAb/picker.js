@@ -178,14 +178,6 @@
       background: $gray-lighter;
     }
   }
-
-  // Basic styling for calendar-week cells
-  .cw {
-    width: 12px;
-    padding: 0 2px 0 5px;
-    font-size: 10px;
-    vertical-align: middle;
-  }
 }
 
 // NOTE: we should try not to have side-effects outside of our datepicker hierarchy

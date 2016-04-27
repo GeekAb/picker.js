@@ -197,41 +197,4 @@
       background: $gray-lighter;
     }
   }
-
-  // Basic styling for calendar-week cells
-  .cw {
-    width: 12px;
-    padding: 0 2px 0 5px;
-    font-size: 10px;
-    vertical-align: middle;
-  }
 }
-
-// NOTE: we should try not to have side-effects outside of our datepicker hierarchy
-
-//.input-group.date .input-group-addon {
-//  cursor: pointer;
-//}
-//
-//.input-daterange {
-//  width: 100%;
-//  input {
-//    text-align: center;
-//  }
-//  input:first-child {
-//    border-radius: 3px 0 0 3px;
-//  }
-//  input:last-child {
-//    border-radius: 0 3px 3px 0;
-//  }
-//  .input-group-addon {
-//    width: auto;
-//    min-width: 16px;
-//    padding: 4px 5px;
-//    margin-right: -5px;
-//    margin-left: -5px;
-//    line-height: $line-height-base;
-//    text-shadow: 0 1px 0 #fff;
-//    border-width: 1px 0;
-//  }
-//}
