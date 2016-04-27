@@ -42,7 +42,9 @@ const Datepicker = (($) => {
     rtl: false,
     enableOnReadonly: true, // If false the datepicker will not show on a readonly datepicker field
     showOnFocus: true, // If false, the datepicker will be prevented from showing when the input field associated with it receives focus
-    title: '', // string that will appear on top of the datepicker. If empty the title will be hidden.
+    label: {
+      title: undefined // string that will appear on top of the datepicker. Some templates do not have a position for title.
+    },
 
     //-----------------
     // view types:

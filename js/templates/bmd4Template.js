@@ -37,8 +37,8 @@ const BMD4Template = class extends BaseTemplate {
   generateView(className) {
     let html = `<div class="card ${className} ${ClassName.VIEW}">
       <div class="card-header">
-        <div class="card-text">xxx2017</div>
-        <h2 class="card-title">xxxThu, Apr 13</h2>
+        <div class="card-text ${ClassName.LABEL_YEAR}"></div>
+        <h2 class="card-title ${ClassName.LABEL_DATE}"></h2>
       </div>
     
       <div class="card-block">

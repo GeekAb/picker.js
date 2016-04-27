@@ -19,9 +19,6 @@ const Renderer = class extends Base {
 
     this.renderDaysViewDOW()
     this.renderButtons()
-
-    // title text
-    this.$picker.find(`${Selector.TITLE}`).text(this.config.title).toggle(this.config.title !== '')
   }
 
   dispose() {
@@ -33,6 +30,10 @@ const Renderer = class extends Base {
 
   render() {
     let viewDate = this.dp.viewDate.clone().local()
+    // title text
+    this.$picker.find(`${Selector.LABEL_TITLE}`).text(this.config.title).toggle(this.config.label.title !== undefined)
+    this.$picker.find(`${Selector.LABEL_YEAR}`).text(this.config.template.formatLabelYear(viewDate))
+    this.$picker.find(`${Selector.LABEL_DATE}`).text(this.config.template.formatLabelDate(viewDate))
 
     this.updateNavArrows(viewDate)
     this.renderMonthsView(viewDate)
@@ -170,7 +171,7 @@ const Renderer = class extends Base {
     $view.find(`tbody`).empty().append(html.join(''))
 
     // render switch text e.g. Thu, Apr 13
-    $view.find(`${Selector.SWITCH}`).text(this.dp.formatDate(viewDate, this.config.template.getDaySwitchFormat()))
+    $view.find(`${Selector.SWITCH}`).text(this.config.template.formatDaySwitch(viewDate))
   }
 
   renderDay(viewDate, date, html) {

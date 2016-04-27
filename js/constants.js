@@ -71,11 +71,14 @@ export const ClassName = {
   CANCEL: `cancel`,
   OK: `ok`,
 
+  // labels for replacement of text
+  LABEL_YEAR: `label-year`,
+  LABEL_DATE: `label-date`,
+  LABEL_TITLE: `title`,
 
   POPPER: `popper`,
 
 
-  TITLE: `title`,
   SWITCH: `switch`,
 
   INLINE: `inline`,
@@ -109,11 +112,14 @@ export const Selector = {
   CANCEL: `.${ClassName.CANCEL}`,
   OK: `.${ClassName.OK}`,
 
+  // labels for replacement of text
+  LABEL_YEAR: `.${ClassName.LABEL_YEAR}`,
+  LABEL_DATE: `.${ClassName.LABEL_DATE}`,
+  LABEL_TITLE: `.${ClassName.LABEL_TITLE}`,
 
   PREV: `.${ClassName.PREV}`,
   NEXT: `.${ClassName.NEXT}`,
 
-  TITLE: `.${ClassName.TITLE}`,
   SWITCH: `.${ClassName.SWITCH}`,
   POPPER: `.${ClassName.POPPER}`,
 

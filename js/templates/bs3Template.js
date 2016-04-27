@@ -30,7 +30,7 @@ const BS3Template = class extends BaseTemplate {
     <table>
       <thead>
         <tr>
-          <th colspan="7" class="${ClassName.TITLE}"></th>
+          <th colspan="7" class="${ClassName.LABEL_TITLE}"></th>
         </tr>
         <tr>
           <th class="${ClassName.PREV}">%arrow.left%</th>
