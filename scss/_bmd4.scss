@@ -1,185 +1,104 @@
+@import "common";
+
 // Separate this file to allow for direct integration by applications with their own variables
+// Spec: https://www.google.com/design/spec/components/pickers.html#pickers-date-pickers
 .datepicker {
-  top: 0;
-  left: 0;
-  padding: 4px;
-  border-radius: $border-radius;
+  padding: .25rem;
 
   &.inline {
-    width: 220px;
+    width: 13.75rem;
   }
-  direction: ltr;
   &.rtl {
     direction: rtl;
     table tr td span {
-      float: right;
+      float: right; // this may need to be flexed instead
     }
-  }
-  > div {
-    display: none;
   }
   table {
-    margin: 0;
-    user-select: none;
     tr {
       td, th {
-        width: 30px;
-        height: 30px;
+        width: 2rem;
+        height: 2rem;
         text-align: center;
         border: 0;
-        border-radius: 4px;
+        border-radius: $border-radius;
       }
-    }
-  }
-  // Inline display inside a table presents some problems with
-  // border and background colors.
-  .table-striped & table tr {
-    td, th {
-      background-color: transparent;
-    }
-  }
-  table tr td {
-    &.old,
-    &.new {
-      color: $btn-link-disabled-color;
-    }
-
-    .bmd-btn-icon {
-      font-size: .875rem;
-      font-weight: normal;
-    }
-
-    &.focused .bmd-btn-icon {
-      color: $bmd-btn-bg;
-      background-color: $bmd-btn-focus-bg;
-      border-color: $bmd-btn-focus-bg;
-      //transition: background-color 0.2s $bmd-animation-curve-default; //since fill rewrites html - this has no effect
-    }
-
-    &.active .bmd-btn-icon {
-      color: $btn-primary-color;
-      background-color: $btn-primary-bg;
-      border-color: $btn-primary-border;
-    }
-
-    //&.day:hover,
-    //&.focused {
-    //  cursor: pointer;
-    //  background: $gray-lighter;
-    //}
-    //&.disabled,
-    //&.disabled:hover {
-    //  color: $btn-link-disabled-color;
-    //  cursor: default;
-    //  background: none;
-    //}
-    //&.highlighted {
-    //  $highlighted-bg: $state-info-bg;
-    //  @include button-variant(#000, $highlighted-bg, darken($highlighted-bg, 20%));
-    //  border-radius: 0;
-    //
-    //  &.focused {
-    //    background: darken($highlighted-bg, 10%);
-    //  }
-    //
-    //  &.disabled,
-    //  &.disabled:active {
-    //    color: $btn-link-disabled-color;
-    //    background: $highlighted-bg;
-    //  }
-    //}
-    //&.today {
-    //  $today-bg: lighten(#ffa500, 30%); //orange
-    //  @include button-variant(#000, $today-bg, darken($today-bg, 20%));
-    //
-    //  &.focused {
-    //    background: darken($today-bg, 10%);
-    //  }
-    //
-    //  &.disabled,
-    //  &.disabled:active {
-    //    color: $btn-link-disabled-color;
-    //    background: $today-bg;
-    //  }
-    //}
-    //&.range {
-    //  $range-bg: $gray-lighter;
-    //  @include button-variant(#000, $range-bg, darken($range-bg, 20%));
-    //  border-radius: 0;
-    //
-    //  &.focused {
-    //    background: darken($range-bg, 10%);
-    //  }
-    //
-    //  &.disabled,
-    //  &.disabled:active {
-    //    color: $btn-link-disabled-color;
-    //    background: $range-bg;
-    //  }
-    //}
-    //&.range.highlighted {
-    //  $range-highlighted-bg: mix($state-info-bg, $gray-lighter, 50%);
-    //  @include button-variant(#000, $range-highlighted-bg, darken($range-highlighted-bg, 20%));
-    //
-    //  &.focused {
-    //    background: darken($range-highlighted-bg, 10%);
-    //  }
-    //
-    //  &.disabled,
-    //  &.disabled:active {
-    //    color: $btn-link-disabled-color;
-    //    background: $range-highlighted-bg;
-    //  }
-    //}
-    //&.range.today {
-    //  $range-today-bg: mix(#ffa500, $gray-lighter, 50%); // orange
-    //  @include button-variant(#000, $range-today-bg, darken($range-today-bg, 20%));
-    //
-    //  &.disabled,
-    //  &.disabled:active {
-    //    color: $btn-link-disabled-color;
-    //    background: $range-today-bg;
-    //  }
-    //}
-    //&.selected,
-    //&.selected.highlighted {
-    //  @include button-variant(#fff, $gray-light, $gray);
-    //  text-shadow: 0 -1px 0 rgba(0, 0, 0, .25);
-    //}
-    //&.active,
-    //&.active.highlighted {
-    //  @include button-variant($btn-primary-color, $btn-primary-bg, $btn-primary-border);
-    //  text-shadow: 0 -1px 0 rgba(0, 0, 0, .25);
-    //}
-    span {
-      display: block;
-      float: left;
-      width: 23%;
-      height: 54px;
-      margin: 1%;
-      line-height: 54px;
-      cursor: pointer;
-      border-radius: 4px;
-      &:hover,
-      &.focused {
-        background: $gray-lighter;
+      th.dow {
+        font-size: .875rem;
+        color: $gray-light;
+        &.disabled {
+          color: $gray-lighter;
+        }
       }
-      &.disabled,
-      &.disabled:hover {
-        color: $btn-link-disabled-color;
-        cursor: default;
-        background: none;
-      }
-      &.active,
-      &.active:hover,
-      &.active.disabled,
-      &.active.disabled:hover {
-        @include button-variant($btn-primary-color, $btn-primary-bg, $btn-primary-border);
-        text-shadow: 0 -1px 0 rgba(0, 0, 0, .25);
-      }
-      &.old,
-      &.new {
-        color: $btn-link-disabled-color;
+      td {
+        &.old,
+        &.new {
+          // spec: hides dates from other months
+          visibility: hidden;
+        }
+
+        .bmd-btn-icon {
+          font-size: .875rem;
+          font-weight: normal;
+        }
+
+        &.focused .bmd-btn-icon {
+          color: $bmd-btn-bg;
+          background-color: $bmd-btn-focus-bg;
+          border-color: $bmd-btn-focus-bg;
+        }
+
+        &.highlighted .bmd-btn-icon {
+          //color: $btn-info-color;
+          //background-color: $btn-info-bg;
+          //border-color: $btn-info-border;
+          color: $btn-info-bg;
+        }
+
+        &.active {
+          &, &.highlighted {
+            .bmd-btn-icon {
+              color: $btn-primary-color;
+              background-color: $btn-primary-bg;
+              border-color: $btn-primary-border;
+            }
+          }
+        }
+
+        //&.today {}
+
+        // these appear to be months and years
+        span {
+          display: block;
+          float: left;
+          width: 23%;
+          height: 54px;
+          margin: 1%;
+          line-height: 54px;
+          cursor: pointer;
+          border-radius: $border-radius;
+          &:hover,
+          &.focused {
+            background: $gray-lighter;
+          }
+          &.disabled,
+          &.disabled:hover {
+            color: $btn-link-disabled-color;
+            cursor: default;
+            background: none;
+          }
+          &.active,
+          &.active:hover,
+          &.active.disabled,
+          &.active.disabled:hover {
+            @include button-variant($btn-primary-color, $btn-primary-bg, $btn-primary-border);
+            text-shadow: 0 -1px 0 rgba(0, 0, 0, .25);
+          }
+          &.old,
+          &.new {
+            color: $btn-link-disabled-color;
+          }
+        }
       }
     }
   }
