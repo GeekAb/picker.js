@@ -44,11 +44,23 @@
       color: $btn-link-disabled-color;
     }
 
-    .bmd-btn-icon-sm {
+    .bmd-btn-icon {
       font-size: .875rem;
+      font-weight: normal;
     }
 
+    &.focused .bmd-btn-icon {
+      color: $bmd-btn-bg;
+      background-color: $bmd-btn-focus-bg;
+      border-color: $bmd-btn-focus-bg;
+      //transition: background-color 0.2s $bmd-animation-curve-default; //since fill rewrites html - this has no effect
+    }
 
+    &.active .bmd-btn-icon {
+      color: $btn-primary-color;
+      background-color: $btn-primary-bg;
+      border-color: $btn-primary-border;
+    }
 
     //&.day:hover,
     //&.focused {

@@ -26,7 +26,7 @@ const BMD4Template = class extends BS4Template {
   renderDayContent(date, classNames){
     // return `<span>${date.date()}</span>`
     // return date.date()
-    return `<button class="btn bmd-btn-icon bmd-btn-icon-sm">${date.date()}</button>`
+    return `<button class="btn bmd-btn-icon">${date.date()}</button>`
   }
 }
 
