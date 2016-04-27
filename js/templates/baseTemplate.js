@@ -49,6 +49,14 @@ const BaseTemplate = class extends Base {
     return `ddd, MMM D` // Thu, Apr 13
   }
 
+  getDayOfWeekFormat() {
+    return 'dd' // Su Mo Tu We Th Fr Sa
+  }
+
+  formatDayOfWeek(date){
+    return date.format(this.getDayOfWeekFormat())
+  }
+
   /**
    *
    * @param date

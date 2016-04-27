@@ -21,6 +21,19 @@ const BMD4Template = class extends BaseTemplate {
     super(Default, ...configs)
   }
 
+  getDaySwitchFormat() {
+    return `MMMM YYYY` // April 2016
+  }
+
+  /**
+   * Unfortunately moment doesn't have the format we want, so we have to hack it directly
+   * @param date
+   * @returns string
+   */
+  formatDayOfWeek(date){
+    return super.formatDayOfWeek(date)[0] // S M T W T F S
+  }
+
   generateView(className) {
     let html = `<div class="card ${className} ${ClassName.VIEW}">
       <div class="card-header">

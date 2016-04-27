@@ -132,13 +132,14 @@ const Renderer = class extends Base {
     let html = '<tr>'
     while (dowCnt < this.config.week.start + 7) {
       let disabledClass = ($.inArray(dowCnt, this.config.daysOfWeek.disabled) > -1) ? ClassName.DISABLED : ''
-      html += `<th class="${ClassName.DOW} ${disabledClass}">${this.dp.newMoment().day((dowCnt++) % 7).format('dd')}</th>`
+      let date = this.dp.newMoment().day((dowCnt++) % 7)
+      html += `<th class="${ClassName.DOW} ${disabledClass}">${this.config.template.formatDayOfWeek(date)}</th>`
     }
     html += '</tr>'
     this.$picker.find(`${Selector.DAYS} thead`).append(html)
   }
 
-  renderButtons(){
+  renderButtons() {
     // today button text
     this.$picker.find(Selector.TODAY).text(this.i18n('today')).toggle(this.config.button.today !== false)
     // clear button text
@@ -225,7 +226,7 @@ const Renderer = class extends Base {
 
     for (let i = 0; i < 12; i++) { // 0..11
       let classNames = [Unit.MONTH]
-      if(viewDate && viewDate.month() === i) classNames.push(ClassName.FOCUSED)
+      if (viewDate && viewDate.month() === i) classNames.push(ClassName.FOCUSED)
 
       let date = this.dp.newMoment().month(i).startOf('month')
       html += this.config.template.renderMonth(date, classNames)
