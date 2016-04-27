@@ -101,13 +101,10 @@ const EventManager = class extends Base {
     ev.preventDefault()
     ev.stopPropagation()
 
+    // if mouse is used - clear out any old state from keyboard navigation
+    this.lastKeyboardFocusDate = null
+
     let $target = $(ev.target)
-
-    // target may be markup inside the td, find the one with the data-moment
-    while ($target != null && !$target.data(Data.MOMENT)) {
-      $target = $target.parent()
-    }
-
     let $navArrow = $target.closest(`${Selector.PREV}, ${Selector.NEXT}`)
 
     // --------------------------
@@ -144,56 +141,66 @@ const EventManager = class extends Base {
     else if ($target.hasClass(ClassName.CLEAR)) {
       this.dp.clearDates()
     }
-    else if (!$target.hasClass(ClassName.DISABLED)) {
-      // --------------------------
-      // Clicked on a day
-      if ($target.hasClass(Unit.DAY)) {
-        let origViewDate = this.dp.viewDate.clone()
-        let m = this.dp.newMoment($target.data(Data.MOMENT))
-        this.dp.updateMultidateOrToggle(m)
-        if (origViewDate.year() != m.year()) {
-          this.trigger(Event.YEAR_CHANGE, m)
-        }
-        if (origViewDate.month() != m.month()) {
-          this.trigger(Event.MONTH_CHANGE, m)
-        }
-      }
-      // --------------------------
-      // Clicked on a month
-      if ($target.hasClass(Unit.MONTH)) {
-        let month = $target.parent().find('span').index($target)
-        this.dp.updateMultidateOrToggle(this.dp.viewDate.clone().month(month))
-        this.trigger(Event.MONTH_CHANGE)
-        if (this.config.view.min === View.MONTHS) {
-          this.dp.showView()
-        }
-        else {
-          this.dp.showView(View.DAYS)
-        }
-      }
-      // --------------------------
-      // Clicked on a year|decade|century
-      if ($target.hasClass(Unit.YEAR)
-        || $target.hasClass(Unit.DECADE)
-        || $target.hasClass(Unit.CENTURY)) {
+    else {
+      // Getting here means it was not a button
 
-        let year = parseInt($target.text(), 10) || 0
-        let unit
-        if ($target.hasClass(Unit.YEAR)) {
-          unit = Unit.YEAR
-        }
-        if ($target.hasClass(Unit.DECADE)) {
-          unit = Unit.DECADE
-        }
-        if ($target.hasClass(Unit.CENTURY)) {
-          unit = Unit.CENTURY
-        }
+      // Target may be markup inside the td, find the one with the data-moment
+      while ($target != null && $target[0].localName != 'body' && !$target.data(Data.MOMENT)) {
+        $target = $target.parent()
+      }
 
-        this.dp.updateMultidateOrToggle(this.dp.viewDate.clone().year(year))
-        if (unit) {
-          this.trigger(Event[`${unit.toUpperCase()}_CHANGE`])
+      if (!$target.hasClass(ClassName.DISABLED)) {
+
+        // --------------------------
+        // Clicked on a day
+        if ($target.hasClass(Unit.DAY)) {
+          let origViewDate = this.dp.viewDate.clone()
+          let m = this.dp.newMoment($target.data(Data.MOMENT))
+          this.dp.updateMultidateOrToggle(m)
+          if (origViewDate.year() != m.year()) {
+            this.trigger(Event.YEAR_CHANGE, m)
+          }
+          if (origViewDate.month() != m.month()) {
+            this.trigger(Event.MONTH_CHANGE, m)
+          }
         }
-        this.dp.changeView(-1)
+        // --------------------------
+        // Clicked on a month
+        if ($target.hasClass(Unit.MONTH)) {
+          let month = $target.parent().find('span').index($target)
+          this.dp.updateMultidateOrToggle(this.dp.viewDate.clone().month(month))
+          this.trigger(Event.MONTH_CHANGE)
+          if (this.config.view.min === View.MONTHS) {
+            this.dp.showView()
+          }
+          else {
+            this.dp.showView(View.DAYS)
+          }
+        }
+        // --------------------------
+        // Clicked on a year|decade|century
+        if ($target.hasClass(Unit.YEAR)
+          || $target.hasClass(Unit.DECADE)
+          || $target.hasClass(Unit.CENTURY)) {
+
+          let year = parseInt($target.text(), 10) || 0
+          let unit
+          if ($target.hasClass(Unit.YEAR)) {
+            unit = Unit.YEAR
+          }
+          if ($target.hasClass(Unit.DECADE)) {
+            unit = Unit.DECADE
+          }
+          if ($target.hasClass(Unit.CENTURY)) {
+            unit = Unit.CENTURY
+          }
+
+          this.dp.updateMultidateOrToggle(this.dp.viewDate.clone().year(year))
+          if (unit) {
+            this.trigger(Event[`${unit.toUpperCase()}_CHANGE`])
+          }
+          this.dp.changeView(-1)
+        }
       }
     }
   }
