@@ -103,8 +103,11 @@ export const Selector = {
   OLD: `.${ClassName.OLD}`,
   NEW: `.${ClassName.NEW}`,
 
+  // buttons
   TODAY: `.${ClassName.TODAY}`,
   CLEAR: `.${ClassName.CLEAR}`,
+  CANCEL: `.${ClassName.CANCEL}`,
+  OK: `.${ClassName.OK}`,
 
 
   PREV: `.${ClassName.PREV}`,

@@ -9,7 +9,7 @@ import extend from 'extend'
  * is any conflict in the deep merge.
  */
 const Preset = class {
-  static resolveByKey(config) {
+  static resolveTemplateConfig(config) {
     let p = config.preset.toLowerCase()
     let value
     switch (p) {
@@ -56,17 +56,24 @@ const Preset = class {
    * Helper to quickly resolve the config from preset based on the presetType
    *
    * @param preset
-   * @param configs - ordered set of overrides
+   * @param userConfigs - ordered set of overrides
    * @returns {source, watch, dest}
    */
-  static resolve(...configs) {
+  static resolve(...userConfigs) {
     // default preset is bs4
-    let config = extend(true, {preset: `bs4`}, ...configs)
+    let userConfig = extend(true, {preset: `bs4`}, ...userConfigs)
 
-    let presetConfig = this.resolveByKey(config)
+    let templateConfig = this.resolveTemplateConfig(userConfig)
+    let template = templateConfig.template
 
-    // presetConfig overrides user config because it converts a potential string template into a StringTemplate class
-    let resolved = extend(true, {}, config, presetConfig)
+    // get a copy of the template config
+    let templateOverrides = extend(true, {}, template.config)
+    // whack the markup key so that we don't include giant templates in our config
+    templateOverrides.markup = undefined
+
+    // Template (object) config overrides userConfig - it converts config to a Template class.
+    // We also gather any Template config and add it, but any userConfig can override it.
+    let resolved = extend(true, {}, templateOverrides, userConfig, templateConfig)
 
     if (!resolved.template) {
       throw new Error(`'template' must be either a Template class or a String`)

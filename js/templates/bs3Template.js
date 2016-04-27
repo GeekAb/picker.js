@@ -10,9 +10,12 @@ import {ClassName} from './../constants'
  *
  */
 const Default = {
-  arrow: {
-    left: `&laquo;`,
-    right: `&raquo;`
+  // keep templates under the markup key so they can be whacked and not included in the general config overrides
+  markup: {
+    arrow: {
+      left: `&laquo;`,
+      right: `&raquo;`
+    }
   }
 }
 

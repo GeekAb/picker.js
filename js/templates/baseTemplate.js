@@ -41,8 +41,8 @@ const BaseTemplate = class extends Base {
       // .replace(/%header%/g, this.config.header)
       // .replace(/%body%/g, this.config.body)
       // .replace(/%footer%/g, this.config.footer)
-      .replace(/%arrow\.left%/g, this.config.arrow.left || '')
-      .replace(/%arrow\.right%/g, this.config.arrow.right || '')
+      .replace(/%arrow\.left%/g, this.config.markup.arrow.left || '')
+      .replace(/%arrow\.right%/g, this.config.markup.arrow.right || '')
   }
 
   getDaySwitchFormat() {

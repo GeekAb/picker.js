@@ -1,119 +1,150 @@
 @import "common";
 
-// Separate this file to allow for direct integration by applications with their own variables
-// Spec: https://www.google.com/design/spec/components/pickers.html#pickers-date-pickers
+$number-size: .75rem;
+$number-weight: 500;
+
+$fab-icon-size: 2.375rem;
+
+//$black: #000;
+//$border-radius: .125rem !default;
+//$gray-lighter: rgba($black, 0.12) !default;
+//$gray-light: rgba($black, 0.26) !default;
+//$gray: rgba($black, .54) !default; // spec color
+//$gray-dark: rgba($black, 0.87) !default; // used
+//$bmd-btn-bg: inherit !default;
+//$bmd-btn-focus-bg: rgba(#999, .20) !default;
+//$light-blue-500: #03a9f4 !default;
+//$teal-500: #009688 !default;
+//$btn-info-bg: $light-blue-500;
+//$brand-primary: $teal-500;
+//$btn-primary-color: #fff !default;
+//$btn-primary-bg: $brand-primary !default;
+//$btn-primary-border: $btn-primary-bg !default;
+//$btn-link-disabled-color: $gray-light !default;
+
 .datepicker {
-  padding: .25rem;
-
-  &.inline {
-    width: 13.75rem;
-  }
-  &.rtl {
-    direction: rtl;
-    table tr td span {
-      float: right; // this may need to be flexed instead
+  .card.view {
+    width: 20.5625rem; // needed?
+    .btn {
+      margin-bottom: 0;
     }
-  }
-  table {
-    tr {
-      td, th {
-        width: 2rem;
-        height: 2rem;
-        text-align: center;
-        border: 0;
-        border-radius: $border-radius;
+
+    // Header with the year and date
+    .card-header {
+      color: #fff;
+      background-color: $brand-primary;
+      .card-text {
+        margin-bottom: .325rem;
       }
-      th.dow {
-        font-size: .875rem;
-        color: $gray-light;
-        &.disabled {
-          color: $gray-lighter;
+
+      .card-title {
+        margin-bottom: 0;
+        font-size: 2rem;
+        //font-weight: 300;
+      }
+    }
+
+    // Content
+    .card-block {
+      padding-top: .5rem;
+      padding-bottom: .5rem;
+
+      // Arrows and Switch
+      .card-title {
+        display: flex;
+        align-items: center; // vertical
+        margin-bottom: 0;
+        .prev, .next {
+          padding-right: 0;
+          padding-left: 0;
+          color: $gray;
+        }
+        .prev {
+          margin-right: auto;
+        }
+        .switch {
+          color: $gray-dark;
+          text-transform: none;
+        }
+        .next {
+          margin-left: auto;
         }
       }
-      td {
-        &.old,
-        &.new {
-          // spec: hides dates from other months
-          visibility: hidden;
-        }
 
-        .bmd-btn-icon {
-          font-size: .875rem;
-          font-weight: normal;
-        }
+      // Calendar or months etc
+      .card-text {
+        display: flex;
+        justify-content: center;
+        table {
+          //border: 1px solid red;
+          tr {
+            td, th {
+              width: 3rem;
+              height: 2.5rem;
+              text-align: center;
+              //border: 0;
+              //border-radius: $border-radius;
+            }
+            th.dow {
+              font-size: $number-size;
+              font-weight: $number-weight;
+              color: $gray;
+              &.disabled {
+                color: $gray-light;
+              }
+            }
+            td {
+              &.old,
+              &.new {
+                // spec: hides dates from other months
+                visibility: hidden;
+              }
 
-        &.focused .bmd-btn-icon {
-          color: $bmd-btn-bg;
-          background-color: $bmd-btn-focus-bg;
-          border-color: $bmd-btn-focus-bg;
-        }
+              .bmd-btn-icon {
+                width: $fab-icon-size;
+                min-width: $fab-icon-size;
+                height: $fab-icon-size;
+                font-size: $number-size;
+                font-weight: $number-weight;
+              }
 
-        &.highlighted .bmd-btn-icon {
-          //color: $btn-info-color;
-          //background-color: $btn-info-bg;
-          //border-color: $btn-info-border;
-          color: $btn-info-bg;
-        }
+              &.focused .bmd-btn-icon {
+                color: $bmd-btn-bg;
+                background-color: $bmd-btn-focus-bg;
+                border-color: $bmd-btn-focus-bg;
+              }
 
-        &.active {
-          &, &.highlighted {
-            .bmd-btn-icon {
-              color: $btn-primary-color;
-              background-color: $btn-primary-bg;
-              border-color: $btn-primary-border;
+              &.highlighted .bmd-btn-icon {
+                //color: $btn-info-color;
+                //background-color: $btn-info-bg;
+                //border-color: $btn-info-border;
+                color: $btn-info-bg;
+              }
+
+              &.today .bmd-btn-icon {
+                font-weight: 600;
+                color: $brand-primary;
+              }
+
+              &.active {
+                &, &.highlighted {
+                  .bmd-btn-icon {
+                    color: $btn-primary-color;
+                    background-color: $btn-primary-bg;
+                    border-color: $btn-primary-border;
+                  }
+                }
+              }
             }
           }
         }
-
-        //&.today {}
-
-        // these appear to be months and years
-        span {
-          display: block;
-          float: left;
-          width: 23%;
-          height: 54px;
-          margin: 1%;
-          line-height: 54px;
-          cursor: pointer;
-          border-radius: $border-radius;
-          &:hover,
-          &.focused {
-            background: $gray-lighter;
-          }
-          &.disabled,
-          &.disabled:hover {
-            color: $btn-link-disabled-color;
-            cursor: default;
-            background: none;
-          }
-          &.active,
-          &.active:hover,
-          &.active.disabled,
-          &.active.disabled:hover {
-            @include button-variant($btn-primary-color, $btn-primary-bg, $btn-primary-border);
-            text-shadow: 0 -1px 0 rgba(0, 0, 0, .25);
-          }
-          &.old,
-          &.new {
-            color: $btn-link-disabled-color;
-          }
-        }
       }
     }
-  }
 
-  .switch {
-    width: 145px;
-  }
-
-  .switch,
-  .prev,
-  .next,
-  tfoot tr th {
-    cursor: pointer;
-    &:hover {
-      background: $gray-lighter;
+    .card-footer {
+      display: flex;
+      justify-content: flex-end;
+      box-shadow: none;
     }
   }
 }
