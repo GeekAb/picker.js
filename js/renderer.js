@@ -17,7 +17,11 @@ const Renderer = class extends Base {
       this.$picker.addClass(ClassName.RTL)
     }
 
-    this.renderDaysViewOfWeekHeader()
+    this.renderDaysViewDOW()
+    this.renderButtons()
+
+    // title text
+    this.$picker.find(`${Selector.TITLE}`).text(this.config.title).toggle(this.config.title !== '')
   }
 
   dispose() {
@@ -29,13 +33,6 @@ const Renderer = class extends Base {
 
   render() {
     let viewDate = this.dp.viewDate.clone().local()
-
-    // today button text
-    this.$picker.find(Selector.TODAY).text(this.i18n('today')).toggle(this.config.today.button !== false)
-    // clear button text
-    this.$picker.find(Selector.CLEAR).text(this.i18n('clear')).toggle(this.config.clear.button !== false)
-    // title text
-    this.$picker.find(`${Selector.TITLE}`).text(this.config.title).toggle(this.config.title !== '')
 
     this.updateNavArrows(viewDate)
     this.renderMonthsView(viewDate)
@@ -81,29 +78,6 @@ const Renderer = class extends Base {
       endYear,
       this.config.beforeShowCentury
     )
-  }
-
-  renderDaysView(viewDate) {
-    // get prevMonth moment set to same day of the week
-    let prevMonth = viewDate.clone().startOf(Unit.MONTH).subtract(1, 'day') // end of last month
-    prevMonth.day(prevMonth.day() - (prevMonth.day() - this.config.week.start + 7) % 7) // set day of week
-
-    // TODO: not sure why 42 days is added (yet)...
-    let nextMonth = prevMonth.clone().add(42, 'days')
-
-    let html = []
-    while (prevMonth.isBefore(nextMonth)) {
-      this.renderDay(viewDate, prevMonth, html)
-      prevMonth.add(1, 'days')
-    }
-
-    let $view = this.$picker.find(`${Selector.DAYS}`)
-
-    // attach new days content
-    $view.find(`tbody`).empty().append(html.join(''))
-
-    // render switch text e.g. Thu, Apr 13
-    $view.find(`${Selector.SWITCH}`).text(this.dp.formatDate(viewDate, this.config.template.getDaySwitchFormat()))
   }
 
   // called publicly from dp#changeView
@@ -153,8 +127,7 @@ const Renderer = class extends Base {
 
   // ------------------------------------------------------------------------
   // private
-
-  renderDaysViewOfWeekHeader() {
+  renderDaysViewDOW() {
     let dowCnt = this.config.week.start
     let html = '<tr>'
     while (dowCnt < this.config.week.start + 7) {
@@ -163,6 +136,40 @@ const Renderer = class extends Base {
     }
     html += '</tr>'
     this.$picker.find(`${Selector.DAYS} thead`).append(html)
+  }
+
+  renderButtons(){
+    // today button text
+    this.$picker.find(Selector.TODAY).text(this.i18n('today')).toggle(this.config.button.today !== false)
+    // clear button text
+    this.$picker.find(Selector.CLEAR).text(this.i18n('clear')).toggle(this.config.button.clear !== false)
+    // cancel button
+    this.$picker.find(Selector.CANCEL).text(this.i18n('cancel')).toggle(this.config.button.cancel !== false)
+    // ok button
+    this.$picker.find(Selector.OK).text(this.i18n('ok')).toggle(this.config.button.ok !== false)
+  }
+
+  renderDaysView(viewDate) {
+    // get prevMonth moment set to same day of the week
+    let prevMonth = viewDate.clone().startOf(Unit.MONTH).subtract(1, 'day') // end of last month
+    prevMonth.day(prevMonth.day() - (prevMonth.day() - this.config.week.start + 7) % 7) // set day of week
+
+    // TODO: not sure why 42 days is added (yet)...
+    let nextMonth = prevMonth.clone().add(42, 'days')
+
+    let html = []
+    while (prevMonth.isBefore(nextMonth)) {
+      this.renderDay(viewDate, prevMonth, html)
+      prevMonth.add(1, 'days')
+    }
+
+    let $view = this.$picker.find(`${Selector.DAYS}`)
+
+    // attach new days content
+    $view.find(`tbody`).empty().append(html.join(''))
+
+    // render switch text e.g. Thu, Apr 13
+    $view.find(`${Selector.SWITCH}`).text(this.dp.formatDate(viewDate, this.config.template.getDaySwitchFormat()))
   }
 
   renderDay(viewDate, date, html) {

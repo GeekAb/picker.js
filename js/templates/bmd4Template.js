@@ -2,6 +2,10 @@ import BaseTemplate from './baseTemplate'
 import {ClassName} from './../constants'
 
 const Default = {
+  button: {
+    cancel: true,
+    ok: true
+  },
   arrow: {
     left: `<i class="material-icons left-arrow">keyboard_arrow_left</i>`,
     right: `<i class="material-icons right-arrow">keyboard_arrow_right</i>`

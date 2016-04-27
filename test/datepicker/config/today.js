@@ -20,7 +20,7 @@ describe('Datepicker', () => {
 
       it(`should show when enabled`, () => {
         $input.datepicker({
-          today: {button: true}
+          button: {today: true}
         })
         assertData().show()
         assertVisible(Selector.DAYS)
@@ -39,7 +39,7 @@ describe('Datepicker', () => {
         $input.val(`2012-03-05`)
           .datepicker({
             format: YYYY_MM_DD,
-            today: {button: true}
+            button: {today: true}
           })
 
         let dp = assertData()

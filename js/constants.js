@@ -56,8 +56,6 @@ export const ClassName = {
   PREV: 'prev',
   NEXT: 'next',
   DOW: `dow`,
-  TODAY: `today`,
-  CLEAR: `clear`,
   SELECTED: `selected`,
   HIGHLIGHTED: `highlighted`,
   DISABLED: `disabled`,
@@ -66,6 +64,13 @@ export const ClassName = {
   NEW: `new`,
   OLD: `old`,
   VIEW: `view`,
+
+  // buttons
+  TODAY: `today`,
+  CLEAR: `clear`,
+  CANCEL: `cancel`,
+  OK: `ok`,
+
 
   POPPER: `popper`,
 

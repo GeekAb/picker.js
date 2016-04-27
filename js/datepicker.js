@@ -23,10 +23,17 @@ const Datepicker = (($) => {
     i18n: {
       en: {
         today: 'Today',
-        clear: 'Clear'
+        clear: 'Clear',
+        cancel: 'Cancel',
+        ok: 'Ok'
       }
     },
-
+    button: {
+      today: false, // If true, displays a “Today” button at the bottom of the datepicker to select the current date
+      clear: false,
+      cancel: false,
+      ok: false
+    },
     autoclose: false, // Whether or not to close the datepicker immediately when a date is selected
     keyboard: {
       navigation: true, // allow date navigation by arrow keys
@@ -36,12 +43,6 @@ const Datepicker = (($) => {
     enableOnReadonly: true, // If false the datepicker will not show on a readonly datepicker field
     showOnFocus: true, // If false, the datepicker will be prevented from showing when the input field associated with it receives focus
     title: '', // string that will appear on top of the datepicker. If empty the title will be hidden.
-    today: {
-      button: false // If true, displays a “Today” button at the bottom of the datepicker to select the current date
-    },
-    clear: {
-      button: false
-    },
 
     //-----------------
     // view types:
