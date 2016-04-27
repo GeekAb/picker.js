@@ -9,7 +9,6 @@ import {ClassName} from './../constants'
  * superclasses' partials.  Tokens are denoted by %% e.g. %header% will be replaced by config.header.
  *
  */
-
 const generateView = (className) => {
   return `<div class="${className}">
           <table>
@@ -60,11 +59,11 @@ const Default = {
   </div>`
 }
 
-const BS4Template = class extends BaseTemplate {
+const BS3Template = class extends BaseTemplate {
 
   constructor(...configs) {
     super(Default, ...configs)
   }
 }
 
-export default BS4Template
+export default BS3Template

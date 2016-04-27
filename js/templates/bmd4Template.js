@@ -3,8 +3,8 @@ import {ClassName} from './../constants'
 
 const Default = {
   arrow: {
-    left: `<i class="material-icons">keyboard_arrow_left</i>`,
-    right: `<i class="material-icons">keyboard_arrow_right</i>`
+    left: `<i class="material-icons left-arrow">keyboard_arrow_left</i>`,
+    right: `<i class="material-icons right-arrow">keyboard_arrow_right</i>`
   }
 }
 

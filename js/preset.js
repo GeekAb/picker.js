@@ -1,6 +1,6 @@
-import BaseTemplate from './templates/baseTemplate'
-import BMD4Template from './templates/bmd4Template'
+import BS3Template from './templates/bs4Template'
 import BS4Template from './templates/bs4Template'
+import BMD4Template from './templates/bmd4Template'
 import extend from 'extend'
 
 /**
@@ -15,7 +15,7 @@ const Preset = class {
       case 'bs3':
       {
         value = {
-          template: new BS4Template()
+          template: new BS3Template()
         }
         break
       }
