@@ -1,5 +1,5 @@
 import BS4Template from './bs4Template'
-//import {ClassName} from './../constants'
+import {ClassName} from './../constants'
 
 const Default = {
   arrow: {
@@ -13,10 +13,6 @@ const BMD4Template = class extends BS4Template {
     super(Default, ...configs)
   }
 
-  // addDayClasses(date, classNames){
-  //   classNames.push('btn bmd-btn-icon')
-  // }
-
   /**
    *
    * @param date
@@ -24,9 +20,11 @@ const BMD4Template = class extends BS4Template {
    * @returns {string}
    */
   renderDayContent(date, classNames){
-    // return `<span>${date.date()}</span>`
-    // return date.date()
-    return `<button class="btn bmd-btn-icon">${date.date()}</button>`
+    let classes = ['btn', 'bmd-btn-icon']
+    if(classNames.includes(ClassName.DISABLED)){
+      classes.push(ClassName.DISABLED)
+    }
+    return `<button class="${classes.join(' ')}">${date.date()}</button>`
   }
 }
 
