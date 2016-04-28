@@ -11,6 +11,10 @@ const Default = {
     max: 'years', // Set a maximum limit for the view mode
     disabled: ['months'] // Skip the month view
   },
+  keyboard: {
+    navigation: false, // disable so that all keys work in the input i.e. back arrow so they can type in a date or use the mouse.
+    touch: false // false will disable keyboard on mobile devices
+  },
   // keep templates under the markup key so they can be whacked and not included in the general config overrides
   markup: {
     arrow: {
