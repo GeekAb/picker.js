@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rosskevin/picker.js.git"
+    "url": "git+https://github.com/alienfast/picker.js.git"
   },
   "keywords": [
     "bootstrap",
@@ -20,9 +20,9 @@
   "author": "Kevin Ross <kevin.ross@alienfast.com> (https://github.com/rosskevin)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/rosskevin/picker.js/issues"
+    "url": "https://github.com/alienfast/picker.js/issues"
   },
-  "homepage": "https://github.com/rosskevin/picker.js#readme",
+  "homepage": "https://github.com/alienfast/picker.js#readme",
   "dependencies": {
     "babel-polyfill": "^6.7.4",
     "extend": "^3.0.0",
