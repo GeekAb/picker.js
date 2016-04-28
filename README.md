@@ -1,3 +1,5 @@
+[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url]
+
 # picker.js
 A picker for dates, date ranges, (and hopefully times) for multiple frameworks including Bootstrap 3, Bootstrap 4, and Material Design for Bootstrap 4
 
@@ -77,3 +79,9 @@ Open the `sandbox/index.html` or the `sandbox/test.html` in a browser and you sh
 - [bootstrap-datepicker original code](http://www.eyecon.ro/bootstrap-datepicker/) - Stefan Petre
 
 See [LICENSE](LICENSE.md)
+
+
+[npm-url]: https://www.npmjs.com/package/picker.js
+[npm-image]: https://img.shields.io/npm/v/picker.js.svg
+[travis-url]: https://travis-ci.org/alienfast/picker.js
+[travis-image]: https://img.shields.io/travis/alienfast/picker.js.svg
