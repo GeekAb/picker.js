@@ -1,10 +1,22 @@
 sudo: false
+git:
+  depth: 10
+
 language: node_js
 node_js:
   - "node"
 
-git:
-  depth: 10
+# enable this once we have reliable builds
+#cache:
+#  directories:
+#    - node_modules
+#    - vendor/bundle
+
+before_install:
+  - rvm install 2.2
+  - rvm use 2.2 --fuzzy
+  - bundle install scss-lint
+
 
 before_script:
   - npm install -g gulpjs/gulp-cli#4.0
