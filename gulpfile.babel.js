@@ -1,9 +1,30 @@
-import {Preset, Clean, CleanJavascripts, CleanStylesheets, Copy, Jekyll, CssNano, MochaPhantomJs, Prepublish, PublishBuild, PublishGhPages, Sass, RollupUmd, RollupIife, ScssLint, EsLint, Aggregate, Uglify, series, parallel} from 'gulp-pipeline'
+import {
+  Preset,
+  Clean,
+  CleanJavascripts,
+  CleanStylesheets,
+  Copy,
+  Jekyll,
+  CssNano,
+  MochaPhantomJs,
+  Prepublish,
+  PublishBuild,
+  PublishGhPages,
+  Sass,
+  RollupUmd,
+  RollupIife,
+  ScssLint,
+  EsLint,
+  Aggregate,
+  Uglify,
+  series,
+  parallel
+} from 'gulp-pipeline'
 import gulp from 'gulp'
 import pkg from './package.json'
 import moment from 'moment'
 
-const preset = Preset.baseline()
+const preset = Preset.baseline({postProcessor: {dest: 'dist'}})
 
 const rollupConfig = {
   options: {
@@ -26,11 +47,8 @@ const jsTest = new Aggregate(gulp, 'js:test',
       options: {
         dest: 'picker-tests.js.iife.js',
         moduleName: 'pickerTests'
-        //, globals: {
-        //  buffer: 'Buffer'
-        //}
       }
-    }, {debug: true}),
+    }, {debug: false}),
     new MochaPhantomJs(gulp, preset)
   )
 )
@@ -43,14 +61,14 @@ const js = new Aggregate(gulp, 'js',
       // umd (non-bundled)
       new RollupUmd(gulp, preset, rollupConfig, {
         options: {
-          dest: 'picker.js.umd.js',
+          dest: 'picker.umd.js',
           moduleName: 'picker'
         }
       }),
       // self executing (fully bundled)
       new RollupIife(gulp, preset, rollupConfig, {
         options: {
-          dest: 'picker.js.iife.js',
+          dest: 'picker.iife.js',
           moduleName: 'picker'
         }
       })
@@ -82,10 +100,12 @@ const all = new Aggregate(gulp, 'all',
   series(gulp,
     defaultRecipes,
     parallel(gulp,
-      new CssNano(gulp, preset),
+      new CssNano(gulp, preset, {debug: true}),
       new Uglify(gulp, preset, {
         task: {name: 'iife:uglify'},
-        source: {glob: '*.iife.js'}
+        source: {
+          glob: 'picker.iife.js'
+        }
       })
     )
   )
@@ -106,7 +126,7 @@ new Aggregate(gulp, 'publish',
     //new PublishGhPages(gulp, preset, {
     //  options: {
     //    remote: {
-    //      repo: 'git@github.com:rosskevin/picker.js.git' // FIXME: temporary, remove this option when we are deploying to our home repo
+    //      repo: 'git@github.com:rosskevin/picker.git' // FIXME: temporary, remove this option when we are deploying to our home repo
     //    }
     //  }
     //})
