@@ -124,6 +124,12 @@ const EventManager = class extends Base {
       this.popView(ev)
     }
     // --------------------------
+    // Clicked on the ok
+    else if ($target.hasClass(ClassName.OK)) {
+      this.acceptDate(ev)
+      this.dp.hide()
+    }
+    // --------------------------
     // Clicked on prev or next
     else if ($navArrow.length > 0) {
       let direction = this.config.view.modes[this.dp.view].navStep * ($navArrow.hasClass(ClassName.PREV) ? -1 : 1)
@@ -251,9 +257,7 @@ const EventManager = class extends Base {
         break
       case Keycodes.ENTER:
       case Keycodes.TAB:
-        this.dp.updateMultidateOrToggle(this.lastKeyboardFocusDate || this.dp.dates.last() || this.dp.viewDate)
-        ev.preventDefault()
-        ev.stopPropagation()
+        this.acceptDate(ev)
 
         if (Key.is(ev, Keycodes.TAB)) {
           this.dp.hide()
@@ -308,6 +312,12 @@ const EventManager = class extends Base {
         break
       }
     }
+  }
+
+  acceptDate(ev) {
+    this.dp.updateMultidateOrToggle(this.lastKeyboardFocusDate || this.dp.dates.last() || this.dp.viewDate)
+    ev.preventDefault()
+    ev.stopPropagation()
   }
 
   onPaste(ev) {
