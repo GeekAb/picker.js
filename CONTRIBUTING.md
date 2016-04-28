@@ -97,7 +97,7 @@ If you do not take the time to read and follow these guidelines (including submi
 
 ## Feature requests
 
-Feature requests are welcome for discussion but note that you may be asked to submit a PR or close teh issue. Please take a moment to find out whether your idea fits with the scope and aims of the project. It's up to *you* to make a strong case to convince the project's developers of the merits of this feature, or for you to build and submit as a PR. Please provide as much detail and context as possible.
+Feature requests are welcome for discussion but note that you may be asked to submit a PR or close the issue. Please take a moment to find out whether your idea fits with the scope and aims of the project. It's up to *you* to make a strong case to convince the project's developers of the merits of this feature, or for you to build and submit as a PR. Please provide as much detail and context as possible.
 
 ## Pull requests
 
