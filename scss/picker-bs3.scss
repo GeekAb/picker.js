@@ -1,0 +1,71 @@
+// Used to create the default css picker-bs3.css.
+//    For full customization, obtain the package via npm and @import "popper" and "bs3" directly with your own variables.
+
+// ---------- start copy of bootstrap 3 variables ---------
+$gray: lighten(#000, 33.5%) !default; // #555
+$gray-light: lighten(#000, 46.7%) !default; // #777
+$gray-lighter: lighten(#000, 93.5%) !default; // #eee
+
+$brand-primary: darken(#428bca, 6.5%) !default; // #337ab7
+
+$btn-primary-color: #fff !default;
+$btn-primary-bg: $brand-primary !default;
+$btn-primary-border: darken($btn-primary-bg, 5%) !default;
+
+$btn-link-disabled-color: $gray-light !default;
+
+$state-info-bg: #d9edf7 !default;
+$line-height-base: 1.428571429 !default; // 20/14
+$border-radius: 4px !default;
+
+$dropdown-bg: #fff !default;
+$dropdown-border-color: rgba(0, 0, 0, .15) !default;
+// ---------- end copy of bootstrap 3 variables ---------
+
+// ---------- start copy of bootstrap 3 mixins ---------
+// Button variants
+@mixin button-variant($color, $background, $border) {
+  &:focus,
+  &.focus {
+    color: $color;
+    background-color: darken($background, 10%);
+    border-color: darken($border, 25%);
+  }
+  &:hover {
+    color: $color;
+    background-color: darken($background, 10%);
+    border-color: darken($border, 12%);
+  }
+  &:active,
+  &.active {
+    color: $color;
+    background-color: darken($background, 10%);
+    border-color: darken($border, 12%);
+
+    &:hover,
+    &:focus,
+    &.focus {
+      color: $color;
+      background-color: darken($background, 17%);
+      border-color: darken($border, 25%);
+    }
+  }
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    &:hover,
+    &:focus,
+    &.focus {
+      background-color: $background;
+      border-color: $border;
+    }
+  }
+}
+// ---------- end copy of bootstrap 3 mixins ---------
+
+
+$popper-bg: $dropdown-bg !default;
+$popper-border-color: $dropdown-border-color !default;
+
+@import "popper";
+@import "bs3";

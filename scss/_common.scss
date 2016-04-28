@@ -1,0 +1,14 @@
+.datepicker {
+  border-radius: $border-radius;
+  table {
+    user-select: none;
+  }
+  direction: ltr;
+
+  // Inline display inside a table presents some problems with border and background colors.
+  .table-striped & table tr {
+    td, th {
+      background-color: transparent;
+    }
+  }
+}

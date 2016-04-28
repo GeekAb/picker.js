@@ -1,0 +1,61 @@
+// pruned from popper.css on their site
+
+// Colors that _must_ be defined
+//$popper-bg: transparent !default; //rgba(255, 193, 7, 1);
+//$popper-border-color: $popper-bg !default;
+$popper-border-width: 5px;
+$offset: -1 * (2 * $popper-border-width);
+
+// scss-lint:disable SelectorFormat
+.popper {
+  position: absolute;  // temporary workaround - see https://github.com/FezVrasta/popper.js/issues/25#issuecomment-209614175
+  //padding: 10px;
+  //text-align: center;
+  background: $popper-bg;
+  border: solid 1px $popper-border-color;
+
+  .popper__arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+    //content: " ";
+    border: solid $popper-border-width transparent;
+  }
+
+  &[x-placement^="top"] {
+    margin-bottom: 5px;
+    .popper__arrow {
+      bottom: $offset;
+      left: calc(50% - 5px);
+      border-top-color: $popper-border-color;
+    }
+  }
+
+  &[x-placement^="right"] {
+    margin-left: 5px;
+    .popper__arrow {
+      top: calc(50% - 5px);
+      left: $offset;
+      border-right-color: $popper-border-color;
+    }
+  }
+
+  &[x-placement^="bottom"] {
+    margin-top: 5px;
+    .popper__arrow {
+      top: $offset;
+      left: calc(50% - 5px);
+      border-bottom-color: $popper-border-color;
+    }
+  }
+
+  &[x-placement^="left"] {
+    margin-right: 5px;
+    .popper__arrow {
+      top: calc(50% - 5px);
+      right: $offset;
+      border-left-color: $popper-border-color;
+    }
+  }
+}
+// scss-lint:enable SelectorFormat
