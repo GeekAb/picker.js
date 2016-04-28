@@ -10,12 +10,12 @@ const Base = class {
     this.config = extend(true, {}, Default, ...configs)
   }
 
-  i18n(key){
+  i18n(key) {
     return this.config.i18n[this.config.lang][key] || ''
   }
 
   dispose(dataKey = null) {
-    if(dataKey) {
+    if (dataKey) {
       this.$element.data(dataKey, null)
     }
     this.$element = null
@@ -49,6 +49,7 @@ const Base = class {
   error(...args) {
     console.error(...args)
   }
+
   /* eslint-enable no-console */
 
   throwError(msg) {

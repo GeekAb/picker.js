@@ -1,4 +1,28 @@
-import {$, $input, safeDispose, fromData, assertData, findPopper, findFocusedDay, findDayOfMonth, findPrev, findMonth, findNext,  findYear, findDecade, findCentury, assertNotFound, assertVisible, assertHidden, assertDatesEqual, prepare, findMonthsSwitch, findYearsSwitch, findDecadesSwitch, findCenturiesSwitch} from '../support'
+import {
+  $,
+  $input,
+  safeDispose,
+  fromData,
+  assertData,
+  findPopper,
+  findFocusedDay,
+  findDayOfMonth,
+  findPrev,
+  findMonth,
+  findNext,
+  findYear,
+  findDecade,
+  findCentury,
+  assertNotFound,
+  assertVisible,
+  assertHidden,
+  assertDatesEqual,
+  prepare,
+  findMonthsSwitch,
+  findYearsSwitch,
+  findDecadesSwitch,
+  findCenturiesSwitch
+} from '../support'
 import {Selector, ClassName, Data} from '../../js/constants'
 import moment from 'moment'
 

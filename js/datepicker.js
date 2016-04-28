@@ -467,13 +467,13 @@ const Datepicker = (($) => {
       }
       else {
         let nextView = this.boundedView(this.view + direction)
-        if(this.config.view.disabled.includes(nextView)){
+        if (this.config.view.disabled.includes(nextView)) {
 
           // determine general direction
           let skipDisabledDirection = (direction < 1) ? -1 : 1
           this.changeView(direction + skipDisabledDirection)
         }
-        else{
+        else {
           this.showView(nextView)
         }
       }
@@ -484,7 +484,7 @@ const Datepicker = (($) => {
      * @param view
      * @returns {number}
      */
-    boundedView(view){
+    boundedView(view) {
       return Math.max(this.config.view.min, Math.min(this.config.view.max, view))
     }
 
@@ -576,7 +576,7 @@ const Datepicker = (($) => {
       this.config.view.min = this.resolveViewType(this.config.view.min)
       this.config.view.max = this.resolveViewType(this.config.view.max) // default to years (slightly different than other view resolution)
       let disabledViews = this.config.view.disabled
-      if(!Array.isArray(disabledViews)){
+      if (!Array.isArray(disabledViews)) {
         disabledViews = [disabledViews]
       }
       this.config.view.disabled = []

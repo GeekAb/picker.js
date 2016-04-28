@@ -52,7 +52,7 @@ const DateArray = class {
       return false
     }
 
-    if(this.length() !== otherDateArray.length()){
+    if (this.length() !== otherDateArray.length()) {
       return false
     }
 
@@ -60,7 +60,7 @@ const DateArray = class {
       let a = this.array[i]
       let b = otherDateArray.array[i]
 
-      if(!a.isSame(b)){
+      if (!a.isSame(b)) {
         return false
       }
     }

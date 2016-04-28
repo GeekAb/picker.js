@@ -1,4 +1,16 @@
-import {$, $input, safeDispose, fromData, assertData, findPopper, assertNotFound, assertVisible, assertHidden, assertDatesEqual, prepare} from '../support'
+import {
+  $,
+  $input,
+  safeDispose,
+  fromData,
+  assertData,
+  findPopper,
+  assertNotFound,
+  assertVisible,
+  assertHidden,
+  assertDatesEqual,
+  prepare
+} from '../support'
 import {Selector, ClassName} from '../../js/constants'
 import moment from 'moment'
 

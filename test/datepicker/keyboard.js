@@ -1,4 +1,29 @@
-import {$, $input, safeDispose, fromData, assertData, findPopper, findFocusedDay, findDayOfMonth, findPrev, findMonth, findNext,  findYear, findDecade, findCentury, assertNotFound, assertVisible, assertHidden, assertDatesEqual, prepare, findMonthsSwitch, findYearsSwitch, findDecadesSwitch, findCenturiesSwitch, fireKey} from '../support'
+import {
+  $,
+  $input,
+  safeDispose,
+  fromData,
+  assertData,
+  findPopper,
+  findFocusedDay,
+  findDayOfMonth,
+  findPrev,
+  findMonth,
+  findNext,
+  findYear,
+  findDecade,
+  findCentury,
+  assertNotFound,
+  assertVisible,
+  assertHidden,
+  assertDatesEqual,
+  prepare,
+  findMonthsSwitch,
+  findYearsSwitch,
+  findDecadesSwitch,
+  findCenturiesSwitch,
+  fireKey
+} from '../support'
 import {Selector, ClassName, Data} from '../../js/constants'
 import Keycodes from '../../js/util/keycodes'
 import moment from 'moment'
@@ -209,7 +234,7 @@ describe('Datepicker', () => {
     })
 
     describe('autoclose', () => {
-      beforeEach(() => prepare() )
+      beforeEach(() => prepare())
 
       it(`enter should select today and hide`, () => {
         $input.datepicker({autoclose: true})

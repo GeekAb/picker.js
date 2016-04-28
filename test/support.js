@@ -14,8 +14,11 @@ export const prepare = () => {
 
 export const safeDispose = () => {
   // regardless of the state of the test, try to clean up every artifact so each test is isolated
-  try {$input.datepicker('dispose')}
-  catch (error) {}
+  try {
+    $input.datepicker('dispose')
+  }
+  catch (error) {
+  }
 
   findPopper().remove()
   $input.data(Data.KEY, null)
@@ -66,11 +69,10 @@ export const assertText = (selector, text) => {
 }
 
 
-
 export const assertDatesEqual = (actual, expected, granularity = 'millisecond') => {
   let msg = `${actual ? actual.format() : null} should equal ${expected ? expected.format() : null}`
 
-  if(expected == null){
+  if (expected == null) {
     expect(actual, msg).to.be.null
   }
   else {
@@ -79,7 +81,7 @@ export const assertDatesEqual = (actual, expected, granularity = 'millisecond') 
 }
 
 // add exact match textEquals filter to jquery (contains will get multiple days)
-$.expr[':'].textEquals = function(el, i, m) {
+$.expr[':'].textEquals = function (el, i, m) {
   var searchText = m[3]
   var match = $(el).text().trim().match(`^${searchText}$`)
   return match && match.length > 0
