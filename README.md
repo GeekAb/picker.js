@@ -49,8 +49,8 @@ Maintaining that much code may be too much for anyone, and we want to _expand_ i
 ## How?
 - Use ES2015 classes (available as es, iife or umd)
 - Use SCSS for full variable based customization/inclusion
-- Use [moment.js](http://momentjs.com/)
-- Use [popper.js](http://popper.js.org/)
+- Use [moment.js](http://momentjs.com/) for anything date related
+- Use [popper.js](http://popper.js.org/) for anything UI placement related
 - Created `presets` for rendering on different frameworks (BS3, BS4, BMD4)       
 
 ## Developing
