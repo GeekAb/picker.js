@@ -1,4 +1,4 @@
-## **TLDR;** Issues will be closed unless they are accompanied by a test case using one of our [CodePen templates](codepen-templates).
+## **TLDR;** Issues will be closed unless they are accompanied by a test case using one of our [CodePen templates](#codepen-templates).
 
 # Contributing
 
