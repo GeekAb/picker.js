@@ -28,6 +28,19 @@ const Renderer = class extends Base {
     super.dispose()
   }
 
+  /**
+   * Show a specific view by id.
+   * @param viewId
+   */
+  showView(viewId) {
+    this.$picker
+      .children('div')
+      .hide()
+      .filter(`.${this.config.view.modes[viewId].cssClass}`) // days|months|years|decades|centuries
+      .show()
+    this.updateNavArrows()
+  }
+
   render() {
     let viewDate = this.dp.viewDate.clone().local()
     // title text
@@ -81,7 +94,9 @@ const Renderer = class extends Base {
     )
   }
 
-  // called publicly from dp#changeView
+  // ------------------------------------------------------------------------
+  // private
+
   updateNavArrows(viewDate) {
     if (!this.allowUpdate)
       return
@@ -126,8 +141,6 @@ const Renderer = class extends Base {
     }
   }
 
-  // ------------------------------------------------------------------------
-  // private
   renderDaysViewDOW() {
     let dowCnt = this.config.week.start
     let html = '<tr>'
@@ -374,7 +387,7 @@ const Renderer = class extends Base {
     if (this.dp.dates.contains(date) !== -1) {
       classes.push(ClassName.ACTIVE)
     }
-    if (!this.dp.dateWithinRange(date) || this.dp.dateIsDisabled(date)) {
+    if (!this.dp.boundedDate(date) || this.dp.dateIsDisabled(date)) {
       classes.push(ClassName.DISABLED)
     }
     if (this.dp.shouldBeHighlighted(date)) {

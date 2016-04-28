@@ -8,7 +8,8 @@ const Default = {
     ok: true
   },
   view: {
-    max: 'years' // Set a maximum limit for the view mode
+    max: 'years', // Set a maximum limit for the view mode
+    disabled: ['months'] // Skip the month view
   },
   // keep templates under the markup key so they can be whacked and not included in the general config overrides
   markup: {

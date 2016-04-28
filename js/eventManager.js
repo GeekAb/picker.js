@@ -98,13 +98,7 @@ const EventManager = class extends Base {
   }
 
   popView(ev) {
-    // escaping from days means hiding the picker
-    if (this.dp.view === View.DAYS) {
-      this.dp.hide()
-    }
-    else {
-      this.dp.changeView(-1)
-    }
+    this.dp.changeView(-1)
     ev.preventDefault()
     ev.stopPropagation()
   }

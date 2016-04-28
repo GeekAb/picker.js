@@ -53,6 +53,7 @@ const Datepicker = (($) => {
       start: 'days', // The view that the datepicker should show when it is opened
       min: 'days', // Set a minimum limit for the view mode
       max: 'centuries', // Set a maximum limit for the view mode
+      disabled: [], // Any view disabled will be skipped on #changeView
       modes: [
         {
           cssClass: ClassName.DAYS,
@@ -217,7 +218,7 @@ const Datepicker = (($) => {
     /**
      * @returns - array of UTC moments selected
      */
-    getDates(){
+    getDates() {
 
       // Depending on the show/hide state when called, this.dates may or may not be populated.
       //  Use it if populated (i.e. initial #update before show), not based on #isShowing
@@ -233,7 +234,7 @@ const Datepicker = (($) => {
      * @param fallbackToDefaults - resolve the date first, if not found, fallback to the default config.date.start
      * @returns - the latest UTC moment selected
      */
-    getDate(fallbackToDefaults = false){
+    getDate(fallbackToDefaults = false) {
       // Depending on the show/hide state when called, this.dates may or may not be populated.
       //  Use it if populated (i.e. initial #update before show), not based on #isShowing
       let dateArray = this.getDates()
@@ -243,7 +244,7 @@ const Datepicker = (($) => {
       }
 
       // if not found above and not to be resolved by defaults, null
-      if(!fallbackToDefaults){
+      if (!fallbackToDefaults) {
         return null
       }
 
@@ -297,7 +298,7 @@ const Datepicker = (($) => {
       }
 
       // finally call update with the new dates
-      if(newDates.length() === 0){
+      if (newDates.length() === 0) {
         // if length is 0, pass null to reset the internal dates, otherwise it will look at/parse input
         this.update(null)
       }
@@ -457,11 +458,34 @@ const Datepicker = (($) => {
     // private
 
     /**
-     * Change view given the direction
+     * Change view given the direction.  If past the bottom, it will #hide
      * @param direction
      */
     changeView(direction) {
-      this.showView(Math.max(this.config.view.min, Math.min(this.config.view.max, this.view + direction)))
+      if (direction < 0 && this.view === View.DAYS) {
+        this.hide()
+      }
+      else {
+        let nextView = this.boundedView(this.view + direction)
+        if(this.config.view.disabled.includes(nextView)){
+
+          // determine general direction
+          let skipDisabledDirection = (direction < 1) ? -1 : 1
+          this.changeView(direction + skipDisabledDirection)
+        }
+        else{
+          this.showView(nextView)
+        }
+      }
+    }
+
+    /**
+     * Get a view within the bounds of min/max
+     * @param view
+     * @returns {number}
+     */
+    boundedView(view){
+      return Math.max(this.config.view.min, Math.min(this.config.view.max, view))
     }
 
     /**
@@ -470,12 +494,7 @@ const Datepicker = (($) => {
      */
     showView(viewId = this.view) {
       this.view = viewId
-      this.renderer.$picker
-        .children('div')
-        .hide()
-        .filter(`.${this.config.view.modes[this.view].cssClass}`) // days|months|years|decades|centuries
-        .show()
-      this.renderer.updateNavArrows()  // FIXME: redundant?
+      this.renderer.showView(this.view)
     }
 
     /**
@@ -490,7 +509,7 @@ const Datepicker = (($) => {
       do {
         m = m.add(dir, unit)
 
-        if (!this.dateWithinRange(m))
+        if (!this.boundedDate(m))
           return false
 
         unit = Unit.DAY
@@ -556,6 +575,14 @@ const Datepicker = (($) => {
       this.config.view.start = this.resolveViewType(this.config.view.start)
       this.config.view.min = this.resolveViewType(this.config.view.min)
       this.config.view.max = this.resolveViewType(this.config.view.max) // default to years (slightly different than other view resolution)
+      let disabledViews = this.config.view.disabled
+      if(!Array.isArray(disabledViews)){
+        disabledViews = [disabledViews]
+      }
+      this.config.view.disabled = []
+      for (let disabledView of disabledViews) {
+        this.config.view.disabled.push(this.resolveViewType(disabledView))
+      }
 
       // Check that the start view is between min and max
       this.config.view.start = Math.min(this.config.view.start, this.config.view.max)
@@ -643,13 +670,13 @@ const Datepicker = (($) => {
       )
     }
 
-    dateWithinRange(date) {
+    boundedDate(date) {
       return date.isSameOrAfter(this.config.date.start) && date.isSameOrBefore(this.config.date.end)
     }
 
-    datesWithinRange(...dates) {
+    boundedDates(...dates) {
       return $.grep(dates, (date) => {
-        return (!this.dateWithinRange(date) || !date)
+        return (!this.boundedDate(date) || !date)
       }, true)
     }
 
@@ -711,7 +738,7 @@ const Datepicker = (($) => {
     configureNewDateArray(...dates) {
       if (dates.length > 0) {
         let newDatesArray = this.parseDates(...dates)
-        newDatesArray = this.datesWithinRange(...newDatesArray)
+        newDatesArray = this.boundedDates(...newDatesArray)
         return new DateArray(...newDatesArray)
       }
       else {
@@ -723,7 +750,7 @@ const Datepicker = (($) => {
     /**
      * @returns - array of UTC moments
      */
-    parseDateArrayFromInput(){
+    parseDateArrayFromInput() {
       let value = this.$input.val()
       let dates
 
@@ -734,7 +761,7 @@ const Datepicker = (($) => {
         dates = [value]
       }
       dates = this.parseDates(...dates)
-      dates = this.datesWithinRange(...dates)
+      dates = this.boundedDates(...dates)
       return dates
     }
 
