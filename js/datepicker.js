@@ -746,10 +746,9 @@ const Datepicker = (($) => {
         function () {
           let $element = $(this)
           let data = $element.data(Data.KEY)
-          // Options priority: js args, data-attrs, Default const
+          // Options priority: js args, data-attrs
           let _config = $.extend(
             {},
-            Default,
             $element.data(),
             typeof config === 'object' && config  // config could be a string method name.
           )
