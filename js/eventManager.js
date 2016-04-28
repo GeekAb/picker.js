@@ -97,6 +97,18 @@ const EventManager = class extends Base {
     }
   }
 
+  popView(ev) {
+    // escaping from days means hiding the picker
+    if (this.dp.view === View.DAYS) {
+      this.dp.hide()
+    }
+    else {
+      this.dp.changeView(-1)
+    }
+    ev.preventDefault()
+    ev.stopPropagation()
+  }
+
   onPickerClick(ev) {
     ev.preventDefault()
     ev.stopPropagation()
@@ -111,6 +123,11 @@ const EventManager = class extends Base {
     // Clicked on the switch
     if ($target.hasClass(ClassName.SWITCH)) {
       this.dp.changeView(1)
+    }
+    // --------------------------
+    // Clicked on the cancel
+    else if ($target.hasClass(ClassName.CANCEL)) {
+      this.popView(ev)
     }
     // --------------------------
     // Clicked on prev or next
@@ -236,15 +253,7 @@ const EventManager = class extends Base {
 
     switch (ev.keyCode) {
       case Keycodes.ESC:
-        // escaping from days means hiding the picker
-        if (this.dp.view === View.DAYS) {
-          this.dp.hide()
-        }
-        else {
-          this.dp.changeView(-1)
-        }
-        ev.preventDefault()
-        ev.stopPropagation()
+        this.popView(ev)
         break
       case Keycodes.ENTER:
       case Keycodes.TAB:
