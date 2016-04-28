@@ -24,7 +24,7 @@ $('input').datepicker({preset: 'bmd4'})
 ## Options
 The datepicker is _very_ configurable, including buttons, disabled dates or days of week, and much much more.  Framework templates may override the `Default` configuration to achieve specific behaviors, for example the [BMD4Template](js/templates/bmd4Template.js#L5) uses `CANCEL | OK` buttons, disables/skips the months view, and disables keyboard navigation so that all keypresses go directly to the input field.
 
-With all of the options available, it's best to look [directly at the `Default` configuration](js/datepicker.js#L19) for notes on how it works. You can also take a look at any of the [tests in the `config` directory](tree/master/test/datepicker/config).
+With all of the options available, it's best to look [directly at the `Default` configuration](js/datepicker.js#L19) for notes on how it works. You can also take a look at any of the [tests in the `config` directory](test/datepicker/config).
 
 ### Date formats/parsing
 _Every single bit of date functionality_ is handled by the fantastic [moment.js](http://momentjs.com/).  See the [moment.js documentation on formats](http://momentjs.com/docs/#/displaying/format/) for more information. A simple way to change the format is to pass in `{format: 'valid momentjs format'}` to the constructor.  See the [format test](test/datepicker/config/format.js) for more.
