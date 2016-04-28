@@ -1,6 +1,5 @@
 import Base from './../base'
-import {Data} from './../constants'
-import {ClassName} from './../constants'
+import {ClassName, Data} from './../constants'
 
 /**
  * This class registers overridable partials in the {Default} hash constant.  Subclasses can override this
@@ -64,7 +63,7 @@ const BaseTemplate = class extends Base {
   formatDaySwitch(date){
     return date.format(this.getDaySwitchFormat())
   }
-  
+
   formatDayOfWeek(date){
     return date.format(this.getDayOfWeekFormat())
   }
@@ -117,6 +116,27 @@ const BaseTemplate = class extends Base {
    */
   renderMonthContent(date, classNames) {  // eslint-disable-line no-unused-vars
     return date.format(`MMM`) // Jan
+  }
+
+  /**
+   *
+   * @param date
+   * @param classNames - array - passed to be used as markers only, not to be rendered.  These are rendered in the container
+   * @returns {string}
+   */
+  renderYearContent(date, classNames) { // eslint-disable-line no-unused-vars
+    return date.year()
+  }
+
+  /**
+   *
+   * @param date
+   * @param classNames
+   * @param tooltip
+   * @returns {string}
+   */
+  renderYear(date, classNames, tooltip = '') {
+    return `<span class="${classNames.join(' ')}" ${tooltip} data-${Data.MOMENT}="${date}">${this.renderYearContent(date, classNames)}</span>`
   }
 }
 

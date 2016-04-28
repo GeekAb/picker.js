@@ -298,22 +298,22 @@ const Renderer = class extends Base {
 
     let year = currentYearFactored - step
     for (let i = -1; i < 11; i += 1) {
-      let classes = [cssClass]
+      let classNames = [cssClass]
 
       if (i === -1) {
-        classes.push(ClassName.OLD)
+        classNames.push(ClassName.OLD)
       }
       else if (i === 10) {
-        classes.push(ClassName.NEW)
+        classNames.push(ClassName.NEW)
       }
       if ($.inArray(year, steps) !== -1) {
-        classes.push(ClassName.ACTIVE)
+        classNames.push(ClassName.ACTIVE)
       }
       if (year < startStep || year > endStep) {
-        classes.push(ClassName.DISABLED)
+        classNames.push(ClassName.DISABLED)
       }
       if (year === this.dp.viewDate.year()) {
-        classes.push(ClassName.FOCUSED)
+        classNames.push(ClassName.FOCUSED)
       }
 
       /*
@@ -334,17 +334,17 @@ const Renderer = class extends Base {
           before = {}
         }
         if (before.disabled === true) {
-          classes.push(ClassName.DISABLED)
+          classNames.push(ClassName.DISABLED)
         }
         if (before.classes) {
-          classes = classes.concat(before.classes.split(/\s+/))
+          classNames = classNames.concat(before.classes.split(/\s+/))
         }
         if (before.tooltip) {
           tooltip = before.tooltip ? `title="${before.tooltip}"` : ''
         }
       }
 
-      html += `<span class="${classes.join(' ')}"${tooltip} data-${Data.MOMENT}="${m}">${year}</span>`
+      html += this.config.template.renderYear(m, classNames, tooltip)
       year += step
     }
     $view.find('td').html(html)

@@ -1,11 +1,14 @@
 import BaseTemplate from './baseTemplate'
-import {ClassName} from './../constants'
+import {ClassName, Data} from './../constants'
 
 const Default = {
   // config overrides specific to this template
   button: {
     cancel: true,
     ok: true
+  },
+  view: {
+    max: 'years' // Set a maximum limit for the view mode
   },
   // keep templates under the markup key so they can be whacked and not included in the general config overrides
   markup: {
@@ -88,6 +91,14 @@ const BMD4Template = class extends BaseTemplate {
       classes.push(ClassName.DISABLED)
     }
     return `<button class="${classes.join(' ')}">${date.date()}</button>`
+  }
+
+  renderMonth(date, classNames, tooltip = '') {
+    return `<button class="btn ${classNames.join(' ')}" ${tooltip} data-${Data.MOMENT}="${date}">${this.renderMonthContent(date, classNames)}</button>`
+  }
+
+  renderYear(date, classNames, tooltip = '') {
+    return `<button class="btn ${classNames.join(' ')}" ${tooltip} data-${Data.MOMENT}="${date}">${this.renderYearContent(date, classNames)}</button>`
   }
 }
 
