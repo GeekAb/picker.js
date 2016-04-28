@@ -45,7 +45,7 @@ const jsTest = new Aggregate(gulp, 'js:test',
         options: {cwd: 'test'}
       },
       options: {
-        dest: 'picker-tests.js.iife.js',
+        dest: 'picker-tests.iife.js',
         moduleName: 'pickerTests'
       }
     }, {debug: false}),
