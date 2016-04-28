@@ -1,6 +1,6 @@
 {
   "name": "picker.js",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A picker for dates, date ranges, (and hopefully times) for multiple frameworks including Bootstrap 3, Bootstrap 4, and Material Design for Bootstrap 4",
   "main": "dist/picker.js.cjs.js",
   "jsnext:main": "src/index.js",
