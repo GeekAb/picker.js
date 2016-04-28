@@ -42,7 +42,7 @@ _Every single bit of UI placement functionality_ is handled by the fantastic [po
 3. (future) add time pickers - starting with material design    
 
 ## Why?
-The bootsrap-datepicker project had 415 open issue and 64 open pull requests.  One reason for this is it bit off a big chunk, including all date functionality and rendering/placement functionality.
+The bootstrap-datepicker project had 415 open issue and 64 open pull requests.  One reason for this is it bit off a big chunk, including all date functionality and rendering/placement functionality.
 
 Maintaining that project may be too much, and we want to _expand_ it!  
 
