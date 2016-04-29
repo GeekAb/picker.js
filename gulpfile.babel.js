@@ -128,7 +128,9 @@ const all = new Aggregate(gulp, 'all',
         }
       })
     ),
-    copyJsToSite
+    // pick up minified files
+    copyJsToSite,
+    copyCssToSite
   )
 )
 
@@ -142,13 +144,18 @@ new Aggregate(gulp, 'publish',
 
     //new Jekyll(gulp, preset, {options: {raw: 'baseurl: "/picker.js"'}}),
 
+    // setup the site in a non-monitored directory - it does it's own git thing.
+    new Copy(gulp, preset, {
+      task: {name: 'copy:site-to-gh-pages'},
+      source: {
+        options: {cwd: 'site'},
+        glob: ['**']
+      },
+      dest: '_gh_pages'
+    }),
 
     new PublishBuild(gulp, preset),
 
-    new PublishGhPages(gulp, preset, {
-      options: {
-        cwd: 'site'
-      }
-    })
+    new PublishGhPages(gulp, preset)
   )
 )
