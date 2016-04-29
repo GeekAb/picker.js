@@ -16,8 +16,8 @@ const BS4Template = class extends BaseTemplate {
     super(Default)
     this.stringTemplate = stringTemplate
   }
-  
-  getTemplate(){
+
+  getTemplate() {
     return this.stringTemplate
   }
 }

@@ -7,6 +7,8 @@ import DateRangePicker from './dateRangePicker'
 import {JQUERY_NAME, Data, Event, Selector, ClassName, Unit, View} from './constants'
 import Popper from 'popper.js'
 import moment from 'moment'
+import extend from 'extend'
+
 
 /**
  * Datepicker for fields using momentjs for all date-based functionality.
@@ -104,14 +106,16 @@ const Datepicker = (($) => {
     // Popper.js options - see https://popper.js.org/
     popper: {
       // any popper.js options are valid here and will be passed to that component
-      placement: 'right',
+      // placement: 'right',
+      placement: 'bottom-start',
+      // flipBehavior: ['bottom-start', 'top-start'],
       removeOnDestroy: true
     },
 
     //template: undefined, // if undefined - will use new BaseTemplate().createTemplate()
 
     // -------------------
-    // callbacks  FIXME: better way to do this?
+    // callbacks  TODO: better way to do this?
 
     /*
      A function that takes a date as a parameter and returns one of the following values:
@@ -467,13 +471,13 @@ const Datepicker = (($) => {
       }
       else {
         let nextView = this.boundedView(this.view + direction)
-        if(this.config.view.disabled.includes(nextView)){
+        if (this.config.view.disabled.includes(nextView)) {
 
           // determine general direction
           let skipDisabledDirection = (direction < 1) ? -1 : 1
           this.changeView(direction + skipDisabledDirection)
         }
-        else{
+        else {
           this.showView(nextView)
         }
       }
@@ -484,7 +488,7 @@ const Datepicker = (($) => {
      * @param view
      * @returns {number}
      */
-    boundedView(view){
+    boundedView(view) {
       return Math.max(this.config.view.min, Math.min(this.config.view.max, view))
     }
 
@@ -537,11 +541,9 @@ const Datepicker = (($) => {
       this.update()
 
       // popper
-      this.popper = new Popper(this.$element, {contentType: 'node', content: this.renderer.$picker}, this.config.popper)
+      this.popper = new Popper(this.$element, {contentType: 'node', content: this.renderer.$picker}, extend({}, true, {boundariesElement: this.$element}, this.config.popper))
       this.shown = true
-
       this.eventManager.onShown()
-      //this.popper._popper.focus()
       return this
     }
 
@@ -576,7 +578,7 @@ const Datepicker = (($) => {
       this.config.view.min = this.resolveViewType(this.config.view.min)
       this.config.view.max = this.resolveViewType(this.config.view.max) // default to years (slightly different than other view resolution)
       let disabledViews = this.config.view.disabled
-      if(!Array.isArray(disabledViews)){
+      if (!Array.isArray(disabledViews)) {
         disabledViews = [disabledViews]
       }
       this.config.view.disabled = []

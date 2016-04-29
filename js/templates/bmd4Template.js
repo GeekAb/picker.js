@@ -4,6 +4,7 @@ import {ClassName, Data} from './../constants'
 const Default = {
   // config overrides specific to this template
   button: {
+    today: true,
     cancel: true,
     ok: true
   },
@@ -38,7 +39,7 @@ const BMD4Template = class extends BaseTemplate {
    * @param date
    * @returns string
    */
-  formatDayOfWeek(date){
+  formatDayOfWeek(date) {
     return super.formatDayOfWeek(date)[0] // S M T W T F S
   }
 
@@ -62,12 +63,12 @@ const BMD4Template = class extends BaseTemplate {
           <table>
             <thead></thead>
             <tbody>`
-        if (className !== ClassName.DAYS) {
-          html += `<tr>
+    if (className !== ClassName.DAYS) {
+      html += `<tr>
               <td colspan="7"></td>
             </tr>`
-        }
-        html += `</tbody>
+    }
+    html += `</tbody>
           </table>
         </div>
     

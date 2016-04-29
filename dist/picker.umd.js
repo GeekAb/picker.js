@@ -1,5 +1,5 @@
 /*!
-  * picker.js v0.1.0 (https://github.com/alienfast/picker.js#readme)
+  * picker.js v0.1.1 (https://github.com/alienfast/picker.js#readme)
   * Copyright 2016 Kevin Ross <kevin.ross@alienfast.com> (https://github.com/rosskevin)
   * Licensed under MIT
   */
@@ -180,6 +180,7 @@
 
         (_console4 = console).error.apply(_console4, arguments);
       }
+
       /* eslint-enable no-console */
 
     }, {
@@ -607,6 +608,7 @@
   var Default$4 = {
     // config overrides specific to this template
     button: {
+      today: true,
       cancel: true,
       ok: true
     },
@@ -2509,14 +2511,16 @@
       // Popper.js options - see https://popper.js.org/
       popper: {
         // any popper.js options are valid here and will be passed to that component
-        placement: 'right',
+        // placement: 'right',
+        placement: 'bottom-start',
+        // flipBehavior: ['bottom-start', 'top-start'],
         removeOnDestroy: true
       },
 
       //template: undefined, // if undefined - will use new BaseTemplate().createTemplate()
 
       // -------------------
-      // callbacks  FIXME: better way to do this?
+      // callbacks  TODO: better way to do this?
 
       /*
        A function that takes a date as a parameter and returns one of the following values:
@@ -3016,11 +3020,9 @@
           this.update();
 
           // popper
-          this.popper = new Popper(this.$element, { contentType: 'node', content: this.renderer.$picker }, this.config.popper);
+          this.popper = new Popper(this.$element, { contentType: 'node', content: this.renderer.$picker }, extend({}, true, { boundariesElement: this.$element }, this.config.popper));
           this.shown = true;
-
           this.eventManager.onShown();
-          //this.popper._popper.focus()
           return this;
         }
       }, {

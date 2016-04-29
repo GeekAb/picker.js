@@ -1,6 +1,6 @@
 {
   "name": "picker.js",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A picker for dates, date ranges, (and hopefully times) for multiple frameworks including Bootstrap 3, Bootstrap 4, and Material Design for Bootstrap 4",
   "main": "dist/picker.js.cjs.js",
   "jsnext:main": "src/index.js",
@@ -40,7 +40,7 @@
     "chai": "^3.5.0",
     "chai-jquery": "^2.0.0",
     "gulp": "github:gulpjs/gulp#4.0",
-    "gulp-pipeline": "^4.0.31",
+    "gulp-pipeline": "^4.0.32",
     "jquery": "^2.2.3",
     "source-map-support": "^0.4.0"
   }

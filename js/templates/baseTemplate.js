@@ -52,7 +52,7 @@ const BaseTemplate = class extends Base {
     return 'dd' // Su Mo Tu We Th Fr Sa
   }
 
-  getLabelYearFormat(){
+  getLabelYearFormat() {
     return 'YYYY'
   }
 
@@ -60,11 +60,11 @@ const BaseTemplate = class extends Base {
     return `ddd, MMM D` // Thu, Apr 13
   }
 
-  formatDaySwitch(date){
+  formatDaySwitch(date) {
     return date.format(this.getDaySwitchFormat())
   }
 
-  formatDayOfWeek(date){
+  formatDayOfWeek(date) {
     return date.format(this.getDayOfWeekFormat())
   }
 
