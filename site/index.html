@@ -14,7 +14,7 @@
 <!-- Material Design for Bootstrap generic -->
 <link href="https://cdn.rawgit.com/FezVrasta/bootstrap-material-design/dist/dist/bootstrap-material-design.min.css" rel="stylesheet">
 
-<link href="dist/demo.css" rel="stylesheet">
+<link href="../dist/demo.css" rel="stylesheet">
 
 
 <div class="bmd-layout-container bmd-drawer-f-l bmd-drawer-overlay-md-down bmd-drawer-in-lg-up">
@@ -24,8 +24,9 @@
         <span class="sr-only">Toggle drawer</span>
         <i class="material-icons">menu</i>
       </button>
+      <!--
       <ul class="nav navbar-nav">
-        <li class="nav-item">Title</li>
+        <li class="nav-item">picker.js</li>
       </ul>
       <ul class="nav navbar-nav pull-xs-right">
         <li class="nav-item">
@@ -51,50 +52,62 @@
           </div>
         </li>
       </ul>
+      -->
     </div>
   </header>
 
   <div id="dw-1" class="bmd-layout-drawer bg-faded">
     <header>
-      <a class="navbar-brand">Title</a>
+      <a class="navbar-brand" href="//alienfast.github.io/picker.js">picker.js</a>
     </header>
     <ul class="list-group">
-      <a class="list-group-item">
-        <i class="material-icons" role="presentation">home</i>Home
-      </a>
-      <a class="list-group-item">
-        <i class="material-icons" role="presentation">inbox</i>Inbox
-      </a>
-      <a class="list-group-item">
-        <i class="material-icons" role="presentation">delete</i>Trash
-      </a>
+      <a class="list-group-item" href="//github.com/alienfast/picker.js">GITHUB</a>
+      <a class="list-group-item" href="https://www.npmjs.com/package/picker.js">NPM</a>
 
       <li class="bmd-layout-spacer"></li>
-
+      <!--
       <a class="list-group-item">
         <i class="material-icons" role="presentation">help_outline</i><span class="sr-only">Help</span>
       </a>
+      -->
     </ul>
   </div>
   <main class="bmd-layout-content">
     <div class="container">
       <!-- main content -->
-      <h2>picker.js for...</h2>
+      <div class="card card-block">
+        <h2>Hello World picker.js demos for...</h2>
+      </div>
       <div class="card-deck">
-        <div class="card card-block">
-          <h4 class="card-title">...Material Design for Bootstrap v4</h4>
-          <p class="card-text">Great companion for <a href="https://github.com/FezVrasta/bootstrap-material-design/tree/v4-dev">bootstrap-material-design v4</a></p>
-          <a href="sandbox/bmd4.html" target="_example" class="btn btn-primary"><i class="material-icons">launch</i> Launch</a>
+        <div class="card">
+          <div class="card-block">
+            <h4 class="card-title">Material Design for Bootstrap v4</h4>
+            <p class="card-text">Great companion for
+              <a href="https://github.com/FezVrasta/bootstrap-material-design/tree/v4-dev">bootstrap-material-design v4</a>
+            </p>
+          </div>
+          <div class="card-footer">
+            <a href="bmd4.html" target="_example" class="btn btn-primary"><i class="material-icons">launch</i> Launch</a>
+          </div>
         </div>
-        <div class="card card-block">
-          <h4 class="card-title">...Bootstrap v4</h4>
-          <!--<p class="card-text"></p>-->
-          <a href="sandbox/bs4.html" target="_example" class="btn btn-primary"><i class="material-icons">launch</i> Launch</a>
+        <div class="card">
+          <div class="card-block">
+            <h4 class="card-title">Bootstrap v4</h4>
+            <p class="card-text"></p>
+          </div>
+          <!--<div class="bmd-layout-spacer"></div>-->
+          <div class="card-footer">
+            <a href="bs4.html" target="_example" class="btn btn-primary"><i class="material-icons">launch</i> Launch</a>
+          </div>
         </div>
-        <div class="card card-block">
-          <h4 class="card-title">...Bootstrap v3</h4>
-          <!--<p class="card-text"></p>-->
-          <a href="sandbox/bs3.html" target="_example" class="btn btn-primary"><i class="material-icons">launch</i> Launch</a>
+        <div class="card">
+          <div class="card-block">
+            <h4 class="card-title">Bootstrap v3</h4>
+            <p class="card-text"></p>
+          </div>
+          <div class="card-footer">
+            <a href="bs3.html" target="_example" class="btn btn-primary"><i class="material-icons">launch</i> Launch</a>
+          </div>
         </div>
       </div>
     </div>
@@ -102,14 +115,13 @@
 </div>
 
 
-
 <script src="https://code.jquery.com/jquery-2.2.2.min.js"></script>
 <script src="https://cdn.rawgit.com/HubSpot/tether/v1.2.0/dist/js/tether.min.js"></script>
 <script src="https://cdn.rawgit.com/FezVrasta/bootstrap-material-design/dist/dist/bootstrap-material-design.iife.min.js"></script>
-<script src="dist/dist/picker.iife.js"></script>
+<script src="../dist/picker.iife.js"></script>
 
 <script>
-  $(function() {
+  $(function () {
     $('body').bootstrapMaterialDesign()
   })
 </script>

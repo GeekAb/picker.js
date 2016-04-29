@@ -11,3 +11,15 @@ section {
   flex: none;
   max-width: 50%;
 }
+
+.card {
+  display: flex;
+  flex-direction: column;
+
+  .card-footer {
+    display: flex;
+    justify-content: flex-end;
+    box-shadow: none;
+    margin-top: auto;
+  }
+}

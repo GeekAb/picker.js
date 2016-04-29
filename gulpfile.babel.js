@@ -121,25 +121,21 @@ new Aggregate(gulp, 'publish',
 
     //new Jekyll(gulp, preset, {options: {raw: 'baseurl: "/picker.js"'}}),
 
-    new PublishBuild(gulp, preset)
+    new Copy(gulp, preset, {
+      task: {name: 'dist:copy-to-site'},
+      source: {
+        options: {cwd: 'dist'},
+        glob: ['**']
+      },
+      dest: 'site/dist/'
+    }),
 
-    //new PublishGhPages(gulp, preset, {
-    //  options: {
-    //    remote: {
-    //      repo: 'git@github.com:rosskevin/picker.git' // FIXME: temporary, remove this option when we are deploying to our home repo
-    //    }
-    //  }
-    //})
+    new PublishBuild(gulp, preset),
+
+    new PublishGhPages(gulp, preset, {
+      options: {
+        cwd: 'site'
+      }
+    })
   )
 )
-
-
-//const sandbox = new Copy(gulp, preset, {
-//  task: {name: 'sandbox'},
-//  source: {
-//    options: {cwd: 'sandbox'},
-//    glob: ['**/*']
-//  },
-//  dest: 'dist/'
-//})
-
