@@ -1,4 +1,7 @@
-**All** bug reports must contain a test case using one of **our** Codepen templates (see `guidelines for contributing` link ^^^)  Bug reports without a test case will be summarily closed.  
+**All** bug reports must contain a test case using one of **our** Codepen templates;  Bug reports without one will be summarily closed:
+- `bmd4` Codepen template - http://codepen.io/rosskevin/pen/ONBQJN
+- `bs4` Codepen template - http://codepen.io/rosskevin/pen/eZPVvL
+- `bs3` Codepen template - http://codepen.io/rosskevin/pen/zqmRwy
 
 ----
 

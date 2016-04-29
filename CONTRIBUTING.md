@@ -81,9 +81,9 @@ Example:
 ## Codepen templates
 When submitting an issue, you must submit a Codepen demonstrating your issue.  Please be sure to use the template below that is specific for your `preset`:
 
-- [`bmd4` Codepen](http://codepen.io/rosskevin/pen/ONBQJN?editors=0010)
-- [`bs4` Codepen](http://codepen.io/rosskevin/pen/eZPVvL?editors=0010)
-- [`bs3` Codepen](http://codepen.io/rosskevin/pen/zqmRwy?editors=0010)
+- [`bmd4` Codepen template](http://codepen.io/rosskevin/pen/ONBQJN?editors=0010)
+- [`bs4` Codepen template](http://codepen.io/rosskevin/pen/eZPVvL?editors=0010)
+- [`bs3` Codepen template](http://codepen.io/rosskevin/pen/zqmRwy?editors=0010)
 
 ## Why was my issue summarily closed?
 Please don't take this the wrong way, but we receive a lot of issues and in order to effectively help, we need you to follow the guidelines written above.
