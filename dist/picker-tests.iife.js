@@ -1,5 +1,5 @@
 /*!
-  * picker.js v0.1.2 (https://github.com/alienfast/picker.js#readme)
+  * picker.js v0.1.3 (https://github.com/alienfast/picker.js#readme)
   * Copyright 2016 Kevin Ross <kevin.ross@alienfast.com> (https://github.com/rosskevin)
   * Licensed under MIT
   */
@@ -241,8 +241,12 @@
    * @param dayOfMonth - string that exact matches your format i.e. `01`,`31` or `1`,`31`
    * @returns {*|HTMLElement}
    */
-  var findDayOfMonth = function findDayOfMonth(dayOfMonth) {
-    var selector = Selector.DAYS + ' td:not(' + Selector.OLD + '):not(' + Selector.NEW + '):textEquals(' + dayOfMonth + ')';
+  var findDayOfMonth = function findDayOfMonth(dayOfMonth, row) {
+    var rowSelector = '';
+    if (row) {
+      rowSelector = 'tr:nth-child(' + row + ')';
+    }
+    var selector = Selector.DAYS + ' ' + rowSelector + ' td:not(' + Selector.OLD + '):not(' + Selector.NEW + '):textEquals(' + dayOfMonth + ')';
     return assertFound(selector);
   };
 
@@ -304,6 +308,12 @@
 
   var findCenturiesSwitch = function findCenturiesSwitch() {
     return assertFound(Selector.DECADES + ' thead th' + Selector.SWITCH);
+  };
+
+  var assertDayRows = function assertDayRows(count) {
+    var selector = Selector.DAYS + ' tbody tr';
+    var $rows = $$2(selector);
+    expect($rows.length).to.equal(count); // one too many for this date
   };
 
   var assertFound = function assertFound(selector) {
@@ -2111,6 +2121,57 @@
           fireKey(Keycodes.ENTER);
           fireKey(Keycodes.ESC);
           assertDatesEqual(dp.getDate(), moment$1(), 'date');
+        });
+      });
+    });
+  });
+
+  describe('Datepicker', function () {
+
+    beforeEach(function () {
+      return prepare();
+    });
+    afterEach(function () {
+      return safeDispose();
+    });
+
+    describe('renderer', function () {
+
+      describe('days', function () {
+        describe('first row should have the 1st and last row should contain last day of the month and no more rows', function () {
+
+          it('04/29/2016', function () {
+            $input.val('04/29/2016').datepicker({});
+
+            assertData().show();
+
+            // first day in the first row
+            findDayOfMonth('1', 1);
+            findDayOfMonth('30', 5);
+            assertDayRows(5);
+          });
+
+          it('05/29/2016', function () {
+            $input.val('05/29/2016').datepicker({});
+
+            assertData().show();
+
+            // first day in the first row
+            findDayOfMonth('1', 1);
+            findDayOfMonth('31', 5);
+            assertDayRows(5);
+          });
+
+          it('07/29/2016', function () {
+            $input.val('07/29/2016').datepicker({});
+
+            assertData().show();
+
+            // first day in the first row
+            findDayOfMonth('1', 1);
+            findDayOfMonth('31', 6);
+            assertDayRows(6);
+          });
         });
       });
     });
