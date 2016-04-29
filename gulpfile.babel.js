@@ -35,6 +35,23 @@ const rollupConfig = {
   */`
   }
 }
+const copyJsToDocs = new Copy(gulp, preset, {
+  task: {name: 'dist:js->docs'},
+  source: {
+    options: {cwd: 'dist'},
+    glob: ['*.iife*.js']
+  },
+  dest: 'docs/dist/'
+})
+
+const copyCssToDocs = new Copy(gulp, preset, {
+  task: {name: 'dist:css->docs'},
+  source: {
+    options: {cwd: 'dist'},
+    glob: ['*.css']
+  },
+  dest: 'docs/dist/'
+})
 
 const jsTest = new Aggregate(gulp, 'js:test',
   series(gulp,
@@ -73,7 +90,8 @@ const js = new Aggregate(gulp, 'js',
         }
       })
     ),
-    jsTest
+    jsTest,
+    copyJsToDocs
   )
 )
 
@@ -81,7 +99,8 @@ const css = new Aggregate(gulp, 'css',
   series(gulp,
     new CleanStylesheets(gulp, preset),
     new ScssLint(gulp, preset),
-    new Sass(gulp, preset)
+    new Sass(gulp, preset),
+    copyCssToDocs
   )
 )
 
@@ -100,14 +119,16 @@ const all = new Aggregate(gulp, 'all',
   series(gulp,
     defaultRecipes,
     parallel(gulp,
-      new CssNano(gulp, preset, {debug: true}),
+      new CssNano(gulp, preset),
       new Uglify(gulp, preset, {
+        debug: true,
         task: {name: 'iife:uglify'},
         source: {
           glob: 'picker.iife.js'
         }
       })
-    )
+    ),
+    copyJsToDocs
   )
 )
 
@@ -121,14 +142,6 @@ new Aggregate(gulp, 'publish',
 
     //new Jekyll(gulp, preset, {options: {raw: 'baseurl: "/picker.js"'}}),
 
-    new Copy(gulp, preset, {
-      task: {name: 'dist:copy-to-site'},
-      source: {
-        options: {cwd: 'dist'},
-        glob: ['**']
-      },
-      dest: 'site/dist/'
-    }),
 
     new PublishBuild(gulp, preset),
 
