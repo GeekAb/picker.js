@@ -93,8 +93,12 @@ $.expr[':'].textEquals = function (el, i, m) {
  * @param dayOfMonth - string that exact matches your format i.e. `01`,`31` or `1`,`31`
  * @returns {*|HTMLElement}
  */
-export const findDayOfMonth = (dayOfMonth) => {
-  let selector = `${Selector.DAYS} td:not(${Selector.OLD}):not(${Selector.NEW}):textEquals(${dayOfMonth})`
+export const findDayOfMonth = (dayOfMonth, row) => {
+  let rowSelector = ''
+  if(row){
+    rowSelector = `tr:nth-child(${row})`
+  }
+  let selector = `${Selector.DAYS} ${rowSelector} td:not(${Selector.OLD}):not(${Selector.NEW}):textEquals(${dayOfMonth})`
   return assertFound(selector)
 }
 
@@ -156,6 +160,12 @@ export const findDecadesSwitch = () => {
 
 export const findCenturiesSwitch = () => {
   return assertFound(`${Selector.DECADES} thead th${Selector.SWITCH}`)
+}
+
+export const assertDayRows = (count) => {
+  let selector = `${Selector.DAYS} tbody tr`
+  let $rows = $(selector)
+  expect($rows.length).to.equal(count) // one too many for this date
 }
 
 export const assertFound = (selector, count = 1) => {
