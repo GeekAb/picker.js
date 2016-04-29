@@ -70,6 +70,13 @@ const jsTest = new Aggregate(gulp, 'js:test',
   )
 )
 
+const rollupIife = new RollupIife(gulp, preset, rollupConfig, {
+  options: {
+    dest: 'picker.iife.js',
+    moduleName: 'picker'
+  }
+})
+
 const js = new Aggregate(gulp, 'js',
   series(gulp,
     new CleanJavascripts(gulp, preset),
@@ -83,14 +90,17 @@ const js = new Aggregate(gulp, 'js',
         }
       }),
       // self executing (fully bundled)
-      new RollupIife(gulp, preset, rollupConfig, {
-        options: {
-          dest: 'picker.iife.js',
-          moduleName: 'picker'
-        }
-      })
+      rollupIife
     ),
     jsTest,
+    copyJsToSite
+  )
+)
+
+new Aggregate(gulp, 'js:dev',
+  series(gulp,
+    new CleanJavascripts(gulp, preset),
+    rollupIife,
     copyJsToSite
   )
 )

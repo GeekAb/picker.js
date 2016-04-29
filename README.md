@@ -68,7 +68,7 @@ Maintaining that much code may be too much for anyone, and we want to _expand_ i
 
 I usually have two terminals open, just to speed up everything during development builds:
 
-1. `gulp js:watch` or for speed without tests `gulp rollup:iife:watch`
+1. `gulp js:watch` or for speed without tests `gulp js:dev:watch`
 1. `gulp css:watch`
 
 Open the `sandbox/index.html` or the `sandbox/test.html` in a browser and you should be good to go.
