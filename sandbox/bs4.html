@@ -10,49 +10,57 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
 
-
   <link href="../dist/picker-bs4.css" rel="stylesheet">
-
-  <script src="//code.jquery.com/jquery-2.2.3.min.js"></script>
-  <script src="https://cdn.rawgit.com/HubSpot/tether/v1.2.0/dist/js/tether.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
-
-  <script src="../dist/picker.iife.js"></script>
+  <link href="../dist/demo.css" rel="stylesheet">
 </head>
 
 <body>
 
+<section>
+  <div class="centered-item">
+    <h1>picker.js for Bootstrap v4</a></h1>
+    <form>
+      <div class="form-group">
+        <label for="i1" class="bmd-label-floating">Start date</label>
+        <input id="i1" type="text" class="form-control">
+      </div>
+    </form>
+  </div>
+</section>
 
-<div class="container">
-  <h2>Bootstrap 4 picker.js test</h2>
-  <form>
-    <!--<input type="text" class="form-control" value="03/06/2011">-->
-    <input type="text" class="form-control">
-    <span></span>
-  </form>
-</div>
+
+<!--  -->
+<script src="//code.jquery.com/jquery-2.2.3.min.js"></script>
+<script src="https://cdn.rawgit.com/HubSpot/tether/v1.2.0/dist/js/tether.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
+<script src="../dist/picker.iife.js"></script>
+
 <script>
-  var $input = $('input')
-  $input.datepicker({
-    debug: true,
-//    format: 'YYYY-MM-DD',
-    date: {
-//      default: '03/04/2013'
-//      disabled: [`2012-10-01`, `2012-10-10`, `2012-10-20`]
-    },
-//    daysOfWeek: {highlighted: [1,5]},
-//    daysOfWeek: {disabled: [0, 6]},
-//    date: {
-//      count: 2
-//      toggle: true
-//    },
-//    autoclose: true
-//    view: {start: `years`},
-    button: {
-      today: true
-    }
-  }).datepicker('show')
-  $input.focus()
+  $(function () {
+    $('input').datepicker({
+      preset: 'bs4',
+//        debug: true,
+//        format: 'YYYY-MM-DD',
+//        date: {
+//          default: '03/04/2013'
+//          disabled: [`2012-10-01`, `2012-10-10`, `2012-10-20`]
+//        },
+//        daysOfWeek: {
+//          highlighted: [1, 5],
+//          disabled: [0, 6]
+//        },
+//        date: {
+//          count: 2
+//          toggle: true
+//        },
+//        autoclose: true
+//        view: {start: `years`},
+//        button: {
+//          today: true
+//        }
+    })
+//      .datepicker('show')
+  })
 </script>
 </body>
 </html>
