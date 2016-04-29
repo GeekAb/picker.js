@@ -40,7 +40,7 @@
     "chai": "^3.5.0",
     "chai-jquery": "^2.0.0",
     "gulp": "github:gulpjs/gulp#4.0",
-    "gulp-pipeline": "^4.0.32",
+    "gulp-pipeline": "^4.0.33",
     "jquery": "^2.2.3",
     "source-map-support": "^0.4.0"
   }
