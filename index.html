@@ -1,0 +1,127 @@
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="Material Design for Bootstrap">
+<meta name="keywords" content="Material Design for Bootstrap, Sass">
+<meta name="author" content="Federico Zivolo, Kevin Ross, and Bootstrap Material Design contributors">
+
+<title>A picker for dates, date ranges, for frameworks including Bootstrap 3, Bootstrap 4, and Material Design for Bootstrap 4 | picker.js</title>
+
+<!-- Material Design fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+<!-- Material Design for Bootstrap generic -->
+<link href="https://cdn.rawgit.com/FezVrasta/bootstrap-material-design/dist/dist/bootstrap-material-design.min.css" rel="stylesheet">
+
+<link href="../dist/demo.css" rel="stylesheet">
+
+
+<div class="bmd-layout-container bmd-drawer-f-l bmd-drawer-overlay-md-down bmd-drawer-in-lg-up">
+  <header class="bmd-layout-header">
+    <div class="navbar navbar-light bg-faded">
+      <button class="navbar-toggler hidden-lg-up" type="button" data-toggle="drawer" data-target="#dw-1">
+        <span class="sr-only">Toggle drawer</span>
+        <i class="material-icons">menu</i>
+      </button>
+      <!--
+      <ul class="nav navbar-nav">
+        <li class="nav-item">picker.js</li>
+      </ul>
+      <ul class="nav navbar-nav pull-xs-right">
+        <li class="nav-item">
+          <div class="bmd-form-group bmd-collapse-inline pull-xs-right">
+            <button class="btn bmd-btn-icon" for="search" data-toggle="collapse" data-target="#collapse-search-1" aria-controls="collapse-search-1">
+              <i class="material-icons">search</i>
+            </button>
+            <span id="collapse-search-1" class="collapse">
+              <input class="form-control" type="text" id="search" placeholder="Enter your query...">
+            </span>
+          </div>
+        </li>
+        <li class="nav-item">
+          <div class="dropdown">
+            <button class="btn bmd-btn-icon btn-secondary dropdown-toggle" type="button" id="more-menu-1" data-toggle="dropdown" aria-haspopup="true">
+              <i class="material-icons">more_vert</i>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="more-menu-1">
+              <button class="dropdown-item" type="button">About</button>
+              <button class="dropdown-item" type="button">Contact</button>
+              <button class="dropdown-item" type="button">Legal information</button>
+            </div>
+          </div>
+        </li>
+      </ul>
+      -->
+    </div>
+  </header>
+
+  <div id="dw-1" class="bmd-layout-drawer bg-faded">
+    <header>
+      <a class="navbar-brand" href="//alienfast.github.io/picker.js">picker.js</a>
+    </header>
+    <ul class="list-group">
+      <a class="list-group-item" href="//github.com/alienfast/picker.js">GITHUB</a>
+      <a class="list-group-item" href="https://www.npmjs.com/package/picker.js">NPM</a>
+
+      <li class="bmd-layout-spacer"></li>
+      <!--
+      <a class="list-group-item">
+        <i class="material-icons" role="presentation">help_outline</i><span class="sr-only">Help</span>
+      </a>
+      -->
+    </ul>
+  </div>
+  <main class="bmd-layout-content">
+    <div class="container">
+      <!-- main content -->
+      <div class="card card-block">
+        <h2>Hello World picker.js demos for...</h2>
+      </div>
+      <div class="card-deck">
+        <div class="card">
+          <div class="card-block">
+            <h4 class="card-title">Material Design for Bootstrap v4</h4>
+            <p class="card-text">Great companion for
+              <a href="https://github.com/FezVrasta/bootstrap-material-design/tree/v4-dev">bootstrap-material-design v4</a>
+            </p>
+          </div>
+          <div class="card-footer">
+            <a href="bmd4.html" target="_example" class="btn btn-primary"><i class="material-icons">launch</i> Launch</a>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-block">
+            <h4 class="card-title">Bootstrap v4</h4>
+            <p class="card-text"></p>
+          </div>
+          <!--<div class="bmd-layout-spacer"></div>-->
+          <div class="card-footer">
+            <a href="bs4.html" target="_example" class="btn btn-primary"><i class="material-icons">launch</i> Launch</a>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-block">
+            <h4 class="card-title">Bootstrap v3</h4>
+            <p class="card-text"></p>
+          </div>
+          <div class="card-footer">
+            <a href="bs3.html" target="_example" class="btn btn-primary"><i class="material-icons">launch</i> Launch</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-2.2.2.min.js"></script>
+<script src="https://cdn.rawgit.com/HubSpot/tether/v1.2.0/dist/js/tether.min.js"></script>
+<script src="https://cdn.rawgit.com/FezVrasta/bootstrap-material-design/dist/dist/bootstrap-material-design.iife.min.js"></script>
+<script src="../dist/picker.iife.js"></script>
+
+<script>
+  $(function () {
+    $('body').bootstrapMaterialDesign()
+  })
+</script>
