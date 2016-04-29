@@ -37,46 +37,17 @@ restrictions:
 
 
 ## Bug reports
-
-A bug is a _demonstrable problem_ that is caused by the code in the repository.
-Good bug reports are extremely helpful, so thanks!
+A bug is a _demonstrable problem_ that is caused by the code in the repository. Good bug reports are extremely helpful, so thanks!
 
 Guidelines for bug reports:
 
-1. **Use the GitHub issue search** &mdash; check if the issue has already been
-   reported.
+1. **Use the GitHub issue search** &mdash; check if the issue has already been reported.
 
-2. **Check if the issue has been fixed** &mdash; try to reproduce it using the
-   latest `master` or development branch in the repository.
+2. **Check if the issue has been fixed** &mdash; try to reproduce it using the latest `master` or development branch in the repository.
 
-3. **Isolate the problem** &mdash; create a [reduced test
-   case](https://css-tricks.com/reduced-test-cases/) using one of **our** [Codepen templates](#codepen-templates).
+3. **Isolate the problem** &mdash; create a [reduced test case](https://css-tricks.com/reduced-test-cases/) using one of **our** [Codepen templates](#codepen-templates).
 
-
-A good bug report shouldn't leave others needing to chase you up for more
-information. Please try to be as detailed as possible in your report. What is
-your environment? What steps will reproduce the issue? What browser(s) and OS
-experience the problem? Do other browsers show the bug differently? What
-would you expect to be the outcome? All these details will help people to fix
-any potential bugs.
-
-Example:
-
-> Short and descriptive example bug report title
->
-> A summary of the issue and the browser/OS environment in which it occurs. If
-> suitable, include the steps required to reproduce the bug.
->
-> 1. This is the first step
-> 2. This is the second step
-> 3. Further steps, etc.
->
-> `<url>` - a link to the reduced test case (via one of our [CodePen templates](#codepen-templates))
->
-> Any other information you want to share that is relevant to the issue being
-> reported. This might include the lines of code that you have identified as
-> causing the bug, and potential solutions (and your opinions on their
-> merits).
+A good bug report shouldn't leave others needing to chase you up for more information. Please try to be as detailed as possible in your report. What is your environment? What steps will reproduce the issue? What browser(s) and OS experience the problem? Do other browsers show the bug differently? What would you expect to be the outcome? All these details will help people to fix any potential bugs.
 
 ## Codepen templates
 When submitting an issue, you must submit a Codepen demonstrating your issue.  Please be sure to use the template below that is specific for your `preset`:
@@ -86,7 +57,7 @@ When submitting an issue, you must submit a Codepen demonstrating your issue.  P
 - [`bs3` Codepen template](http://codepen.io/rosskevin/pen/zqmRwy?editors=0010)
 
 ## Why was my issue summarily closed?
-Please don't take this the wrong way, but we receive a lot of issues and in order to effectively help, we need you to follow the guidelines written above.
+Please don't take this the wrong way, but we receive a lot of issues and in order to effectively help, we need you to follow the guidelines.
 
 We try our best to maintain a great project, and do so with a considerable amount of our personal time and effort.  Following these guidelines facilitates an efficient way to communicate about bugs or simply help. Failure to follow these guidelines leads to confusion and wasted time.  
 
@@ -96,24 +67,20 @@ If you do not take the time to read and follow these guidelines (including submi
 
 
 ## Feature requests
-
 Feature requests are welcome for discussion but note that you may be asked to submit a PR or close the issue. Please take a moment to find out whether your idea fits with the scope and aims of the project. It's up to *you* to make a strong case to convince the project's developers of the merits of this feature, or for you to build and submit as a PR. Please provide as much detail and context as possible.
 
 ## Pull requests
+Good pull requests—patches, improvements, new features—are a fantastic help. They should remain focused in scope and avoid containing unrelated commits.
 
-Good pull requests—patches, improvements, new features—are a fantastic help. They should remain focused in scope and all tests should pass.  If possible, PRs should be accompanied by additional tests.
+**Please ask first** before embarking on any significant pull request (e.g. implementing features, refactoring code, porting to a different language), otherwise you risk spending a lot of time working on something that the project's developers might not want to merge into the project.
 
-**Please ask first** before embarking on any significant pull request (e.g.
-implementing features, refactoring code, porting to a different language),
-otherwise you risk spending a lot of time working on something that the
-project's developers might not want to merge into the project.
+Please adhere to the [coding guidelines](#code-guidelines) used throughout the project (indentation, accurate comments, etc.) and any other requirements (such as test coverage).
 
-Please adhere to the [coding guidelines](#code-guidelines) used throughout the
-project (indentation, accurate comments, etc.) and any other requirements
-(such as test coverage).
+**In general, do not edit `dist` or `gh-pages` files directly!** Those files are automatically generated. 
 
-Adhering to the following process is the best way to get your work
-included in the project:
+Similarly, when contributing to the documentation, you should edit the documentation source files in the docs directory.
+
+Adhering to the following process is the best way to get your work included in the project:
 
 1. [Fork](https://help.github.com/fork-a-repo/) the project, clone your fork,
    and configure the remotes:
@@ -122,7 +89,7 @@ included in the project:
    # Clone your fork of the repo into the current directory
    git clone https://github.com/<your-username>/picker.js.git
    # Navigate to the newly cloned directory
-   cd picker.js
+   cd bootstrap
    # Assign the original repo to a remote called "upstream"
    git remote add upstream https://github.com/alienfast/picker.js.git
    ```
@@ -134,16 +101,13 @@ included in the project:
    git pull upstream master
    ```
 
-3. Create a new topic branch (off the main project development branch) to
-   contain your feature, change, or fix:
+3. Create a new topic branch (off the main project development branch) to contain your feature, change, or fix:
 
    ```bash
    git checkout -b <topic-branch-name>
    ```
 
-4. Commit your changes in logical chunks with messages written in english. Please adhere to these [git commit
-   message guidelines](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
-   or your code is unlikely be merged into the main project. 
+4. Commit your changes in logical chunks with messages written in english. Please adhere to these [git commit message guidelines](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html) or your code is unlikely be merged into the main project.
 
 5. Locally merge (or rebase) the upstream development branch into your topic branch:
 
@@ -157,15 +121,14 @@ included in the project:
    git push origin <topic-branch-name>
    ```
 
-7. [Open a Pull Request](https://help.github.com/articles/using-pull-requests/)
-    with a clear title and description against the `master` branch.
+7. [Open a Pull Request](https://help.github.com/articles/using-pull-requests/) with a clear title and description against the `master` branch.  Referenc any open issue in the description so it is automatically linked.
 
-**IMPORTANT**: By submitting a pull request, you agree to allow the project owners to license your work under the terms of the [MIT License](LICENSE) (if it includes code changes) and under the terms of the [Creative Commons Attribution 3.0 Unported License](docs/LICENSE) (if it includes documentation changes).
+**IMPORTANT**: By submitting a patch, you agree to allow the project owners to license your work under the terms of the [MIT License](LICENSE) (if it includes code changes) and under the terms of the [Creative Commons Attribution 3.0 Unported License](docs/LICENSE) (if it includes documentation changes).
+
 
 ## Code guidelines
 
 ### HTML
-
 [Adhere to the Code Guide.](http://codeguide.co/#html)
 
 - Use tags and elements appropriate for an HTML5 doctype (e.g., self-closing tags).
@@ -173,6 +136,4 @@ included in the project:
 - Use [WAI-ARIA](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA) attributes in documentation examples to promote accessibility.
 
 ### Coding styles
-
-Before committing ensure your changes follow our coding standards by running `gulp`.  This will run the various code style
-check tools and provide feedback.
+Before committing ensure your changes follow our coding standards by running `gulp`.  This will run the various code style check tools and provide feedback.
