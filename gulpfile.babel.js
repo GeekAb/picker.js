@@ -35,22 +35,22 @@ const rollupConfig = {
   */`
   }
 }
-const copyJsToDocs = new Copy(gulp, preset, {
-  task: {name: 'dist:js->docs'},
+const copyJsToSite = new Copy(gulp, preset, {
+  task: {name: 'dist:js->site'},
   source: {
     options: {cwd: 'dist'},
     glob: ['*.iife*.js']
   },
-  dest: 'docs/dist/'
+  dest: 'site/dist/'
 })
 
-const copyCssToDocs = new Copy(gulp, preset, {
-  task: {name: 'dist:css->docs'},
+const copyCssToSite = new Copy(gulp, preset, {
+  task: {name: 'dist:css->site'},
   source: {
     options: {cwd: 'dist'},
     glob: ['*.css']
   },
-  dest: 'docs/dist/'
+  dest: 'site/dist/'
 })
 
 const jsTest = new Aggregate(gulp, 'js:test',
@@ -91,7 +91,7 @@ const js = new Aggregate(gulp, 'js',
       })
     ),
     jsTest,
-    copyJsToDocs
+    copyJsToSite
   )
 )
 
@@ -100,7 +100,7 @@ const css = new Aggregate(gulp, 'css',
     new CleanStylesheets(gulp, preset),
     new ScssLint(gulp, preset),
     new Sass(gulp, preset),
-    copyCssToDocs
+    copyCssToSite
   )
 )
 
@@ -128,7 +128,7 @@ const all = new Aggregate(gulp, 'all',
         }
       })
     ),
-    copyJsToDocs
+    copyJsToSite
   )
 )
 
