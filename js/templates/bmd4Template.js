@@ -4,6 +4,7 @@ import {ClassName, Data} from './../constants'
 const Default = {
   // config overrides specific to this template
   button: {
+    today: true,
     cancel: true,
     ok: true
   },

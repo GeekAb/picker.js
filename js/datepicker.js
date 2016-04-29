@@ -7,6 +7,8 @@ import DateRangePicker from './dateRangePicker'
 import {JQUERY_NAME, Data, Event, Selector, ClassName, Unit, View} from './constants'
 import Popper from 'popper.js'
 import moment from 'moment'
+import extend from 'extend'
+
 
 /**
  * Datepicker for fields using momentjs for all date-based functionality.
@@ -104,14 +106,16 @@ const Datepicker = (($) => {
     // Popper.js options - see https://popper.js.org/
     popper: {
       // any popper.js options are valid here and will be passed to that component
-      placement: 'right',
+      // placement: 'right',
+      placement: 'bottom-start',
+      // flipBehavior: ['bottom-start', 'top-start'],
       removeOnDestroy: true
     },
 
     //template: undefined, // if undefined - will use new BaseTemplate().createTemplate()
 
     // -------------------
-    // callbacks  FIXME: better way to do this?
+    // callbacks  TODO: better way to do this?
 
     /*
      A function that takes a date as a parameter and returns one of the following values:
@@ -537,11 +541,9 @@ const Datepicker = (($) => {
       this.update()
 
       // popper
-      this.popper = new Popper(this.$element, {contentType: 'node', content: this.renderer.$picker}, this.config.popper)
+      this.popper = new Popper(this.$element, {contentType: 'node', content: this.renderer.$picker}, extend({}, true, {boundariesElement: this.$element}, this.config.popper))
       this.shown = true
-
       this.eventManager.onShown()
-      //this.popper._popper.focus()
       return this
     }
 

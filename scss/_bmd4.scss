@@ -22,6 +22,10 @@ $fab-icon-size: 2.375rem;
 //$btn-primary-border: $btn-primary-bg !default;
 //$btn-link-disabled-color: $gray-light !default;
 
+.popper {
+  position: absolute; // temporary workaround - see https://github.com/FezVrasta/popper.js/issues/25#issuecomment-209614175
+}
+
 .datepicker {
   .card.view {
     width: 20.5625rem; // needed?

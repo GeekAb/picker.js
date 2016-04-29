@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>BMD4 Test Datepicker for Bootstrap Material Design 4</title>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <!-- Material Design fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+  <!-- Material Design for Bootstrap generic -->
+  <link href="https://cdn.rawgit.com/FezVrasta/bootstrap-material-design/dist/dist/bootstrap-material-design.min.css" rel="stylesheet">
+
+  <link href="../dist/picker-bmd4.css" rel="stylesheet">
+  <link href="../dist/index.css" rel="stylesheet">
+</head>
+
+<body>
+
+<section>
+  <div class="centered-item">
+    <h1>picker.js for
+      <a href="https://github.com/FezVrasta/bootstrap-material-design/tree/v4-dev">bootstrap-material-design v4</a></h1>
+    <form>
+      <div class="form-group">
+        <label for="i1" class="bmd-label-floating">Start date</label>
+        <input id="i1" type="text" class="form-control">
+      </div>
+    </form>
+  </div>
+</section>
+
+
+<!--  -->
+<script src="https://code.jquery.com/jquery-2.2.2.min.js"></script>
+<script src="https://cdn.rawgit.com/HubSpot/tether/v1.2.0/dist/js/tether.min.js"></script>
+<script src="https://cdn.rawgit.com/FezVrasta/bootstrap-material-design/dist/dist/bootstrap-material-design.iife.min.js"></script>
+<script src="../dist/picker.iife.js"></script>
+
+<script>
+  $(function () {
+    $('body').bootstrapMaterialDesign()
+
+    $('input').datepicker({
+      preset: 'bmd4',
+//        debug: true,
+//        format: 'YYYY-MM-DD',
+//        date: {
+//          default: '03/04/2013'
+//          disabled: [`2012-10-01`, `2012-10-10`, `2012-10-20`]
+//        },
+//        daysOfWeek: {
+//          highlighted: [1, 5],
+//          disabled: [0, 6]
+//        },
+//        date: {
+//          count: 2
+//          toggle: true
+//        },
+//        autoclose: true
+//        view: {start: `years`},
+//        button: {
+//          today: true
+//        }
+    })
+//      .datepicker('show')
+  })
+</script>
+</body>
+</html>
