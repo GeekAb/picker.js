@@ -100,9 +100,9 @@ $fab-icon-size: 2.375rem;
             td {
               &.old,
               &.new {
+                color: $gray-light; // add the color so that just in case someone wants these days, they can just change visibility
                 // spec: hides dates from other months
                 visibility: hidden;
-                color: $gray-light; // add the color so that just in case someone wants these days, they can just change visibility
               }
 
               .bmd-btn-icon {
