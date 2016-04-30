@@ -27,6 +27,8 @@ $fab-icon-size: 2.375rem;
 }
 
 .datepicker {
+  transform-origin: top left;
+  animation: fade-in 0.3s linear;
   .card.view {
     width: 20.5625rem; // needed?
     .btn {
@@ -151,5 +153,16 @@ $fab-icon-size: 2.375rem;
       justify-content: flex-end;
       box-shadow: none;
     }
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.1);
   }
 }
