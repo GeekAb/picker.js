@@ -58,7 +58,10 @@ const jsTest = new Aggregate(gulp, 'js:test',
     // self executing (fully bundled)
     new RollupIife(gulp, preset, rollupConfig, {
       task: {name: 'rollup:iife:test'},
-      source: { // rollup the source code and all test files - they are ES2015
+      source: { // rollup test code - they are ES2015
+        options: {cwd: 'test'}
+      },
+      watch: { // rollup test code - they are ES2015
         options: {cwd: 'test'}
       },
       options: {
@@ -69,6 +72,13 @@ const jsTest = new Aggregate(gulp, 'js:test',
     new MochaPhantomJs(gulp, preset)
   )
 )
+
+const rollupIife = new RollupIife(gulp, preset, rollupConfig, {
+  options: {
+    dest: 'picker.iife.js',
+    moduleName: 'picker'
+  }
+})
 
 const js = new Aggregate(gulp, 'js',
   series(gulp,
@@ -83,14 +93,17 @@ const js = new Aggregate(gulp, 'js',
         }
       }),
       // self executing (fully bundled)
-      new RollupIife(gulp, preset, rollupConfig, {
-        options: {
-          dest: 'picker.iife.js',
-          moduleName: 'picker'
-        }
-      })
+      rollupIife
     ),
     jsTest,
+    copyJsToSite
+  )
+)
+
+new Aggregate(gulp, 'js:dev',
+  series(gulp,
+    new CleanJavascripts(gulp, preset),
+    rollupIife,
     copyJsToSite
   )
 )

@@ -166,16 +166,15 @@ const Renderer = class extends Base {
 
   renderDaysView(viewDate) {
     // get prevMonth moment set to same day of the week
-    let prevMonth = viewDate.clone().startOf(Unit.MONTH).subtract(1, 'day') // end of last month
-    prevMonth.day(prevMonth.day() - (prevMonth.day() - this.config.week.start + 7) % 7) // set day of week
+    let viewFirstDay = viewDate.clone().startOf(Unit.MONTH).startOf(Unit.WEEK)
+    viewFirstDay.day(viewFirstDay.day() - (viewFirstDay.day() - this.config.week.start + 7) % 7) // set day of week
 
-    // TODO: not sure why 42 days is added (yet)...
-    let nextMonth = prevMonth.clone().add(42, 'days')
+    let viewLastDay = viewDate.clone().endOf(Unit.MONTH).endOf(Unit.WEEK)
 
     let html = []
-    while (prevMonth.isBefore(nextMonth)) {
-      this.renderDay(viewDate, prevMonth, html)
-      prevMonth.add(1, 'days')
+    while (viewFirstDay.isBefore(viewLastDay)) {
+      this.renderDay(viewDate, viewFirstDay, html)
+      viewFirstDay.add(1, 'days')
     }
 
     let $view = this.$picker.find(`${Selector.DAYS}`)
