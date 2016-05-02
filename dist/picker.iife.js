@@ -1,5 +1,5 @@
 /*!
-  * picker.js v0.1.4 (https://github.com/alienfast/picker.js#readme)
+  * picker.js v0.1.5 (https://github.com/alienfast/picker.js#readme)
   * Copyright 2016 Kevin Ross <kevin.ross@alienfast.com> (https://github.com/rosskevin)
   * Licensed under MIT
   */
@@ -3433,9 +3433,9 @@
              * @param {HTMLElement|String} [popper.parent=window.document.body] The parent element, given as HTMLElement or as query string.
              * @param {String} [popper.content=''] The content of the popper, it can be text, html, or node; if it is not text, set `contentType` to `html` or `node`.
              * @param {String} [popper.contentType='text'] If `html`, the `content` will be parsed as HTML. If `node`, it will be appended as-is.
-             * @param {String} [popper.arrow.tagName='div'] Same as `popper.tagName` but for the arrow element.
-             * @param {Array} [popper.arrow.classNames='popper__arrow'] Same as `popper.classNames` but for the arrow element.
-             * @param {String} [popper.arrow.attributes=['x-arrow']] Same as `popper.attributes` but for the arrow element.
+             * @param {String} [popper.arrowTagName='div'] Same as `popper.tagName` but for the arrow element.
+             * @param {Array} [popper.arrowClassNames='popper__arrow'] Same as `popper.classNames` but for the arrow element.
+             * @param {String} [popper.arrowAttributes=['x-arrow']] Same as `popper.attributes` but for the arrow element.
              * @param {Object} options
              * @param {String} [options.placement=bottom]
              *      Placement of the popper accepted values: `top(-left, -right), right(-left, -right), bottom(-left, -right),
@@ -3487,7 +3487,7 @@
                 // if the popper variable is a configuration object, parse it to generate an HTMLElement
                 // generate a default popper if is not defined
                 var isNotDefined = typeof popper === 'undefined' || popper === null;
-                var isConfig = popper && popper.constructor.name === 'Object';
+                var isConfig = popper && Object.prototype.toString.call(popper) === '[object Object]';
                 if (isNotDefined || isConfig) {
                     this._popper = this.parse(isConfig ? popper : {});
                 }
@@ -3518,11 +3518,16 @@
                     this._popper.setAttribute('x-placement', this._options.placement);
                 }
 
+                // make sure to apply the popper position before any computation
+                this.state.position = this._getPosition(this._popper, this._reference);
+                setStyle(this._popper, { position: this.state.position });
+
                 // fire the first update to position the popper in the right place
                 this.update();
 
                 // setup event listeners, they will take care of update the position in specific situations
                 this._setupEventListeners();
+                return this;
             }
 
             //
@@ -3545,6 +3550,7 @@
                 if (this._options.removeOnDestroy) {
                     this._popper.remove();
                 }
+                return this;
             };
 
             /**
@@ -3582,23 +3588,27 @@
             Popper.prototype.onCreate = function (callback) {
                 // the createCallbacks return as first argument the popper instance
                 callback(this);
+                return this;
             };
 
             /**
              * If a function is passed, it will be executed after each update of popper with as first argument the set of coordinates and informations
              * used to style popper and its arrow.
+             * NOTE: it doesn't get fired on the first call of the `Popper.update()` method inside the `Popper` constructor!
              * @method
              * @memberof Popper
              * @param {Function} callback
              */
             Popper.prototype.onUpdate = function (callback) {
                 this.state.updateCallback = callback;
+                return this;
             };
 
             /**
              * Helper used to generate poppers from a configuration file
              * @method
              * @memberof Popper
+             * @param config {Object} configuration
              * @returns {HTMLElement} popper
              */
             Popper.prototype.parse = function (config) {
@@ -3609,11 +3619,9 @@
                     parent: root.document.body,
                     content: '',
                     contentType: 'text',
-                    arrow: {
-                        tagName: 'div',
-                        classNames: ['popper__arrow'],
-                        attributes: ['x-arrow']
-                    }
+                    arrowTagName: 'div',
+                    arrowClassNames: ['popper__arrow'],
+                    arrowAttributes: ['x-arrow']
                 };
                 config = Object.assign({}, defaultConfig, config);
 
@@ -3630,10 +3638,10 @@
                     popper.textContent = config.content;
                 }
 
-                if (config.arrow) {
-                    var arrow = d.createElement(config.arrow.tagName);
-                    addClassNames(arrow, config.arrow.classNames);
-                    addAttributes(arrow, config.arrow.attributes);
+                if (config.arrowTagName) {
+                    var arrow = d.createElement(config.arrowTagName);
+                    addClassNames(arrow, config.arrowClassNames);
+                    addAttributes(arrow, config.arrowAttributes);
                     popper.appendChild(arrow);
                 }
 
@@ -3645,7 +3653,7 @@
                 if (typeof parent === 'string') {
                     parent = d.querySelectorAll(config.parent);
                     if (parent.length > 1) {
-                        console.warning('WARNING: the given `parent` query(' + config.parent + ') matched more than one element, the first one will be used');
+                        console.warn('WARNING: the given `parent` query(' + config.parent + ') matched more than one element, the first one will be used');
                     }
                     if (parent.length === 0) {
                         throw 'ERROR: the given `parent` doesn\'t exists!';
@@ -3654,8 +3662,8 @@
                 }
                 // if the given parent is a DOM nodes list or an array of nodes with more than one element,
                 // the first one will be used as parent
-                if (parent.length > 1) {
-                    console.warning('WARNING: you have passed as parent a list of elements, the first one will be used');
+                if (parent.length > 1 && parent instanceof Element === false) {
+                    console.warn('WARNING: you have passed as parent a list of elements, the first one will be used');
                     parent = parent[0];
                 }
 
@@ -3688,9 +3696,25 @@
                  */
                 function addAttributes(element, attributes) {
                     attributes.forEach(function (attribute) {
-                        element.setAttribute(attribute.split(':')[0], attribute.split(':')[1]);
+                        element.setAttribute(attribute.split(':')[0], attribute.split(':')[1] || '');
                     });
                 }
+            };
+
+            /**
+             * Helper used to get the position which will be applied to the popper
+             * @method
+             * @memberof Popper
+             * @param config {HTMLElement} popper element
+             * @returns {HTMLElement} reference element
+             */
+            Popper.prototype._getPosition = function (popper, reference) {
+                var container = getOffsetParent(reference);
+
+                // Decide if the popper will be fixed
+                // If the reference element is inside a fixed context, the popper will be fixed as well to allow them to scroll together
+                var isParentFixed = isFixed(reference, container);
+                return isParentFixed ? 'fixed' : 'absolute';
             };
 
             /**
@@ -3706,13 +3730,8 @@
                 placement = placement.split('-')[0];
                 var popperOffsets = {};
 
-                var container = getOffsetParent(reference);
-
-                // Decide if the popper will be fixed
-                // If the reference element is inside a fixed context, the popper will be fixed as well to allow them to scroll together
-                var isParentFixed = isFixed(reference, container);
-                popperOffsets.position = isParentFixed ? 'fixed' : 'absolute';
-                this.state.position = popperOffsets.position;
+                popperOffsets.position = this.state.position;
+                var isParentFixed = popperOffsets.position === 'fixed';
 
                 //
                 // Get reference element position
