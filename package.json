@@ -1,9 +1,9 @@
 {
   "name": "picker.js",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "A picker for dates, date ranges, (and hopefully times) for multiple frameworks including Bootstrap 3, Bootstrap 4, and Material Design for Bootstrap 4",
-  "main": "dist/picker.js.cjs.js",
-  "jsnext:main": "src/index.js",
+  "main": "dist/picker.umd.js",
+  "jsnext:main": "js/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -26,20 +26,21 @@
   "dependencies": {
     "babel-polyfill": "^6.7.4",
     "extend": "^3.0.0",
+    "key.js": "^1.0.7",
     "moment": "^2.13.0",
     "moment-range": "^2.2.0",
     "popper.js": "^0.4.0",
     "stringify-object": "^2.3.1"
   },
   "devDependencies": {
-    "bootstrap-material-design": "https://github.com/fezvrasta/bootstrap-material-design/tarball/dist",
+    "bootstrap-material-design": "fezvrasta/bootstrap-material-design#dist",
     "bootstrap": "twbs/bootstrap#v4-dev",
     "babel-core": "^6.7.7",
     "babel-eslint": ">=6.0.4",
     "babel-preset-es2015": "^6.6.0",
     "chai": "^3.5.0",
     "chai-jquery": "^2.0.0",
-    "gulp": "github:gulpjs/gulp#4.0",
+    "gulp": "gulpjs/gulp#4.0",
     "gulp-pipeline": "^4.0.37",
     "jquery": "^2.2.3",
     "source-map-support": "^0.4.0"

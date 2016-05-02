@@ -1,7 +1,6 @@
 import Base from './base'
 import {Selector, ClassName, Unit, View, Event, Data} from './constants'
-import Keycodes from './util/keycodes'
-import Key from './util/key'
+import {Keycodes, Key} from 'key.js'
 
 const EventManager = class extends Base {
 
@@ -251,7 +250,7 @@ const EventManager = class extends Base {
       return
     }
 
-    switch (ev.keyCode) {
+    switch (Key.toCode(ev)) {
       case Keycodes.ESC:
         this.popView(ev)
         break

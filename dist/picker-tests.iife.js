@@ -1,5 +1,5 @@
 /*!
-  * picker.js v0.1.5 (https://github.com/alienfast/picker.js#readme)
+  * picker.js v0.1.6 (https://github.com/alienfast/picker.js#readme)
   * Copyright 2016 Kevin Ross <kevin.ross@alienfast.com> (https://github.com/rosskevin)
   * Licensed under MIT
   */
@@ -16,6 +16,31 @@
   } : function (obj) {
     return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
   };
+
+  babelHelpers.classCallCheck = function (instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  };
+
+  babelHelpers.createClass = function () {
+    function defineProperties(target, props) {
+      for (var i = 0; i < props.length; i++) {
+        var descriptor = props[i];
+        descriptor.enumerable = descriptor.enumerable || false;
+        descriptor.configurable = true;
+        if ("value" in descriptor) descriptor.writable = true;
+        Object.defineProperty(target, descriptor.key, descriptor);
+      }
+    }
+
+    return function (Constructor, protoProps, staticProps) {
+      if (protoProps) defineProperties(Constructor.prototype, protoProps);
+      if (staticProps) defineProperties(Constructor, staticProps);
+      return Constructor;
+    };
+  }();
+
   babelHelpers;
 
   var $$1 = window.jQuery;
@@ -1869,6 +1894,107 @@
     MAC_WK_CMD_RIGHT: 93, // WebKit Right Command key fired, different from META
     WIN_IME: 229
   };
+
+  var Key = function () {
+    function Key() {
+      babelHelpers.classCallCheck(this, Key);
+    }
+
+    babelHelpers.createClass(Key, null, [{
+      key: "is",
+
+      /**
+       *
+       * @param ev
+       * @param codes - one to many Keycodes
+       * @returns {boolean} - true if any of the given codes
+       */
+      value: function is(ev) {
+        for (var _len = arguments.length, codes = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+          codes[_key - 1] = arguments[_key];
+        }
+
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+          for (var _iterator = codes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var code = _step.value;
+
+            if (this.toCode(ev) === code) {
+              return true;
+            }
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
+        }
+
+        return false;
+      }
+
+      /**
+       *
+       * @param ev
+       * @param codes - one to many Keycodes
+       * @returns {boolean} - true if _none_ of the codes
+       */
+
+    }, {
+      key: "isNot",
+      value: function isNot(ev) {
+        for (var _len2 = arguments.length, codes = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+          codes[_key2 - 1] = arguments[_key2];
+        }
+
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
+
+        try {
+          for (var _iterator2 = codes[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var code = _step2.value;
+
+            if (this.toCode(ev) === code) {
+              return false;
+            }
+          }
+        } catch (err) {
+          _didIteratorError2 = true;
+          _iteratorError2 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+              _iterator2.return();
+            }
+          } finally {
+            if (_didIteratorError2) {
+              throw _iteratorError2;
+            }
+          }
+        }
+
+        return true;
+      }
+    }, {
+      key: "toCode",
+      value: function toCode(ev) {
+        return ev.keyCode || ev.which;
+      }
+    }]);
+    return Key;
+  }();
 
   describe('Datepicker', function () {
 
