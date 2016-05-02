@@ -1,5 +1,5 @@
 /*!
-  * picker.js v0.1.5 (https://github.com/alienfast/picker.js#readme)
+  * picker.js v0.1.6 (https://github.com/alienfast/picker.js#readme)
   * Copyright 2016 Kevin Ross <kevin.ross@alienfast.com> (https://github.com/rosskevin)
   * Licensed under MIT
   */
@@ -1580,24 +1580,20 @@
       WIN_IME: 229
     };
 
-    var Key = function (_Base) {
-      babelHelpers.inherits(Key, _Base);
-
+    var Key = function () {
       function Key() {
         babelHelpers.classCallCheck(this, Key);
-        return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Key).call(this));
       }
 
-      /**
-       *
-       * @param ev
-       * @param codes - one to many Keycodes
-       * @returns {boolean} - true if any of the given codes
-       */
-
-
       babelHelpers.createClass(Key, null, [{
-        key: 'is',
+        key: "is",
+
+        /**
+         *
+         * @param ev
+         * @param codes - one to many Keycodes
+         * @returns {boolean} - true if any of the given codes
+         */
         value: function is(ev) {
           for (var _len = arguments.length, codes = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
             codes[_key - 1] = arguments[_key];
@@ -1641,7 +1637,7 @@
          */
 
       }, {
-        key: 'isNot',
+        key: "isNot",
         value: function isNot(ev) {
           for (var _len2 = arguments.length, codes = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
             codes[_key2 - 1] = arguments[_key2];
@@ -1677,13 +1673,13 @@
           return true;
         }
       }, {
-        key: 'toCode',
+        key: "toCode",
         value: function toCode(ev) {
           return ev.keyCode || ev.which;
         }
       }]);
       return Key;
-    }(Base);
+    }();
 
     var EventManager = function (_Base) {
       babelHelpers.inherits(EventManager, _Base);
@@ -1946,7 +1942,7 @@
             return;
           }
 
-          switch (ev.keyCode) {
+          switch (Key.toCode(ev)) {
             case Keycodes.ESC:
               this.popView(ev);
               break;
