@@ -32,7 +32,7 @@
     "stringify-object": "^2.3.1"
   },
   "devDependencies": {
-    "bootstrap-material-design": "https://github.com/fezvrasta/bootstrap-material-design/tarball/dist",
+    "bootstrap-material-design": "fezvrasta/bootstrap-material-design#dist",
     "bootstrap": "twbs/bootstrap#v4-dev",
     "babel-core": "^6.7.7",
     "babel-eslint": ">=6.0.4",
