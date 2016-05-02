@@ -28,7 +28,7 @@
     "extend": "^3.0.0",
     "moment": "^2.13.0",
     "moment-range": "^2.2.0",
-    "popper.js": "git://github.com/rosskevin/popper.js.git#feature-allow-text-html-node",
+    "popper.js": "^0.4.0",
     "stringify-object": "^2.3.1"
   },
   "devDependencies": {
