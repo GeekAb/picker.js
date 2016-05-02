@@ -1,5 +1,5 @@
 /*!
-  * picker.js v0.1.4 (https://github.com/alienfast/picker.js#readme)
+  * picker.js v0.1.5 (https://github.com/alienfast/picker.js#readme)
   * Copyright 2016 Kevin Ross <kevin.ross@alienfast.com> (https://github.com/rosskevin)
   * Licensed under MIT
   */

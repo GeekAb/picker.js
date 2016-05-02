@@ -1,6 +1,6 @@
 {
   "name": "picker.js",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "A picker for dates, date ranges, (and hopefully times) for multiple frameworks including Bootstrap 3, Bootstrap 4, and Material Design for Bootstrap 4",
   "main": "dist/picker.js.cjs.js",
   "jsnext:main": "src/index.js",
@@ -28,7 +28,7 @@
     "extend": "^3.0.0",
     "moment": "^2.13.0",
     "moment-range": "^2.2.0",
-    "popper.js": "git://github.com/rosskevin/popper.js.git#feature-allow-text-html-node",
+    "popper.js": "^0.4.0",
     "stringify-object": "^2.3.1"
   },
   "devDependencies": {
@@ -40,7 +40,7 @@
     "chai": "^3.5.0",
     "chai-jquery": "^2.0.0",
     "gulp": "github:gulpjs/gulp#4.0",
-    "gulp-pipeline": "^4.0.34",
+    "gulp-pipeline": "^4.0.37",
     "jquery": "^2.2.3",
     "source-map-support": "^0.4.0"
   }
