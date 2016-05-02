@@ -5,7 +5,9 @@ A picker for dates, date ranges, (and hopefully times) for multiple frameworks i
 
 [Demos](http://alienfast.github.io/picker.js/)
 
-## Usage
+## Install
+
+`npm install picker.js`
 
 ## Bootstrap 3
 [Demo](http://alienfast.github.io/picker.js/bs3.html)

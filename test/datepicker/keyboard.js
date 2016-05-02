@@ -25,7 +25,7 @@ import {
   fireKey
 } from '../support'
 import {Selector, ClassName, Data} from '../../js/constants'
-import Keycodes from '../../js/util/keycodes'
+import {Keycodes} from 'key.js'
 import moment from 'moment'
 
 describe('Datepicker', () => {

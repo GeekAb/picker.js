@@ -3,7 +3,7 @@
   "version": "0.1.6",
   "description": "A picker for dates, date ranges, (and hopefully times) for multiple frameworks including Bootstrap 3, Bootstrap 4, and Material Design for Bootstrap 4",
   "main": "dist/picker.umd.js",
-  "jsnext:main": "src/index.js",
+  "jsnext:main": "js/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -26,7 +26,7 @@
   "dependencies": {
     "babel-polyfill": "^6.7.4",
     "extend": "^3.0.0",
-    "key.js": "^1.0.1",
+    "key.js": "^1.0.7",
     "moment": "^2.13.0",
     "moment-range": "^2.2.0",
     "popper.js": "^0.4.0",
