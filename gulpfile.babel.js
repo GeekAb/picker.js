@@ -28,6 +28,7 @@ const preset = Preset.baseline()
 
 const rollupConfig = {
   options: {
+    moduleName: 'picker',
     banner: `/*!
   * ${pkg.name} v${pkg.version} (${pkg.homepage})
   * Copyright ${moment().format("YYYY")} ${pkg.author}
@@ -75,8 +76,7 @@ const jsTest = new Aggregate(gulp, 'js:test',
 
 const rollupIife = new RollupIife(gulp, preset, rollupConfig, {
   options: {
-    dest: 'picker.iife.js',
-    moduleName: 'picker'
+    dest: 'picker.iife.js'
   }
 })
 
@@ -88,8 +88,7 @@ const js = new Aggregate(gulp, 'js',
       // umd (non-bundled)
       new RollupUmd(gulp, preset, rollupConfig, {
         options: {
-          dest: 'picker.umd.js',
-          moduleName: 'picker'
+          dest: 'picker.umd.js'
         }
       }),
       // self executing (fully bundled)

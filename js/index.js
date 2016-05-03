@@ -11,3 +11,4 @@ export {default as BS4Template} from './templates/bs4Template'
 export {default as BMD4Template} from './templates/bmd4Template'
 export {default as StringTemplate} from './templates/stringTemplate'
 
+export {default as moment} from 'moment'
