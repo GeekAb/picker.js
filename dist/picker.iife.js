@@ -1,5 +1,5 @@
 /*!
-  * picker.js v0.1.6 (https://github.com/alienfast/picker.js#readme)
+  * picker.js v0.1.7 (https://github.com/alienfast/picker.js#readme)
   * Copyright 2016 Kevin Ross <kevin.ross@alienfast.com> (https://github.com/rosskevin)
   * Licensed under MIT
   */
@@ -5534,6 +5534,7 @@
     exports.BS4Template = BS4Template;
     exports.BMD4Template = BMD4Template;
     exports.StringTemplate = BS4Template$1;
+    exports.moment = require$$0$1;
 
 }((this.picker = this.picker || {})));
 //# sourceMappingURL=picker.iife.js.map
