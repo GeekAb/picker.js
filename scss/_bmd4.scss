@@ -23,7 +23,8 @@ $fab-icon-size: 2.375rem;
 //$btn-link-disabled-color: $gray-light !default;
 
 .popper {
-  position: absolute; // temporary workaround - see https://github.com/FezVrasta/popper.js/issues/25#issuecomment-209614175
+  //position: absolute; // temporary workaround - see https://github.com/FezVrasta/popper.js/issues/25#issuecomment-209614175
+  z-index: 1; // popper is added as a sibling to the element, but to ensure it is above anything relative to it, add 1 to the z-index
 }
 
 .datepicker {

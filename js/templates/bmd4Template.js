@@ -96,15 +96,15 @@ const BMD4Template = class extends BaseTemplate {
     if (classNames.includes(ClassName.DISABLED)) {
       classes.push(ClassName.DISABLED)
     }
-    return `<button class="${classes.join(' ')}">${date.date()}</button>`
+    return `<button type="button" class="${classes.join(' ')}">${date.date()}</button>`
   }
 
   renderMonth(date, classNames, tooltip = '') {
-    return `<button class="btn ${classNames.join(' ')}" ${tooltip} data-${Data.MOMENT}="${date}">${this.renderMonthContent(date, classNames)}</button>`
+    return `<button type="button" class="btn ${classNames.join(' ')}" ${tooltip} data-${Data.MOMENT}="${date}">${this.renderMonthContent(date, classNames)}</button>`
   }
 
   renderYear(date, classNames, tooltip = '') {
-    return `<button class="btn ${classNames.join(' ')}" ${tooltip} data-${Data.MOMENT}="${date}">${this.renderYearContent(date, classNames)}</button>`
+    return `<button type="button" class="btn ${classNames.join(' ')}" ${tooltip} data-${Data.MOMENT}="${date}">${this.renderYearContent(date, classNames)}</button>`
   }
 }
 
