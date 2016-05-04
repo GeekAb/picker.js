@@ -1,5 +1,5 @@
 /*!
-  * picker.js v0.1.9 (https://github.com/alienfast/picker.js#readme)
+  * picker.js v0.1.10 (https://github.com/alienfast/picker.js#readme)
   * Copyright 2016 Kevin Ross <kevin.ross@alienfast.com> (https://github.com/rosskevin)
   * Licensed under MIT
   */
@@ -877,21 +877,21 @@
           if (classNames.includes(ClassName.DISABLED)) {
             classes.push(ClassName.DISABLED);
           }
-          return '<button class="' + classes.join(' ') + '">' + date.date() + '</button>';
+          return '<button type="button" class="' + classes.join(' ') + '">' + date.date() + '</button>';
         }
       }, {
         key: 'renderMonth',
         value: function renderMonth(date, classNames) {
           var tooltip = arguments.length <= 2 || arguments[2] === undefined ? '' : arguments[2];
 
-          return '<button class="btn ' + classNames.join(' ') + '" ' + tooltip + ' data-' + Data.MOMENT + '="' + date + '">' + this.renderMonthContent(date, classNames) + '</button>';
+          return '<button type="button" class="btn ' + classNames.join(' ') + '" ' + tooltip + ' data-' + Data.MOMENT + '="' + date + '">' + this.renderMonthContent(date, classNames) + '</button>';
         }
       }, {
         key: 'renderYear',
         value: function renderYear(date, classNames) {
           var tooltip = arguments.length <= 2 || arguments[2] === undefined ? '' : arguments[2];
 
-          return '<button class="btn ' + classNames.join(' ') + '" ' + tooltip + ' data-' + Data.MOMENT + '="' + date + '">' + this.renderYearContent(date, classNames) + '</button>';
+          return '<button type="button" class="btn ' + classNames.join(' ') + '" ' + tooltip + ' data-' + Data.MOMENT + '="' + date + '">' + this.renderYearContent(date, classNames) + '</button>';
         }
       }]);
       return BMD4Template;
@@ -5533,12 +5533,14 @@
       return Datepicker;
     }(jQuery);
 
+    window.moment = require$$0$1;
+
+    exports.moment = require$$0$1;
     exports.Datepicker = Datepicker;
     exports.BS3Template = BS4Template;
     exports.BS4Template = BS4Template;
     exports.BMD4Template = BMD4Template;
     exports.StringTemplate = BS4Template$1;
-    exports.moment = require$$0$1;
 
 }((this.picker = this.picker || {})));
 //# sourceMappingURL=picker.iife.js.map
