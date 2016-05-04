@@ -1,5 +1,5 @@
 /*!
-  * picker.js v0.1.8 (https://github.com/alienfast/picker.js#readme)
+  * picker.js v0.1.9 (https://github.com/alienfast/picker.js#readme)
   * Copyright 2016 Kevin Ross <kevin.ross@alienfast.com> (https://github.com/rosskevin)
   * Licensed under MIT
   */
@@ -2793,7 +2793,11 @@
           this.update();
 
           // popper
-          this.popper = new Popper(this.$element, { contentType: 'node', content: this.renderer.$picker }, extend({}, true, { boundariesElement: this.$element }, this.config.popper));
+          this.popper = new Popper(this.$element, {
+            contentType: 'node',
+            content: this.renderer.$picker,
+            parent: this.$element.parent()[0]
+          }, extend({}, true, { boundariesElement: this.$element }, this.config.popper));
           this.shown = true;
           this.eventManager.onShown();
           return this;

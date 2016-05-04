@@ -541,7 +541,13 @@ const Datepicker = (($) => {
       this.update()
 
       // popper
-      this.popper = new Popper(this.$element, {contentType: 'node', content: this.renderer.$picker}, extend({}, true, {boundariesElement: this.$element}, this.config.popper))
+      this.popper = new Popper(this.$element, {
+          contentType: 'node',
+          content: this.renderer.$picker,
+          parent: this.$element.parent()[0]
+        },
+        extend({}, true, {boundariesElement: this.$element}, this.config.popper)
+      )
       this.shown = true
       this.eventManager.onShown()
       return this
