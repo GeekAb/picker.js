@@ -1,7 +1,9 @@
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url]
 
 # picker.js
-A picker for dates, date ranges, (and hopefully times) for multiple frameworks including Bootstrap 3, Bootstrap 4, and Material Design for Bootstrap 4.
+**[Call for maintainers/new owners](https://github.com/alienfast/picker.js/issues/15)**
+
+A picker for dates and date ranges for multiple frameworks including Bootstrap 3, Bootstrap 4, and Material Design for Bootstrap 4.
 
 [Demos](http://alienfast.github.io/picker.js/)
 
