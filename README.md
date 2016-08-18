@@ -3,26 +3,26 @@
 
 A picker for dates and date ranges for multiple frameworks including Bootstrap 3, Bootstrap 4, and Material Design for Bootstrap 4.
 
-[Demos](http://alienfast.github.io/picker.js/)
+[Demos](http://geekab.github.io/picker.js/)
 
 ## Install
 
 `npm install picker.js`
 
 ## Bootstrap 3
-[Demo](http://alienfast.github.io/picker.js/bs3.html)
+[Demo](http://geekab.github.io/picker.js/bs3.html)
 
 ```javascript
 $('input').datepicker({preset: 'bs3'})
 ```
 ## Bootstrap 4
-[Demo](http://alienfast.github.io/picker.js/bs4.html)
+[Demo](http://geekab.github.io/picker.js/bs4.html)
 
 ```javascript
 $('input').datepicker({preset: 'bs4'})
 ```
 ## Bootstrap Material Design 4
-[Demo](http://alienfast.github.io/picker.js/bmd4.html)
+[Demo](http://geekab.github.io/picker.js/bmd4.html)
 
 ```javascript
 $('input').datepicker({preset: 'bmd4'})
@@ -88,5 +88,5 @@ See [LICENSE](LICENSE.md)
 
 [npm-url]: https://www.npmjs.com/package/picker.js
 [npm-image]: https://img.shields.io/npm/v/picker.js.svg
-[travis-url]: https://travis-ci.org/alienfast/picker.js
-[travis-image]: https://img.shields.io/travis/alienfast/picker.js.svg
+[travis-url]: https://travis-ci.org/GeekAb/picker.js
+[travis-image]: https://img.shields.io/travis/GeekAb/picker.js.svg
