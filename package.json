@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alienfast/picker.js.git"
+    "url": "git+https://github.com/GeekAb/picker.js.git"
   },
   "keywords": [
     "bootstrap",
@@ -17,12 +17,12 @@
     "design",
     "datepicker"
   ],
-  "author": "Kevin Ross <kevin.ross@alienfast.com> (https://github.com/rosskevin)",
+  "author": "Abhishek Srivastava <nit.abhi85@gmail.com> (https://github.com/GeekAb)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/alienfast/picker.js/issues"
+    "url": "https://github.com/GeekAb/picker.js/issues"
   },
-  "homepage": "https://github.com/alienfast/picker.js#readme",
+  "homepage": "https://github.com/GeekAb/picker.js#readme",
   "dependencies": {
     "babel-polyfill": "^6.7.4",
     "extend": "^3.0.0",
