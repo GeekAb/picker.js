@@ -27,7 +27,7 @@
     "babel-polyfill": "^6.7.4",
     "extend": "^3.0.0",
     "key.js": "^1.0.7",
-    "moment": "^2.13.0",
+    "moment": "^2.14.1",
     "moment-range": "^2.2.0",
     "popper.js": "^0.4.0",
     "stringify-object": "^2.3.1"
