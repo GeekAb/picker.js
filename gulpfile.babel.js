@@ -22,7 +22,7 @@ import {
 } from 'gulp-pipeline'
 import gulp from 'gulp'
 import pkg from './package.json'
-import moment from 'moment'
+import moment = require('moment')
 
 const preset = Preset.baseline()
 
