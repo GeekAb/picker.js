@@ -1,5 +1,5 @@
 //import 'babel-polyfill/dist/polyfill'
-import 'babel-polyfill'
+//import 'babel-polyfill'
 //import 'core-js/es6/symbol'
 //export * from 'babel-polyfill'
 
@@ -11,5 +11,5 @@ export {default as StringTemplate} from './templates/stringTemplate'
 
 // export moment for use with additional locales #13
 import moment from 'moment'
-window.moment = moment
 export { moment }
+window.moment = moment
