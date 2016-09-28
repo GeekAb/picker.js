@@ -1,5 +1,5 @@
 //import 'babel-polyfill/dist/polyfill'
-//import 'babel-polyfill'
+import 'babel-polyfill'
 //import 'core-js/es6/symbol'
 //export * from 'babel-polyfill'
 
