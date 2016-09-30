@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import {
     Preset,
     Clean,
@@ -23,7 +24,7 @@ import {
 from 'gulp-pipeline'
 import gulp from 'gulp'
 import pkg from './package.json'
-import moment from 'moment'
+//import moment from 'moment'
 
 const preset = Preset.baseline()
 
@@ -32,7 +33,6 @@ const rollupConfig = {
         moduleName: 'picker',
         banner: `/*!
   * ${pkg.name} v${pkg.version} (${pkg.homepage})
-  * Copyright ${moment().format("YYYY")} ${pkg.author}
   * Licensed under ${pkg.license}
   */`
     }
@@ -85,7 +85,7 @@ const jsTest = new Aggregate(gulp, 'js:test',
                 moduleName: 'pickerTests'
             }
         }, {
-            debug: false
+            debug: true
         }),
         new MochaPhantomJs(gulp, preset)
     )

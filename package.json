@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/GeekAb/picker.js#readme",
   "dependencies": {
-    "babel-polyfill": "^6.7.4",
+    "babel-polyfill": "^6.13.0",
     "extend": "^3.0.0",
     "key.js": "^1.0.7",
     "moment": "^2.14.1",
@@ -44,6 +44,7 @@
     "gulp": "gulpjs/gulp.git#4.0",
     "gulp-pipeline": "^4.0.43",
     "jquery": "^2.2.3",
+    "process": "^0.11.9",
     "source-map-support": "^0.4.0"
   }
 }
