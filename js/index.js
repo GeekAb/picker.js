@@ -1,7 +1,9 @@
+import 'gulp-pipeline'
+import 'babel-polyfill'
 //import 'babel-polyfill/dist/polyfill'
-//import 'babel-polyfill'
+//import babel-polyfill from 'babel-polyfill'
 //import 'core-js/es6/symbol'
-//export * from 'babel-polyfill'
+//export { babel-polyfill }
 
 export {default as Datepicker} from './datepicker'
 export {default as BS3Template} from './templates/bs4Template'
@@ -11,5 +13,5 @@ export {default as StringTemplate} from './templates/stringTemplate'
 
 // export moment for use with additional locales #13
 import moment from 'moment'
-export { moment }
 window.moment = moment
+export { moment }
